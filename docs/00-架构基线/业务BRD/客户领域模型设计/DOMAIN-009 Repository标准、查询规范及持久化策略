@@ -1,0 +1,789 @@
+# DOMAIN-009 Repository（仓储设计规范）
+
+---
+
+**文档编号**：DOMAIN-009
+
+**文档名称**：Repository
+
+**中文名称**：仓储设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+Repository（仓储）是 Domain Layer 与 Persistence Layer（持久化层）之间唯一的数据访问边界。
+
+Repository 的职责不是封装数据库，而是：
+
+> **为 Aggregate 提供符合领域语言的数据访问能力。**
+
+Repository 屏蔽数据库、缓存、搜索引擎、图数据库等底层技术实现，使 Domain 始终围绕业务对象，而不是围绕数据存储进行设计。
+
+---
+
+# 二、Repository 在 JBOS 中的定位
+
+JBOS 采用严格的分层架构。
+
+```text
+Presentation Layer
+
+↓
+
+Application Layer
+
+↓
+
+Domain Layer
+    │
+    │
+Repository Interface
+    │
+    ▼
+Infrastructure Layer
+
+↓
+
+MySQL
+Redis
+MongoDB
+ElasticSearch
+Neo4j
+Object Storage
+```
+
+Repository 属于 Domain。
+
+Repository Implementation 属于 Infrastructure。
+
+---
+
+# 三、Repository 定义
+
+JBOS 定义：
+
+> Repository 是 Aggregate 的持久化抽象，是领域模型唯一合法的数据访问入口。
+
+Repository：
+
+负责：
+
+- 获取 Aggregate
+- 保存 Aggregate
+- 删除（逻辑）
+- 查询 Identity
+
+Repository：
+
+不负责：
+
+- SQL
+- ORM
+- DTO
+- HTTP
+- Cache Logic
+
+---
+
+# 四、设计原则（Design Principles）
+
+所有 Repository 必须遵循以下原则。
+
+## Principle-001
+
+Aggregate Oriented
+
+一个 Repository。
+
+对应一个 Aggregate Root。
+
+例如：
+
+```
+CustomerRepository
+
+MembershipRepository
+
+RelationshipRepository
+```
+
+禁止：
+
+```
+CommonRepository
+
+BaseRepository
+
+UniversalRepository
+```
+
+---
+
+## Principle-002
+
+Business Language
+
+Repository 方法必须体现业务。
+
+例如：
+
+```
+findByCustomerId()
+
+findByMembership()
+
+existsIdentity()
+```
+
+禁止：
+
+```
+query()
+
+execute()
+
+select()
+```
+
+---
+
+## Principle-003
+
+Persistence Ignorance
+
+Domain 不感知数据库。
+
+Repository 内部可以使用：
+
+- MySQL
+- PostgreSQL
+- Redis
+- Neo4j
+- Elasticsearch
+
+Domain 永远不知道。
+
+---
+
+## Principle-004
+
+One Aggregate One Repository
+
+一个 Aggregate。
+
+一个 Repository。
+
+不得多个 Repository 操作同一 Aggregate。
+
+---
+
+## Principle-005
+
+No Business Logic
+
+Repository 不处理业务规则。
+
+业务属于：
+
+Aggregate
+
+Policy
+
+Domain Service
+
+---
+
+# 五、Customer Repository Catalog
+
+Customer Domain 建议 Repository 如下。
+
+```text
+CustomerRepository
+
+MembershipRepository
+
+RelationshipRepository
+
+GrowthRepository
+
+ValueRepository
+
+TimelineRepository
+
+PreferenceRepository
+
+SegmentRepository（Future）
+```
+
+Repository 与 Aggregate 一一对应。
+
+---
+
+# 六、Repository Interface
+
+CustomerRepository 标准接口。
+
+```text
+Load(CustomerId)
+
+Save(Customer)
+
+Exists(CustomerId)
+
+ExistsIdentity(CustomerIdentity)
+
+Find(CustomerId)
+
+Archive(Customer)
+
+Restore(Customer)
+```
+
+接口采用业务语言。
+
+不暴露 SQL。
+
+---
+
+# 七、Repository 查询规范
+
+Repository 查询分为四类。
+
+## 7.1 Identity Query
+
+例如：
+
+```
+FindByCustomerId()
+
+FindByMembershipId()
+```
+
+---
+
+## 7.2 Business Query
+
+例如：
+
+```
+FindByPhone()
+
+FindByEmail()
+
+FindByCertificate()
+
+FindByReferral()
+```
+
+---
+
+## 7.3 Specification Query
+
+采用：
+
+Specification Pattern。
+
+例如：
+
+```
+Find(CustomerSpecification)
+```
+
+支持复杂组合查询。
+
+---
+
+## 7.4 Search Query
+
+全文搜索。
+
+建议：
+
+Search Repository。
+
+例如：
+
+```
+CustomerSearchRepository
+```
+
+避免污染 Aggregate Repository。
+
+---
+
+# 八、CQRS 建议
+
+JBOS 推荐采用 CQRS。
+
+```text
+Write
+
+↓
+
+CustomerRepository
+
+-------------------
+
+Read
+
+↓
+
+CustomerQueryRepository
+```
+
+Write：
+
+保证一致性。
+
+Read：
+
+保证性能。
+
+二者职责分离。
+
+---
+
+# 九、Repository 与 Aggregate
+
+Repository。
+
+始终返回：
+
+Aggregate。
+
+例如：
+
+```
+CustomerRepository
+
+↓
+
+Customer Aggregate
+```
+
+禁止：
+
+```
+CustomerEntity
+
+CustomerDTO
+
+CustomerPO
+```
+
+Domain 永远操作 Aggregate。
+
+---
+
+# 十、Repository 与事务
+
+Repository 不管理事务。
+
+事务属于：
+
+Application Layer。
+
+例如：
+
+```text
+Application Service
+
+↓
+
+Transaction
+
+↓
+
+CustomerRepository
+
+↓
+
+MembershipRepository
+
+↓
+
+Commit
+```
+
+Repository 只负责持久化。
+
+---
+
+# 十一、Repository 与缓存
+
+Repository：
+
+不直接管理缓存策略。
+
+统一由：
+
+Infrastructure。
+
+实现：
+
+```text
+Repository Interface
+
+↓
+
+Cache Decorator
+
+↓
+
+Repository Implementation
+```
+
+业务保持纯净。
+
+---
+
+# 十二、Repository 与 Event Sourcing
+
+未来支持：
+
+```text
+CustomerRepository
+
+↓
+
+Event Store
+
+↓
+
+Aggregate Replay
+
+↓
+
+Customer Aggregate
+```
+
+Repository：
+
+可切换：
+
+Event Sourcing。
+
+无需修改 Domain。
+
+---
+
+# 十三、Repository 与 Graph Database
+
+Relationship Repository。
+
+未来可直接支持：
+
+Neo4j。
+
+例如：
+
+```text
+RelationshipRepository
+
+↓
+
+Graph Storage
+
+↓
+
+Customer Graph
+```
+
+Repository 保持统一接口。
+
+无需修改业务。
+
+---
+
+# 十四、Repository 与 AI
+
+AI Agent。
+
+禁止：
+
+直接访问数据库。
+
+统一：
+
+```text
+AI Agent
+
+↓
+
+Application Service
+
+↓
+
+Domain Service
+
+↓
+
+Repository
+```
+
+保证：
+
+权限。
+
+审计。
+
+一致性。
+
+---
+
+# 十五、Repository 与 API
+
+API：
+
+永远调用：
+
+Application Service。
+
+Application Service：
+
+调用：
+
+Repository。
+
+禁止：
+
+```text
+Controller
+
+↓
+
+Repository
+```
+
+绕过 Domain。
+
+---
+
+# 十六、Repository 命名规范
+
+统一采用：
+
+```
+<Aggregate>Repository
+```
+
+例如：
+
+```
+CustomerRepository
+
+MembershipRepository
+
+TimelineRepository
+
+RelationshipRepository
+```
+
+禁止：
+
+```
+CustomerDao
+
+CustomerMapper
+
+CustomerPersistence
+
+CustomerStorage
+```
+
+---
+
+# 十七、Repository 生命周期
+
+Repository 生命周期：
+
+```text
+Design
+
+↓
+
+Interface
+
+↓
+
+Implementation
+
+↓
+
+Optimization
+
+↓
+
+Versioning
+
+↓
+
+Replacement
+```
+
+Repository 接口长期稳定。
+
+实现可持续演进。
+
+---
+
+# 十八、Repository Registry
+
+JBOS 建议建立统一 Repository Registry。
+
+```text
+Repository Registry
+
+Customer
+
+Product
+
+Inventory
+
+Sales
+
+Marketing
+
+Finance
+
+Organization
+
+Workflow
+
+AI
+```
+
+统一：
+
+命名。
+
+Owner。
+
+版本。
+
+依赖关系。
+
+---
+
+# 十九、Repository 扩展能力
+
+Repository 应支持：
+
+- Multi Database
+- Multi Tenant
+- Read Replica
+- Cache Layer
+- Search Engine
+- Graph Storage
+- Object Storage
+- Event Store
+
+但这些能力：
+
+不得影响 Domain。
+
+---
+
+# 二十、Repository 与 Canonical Model
+
+Repository 服务于 Canonical Model。
+
+```text
+Canonical Aggregate
+
+↓
+
+Repository
+
+↓
+
+Persistence
+
+↓
+
+Storage
+```
+
+Repository 永远围绕：
+
+Canonical Object。
+
+而不是数据库 Schema。
+
+---
+
+# 二十一、Repository 演进路线
+
+未来：
+
+```text
+Repository
+
+↓
+
+CQRS Repository
+
+↓
+
+Graph Repository
+
+↓
+
+Event Repository
+
+↓
+
+Knowledge Repository
+
+↓
+
+AI Repository
+
+↓
+
+Business Memory Repository
+```
+
+最终：
+
+Repository 将成为：
+
+企业经营知识访问层。
+
+---
+
+# 二十二、本章总结
+
+Repository 是 JBOS Domain Layer 与持久化技术之间的唯一桥梁。
+
+它围绕 Aggregate 建立统一的数据访问模型，屏蔽底层数据库实现，保证领域模型的纯净性和可持续演进能力。
+
+通过 Repository 规范，JBOS 将实现：
+
+- One Aggregate One Repository（一个聚合对应一个仓储）
+- One Persistence Contract（统一持久化契约）
+- One Business Access Layer（统一业务访问层）
+- One Canonical Repository Model（统一仓储模型）
+
+未来 Repository 将进一步支持 CQRS、Event Sourcing、Knowledge Graph、AI Memory 等高级架构能力，为 JBOS 智能经营平台提供统一的数据访问基础。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Repository 设计规范 |

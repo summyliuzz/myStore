@@ -1,0 +1,779 @@
+# DOMAIN-015 Business Ownership Model（业务归属模型）
+
+---
+
+**文档编号**：DOMAIN-015
+
+**文档名称**：Business Ownership Model
+
+**中文名称**：业务归属模型规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Business Ownership Model（业务归属模型）。
+
+Business Ownership 是企业经营治理体系的重要组成部分。
+
+它用于定义：
+
+- 谁拥有业务对象
+- 谁负责维护业务对象
+- 谁可以操作业务对象
+- 谁拥有最终责任
+- 谁可以转移归属
+- 谁可以授权他人
+- AI Agent 属于谁
+
+Business Ownership 是 Business Permission、Business Audit、Business Workflow、Business Policy 的基础。
+
+所有业务对象必须拥有统一的 Ownership 模型。
+
+---
+
+# 二、为什么需要 Ownership
+
+传统系统通常只保存：
+
+```
+created_by
+
+updated_by
+```
+
+或者：
+
+```
+owner_id
+```
+
+这种设计无法回答：
+
+- 谁是真正拥有者？
+- 谁负责运营？
+- 谁负责审批？
+- 谁可以接管？
+- AI 为谁工作？
+- 多组织如何管理？
+
+JBOS 通过统一 Ownership 模型解决上述问题。
+
+---
+
+# 三、Business Ownership 定义
+
+JBOS 定义：
+
+> Business Ownership 是企业业务对象在整个生命周期中的归属关系定义，用于明确对象的拥有者、责任人、运营者以及管理边界。
+
+Ownership 不是权限。
+
+Ownership 也不是组织结构。
+
+Ownership 描述的是：
+
+**业务对象属于谁。**
+
+---
+
+# 四、Ownership Design Principles
+
+所有 Ownership 必须遵循：
+
+## Principle-001
+
+Single Owner
+
+一个业务对象。
+
+任何时刻。
+
+只能拥有一个 Primary Owner。
+
+---
+
+## Principle-002
+
+Business Driven
+
+Ownership 必须来源于业务关系。
+
+而不是数据库关系。
+
+---
+
+## Principle-003
+
+Lifecycle Aware
+
+Ownership 必须伴随 Lifecycle 演进。
+
+生命周期变化。
+
+Ownership 可以变化。
+
+---
+
+## Principle-004
+
+Transferable
+
+Ownership 可以合法转移。
+
+例如：
+
+客户转店。
+
+门店关闭。
+
+组织调整。
+
+---
+
+## Principle-005
+
+Auditable
+
+任何 Ownership 变化。
+
+必须记录。
+
+支持：
+
+追踪。
+
+审计。
+
+回放。
+
+---
+
+# 五、Ownership Architecture
+
+统一模型：
+
+```text
+Business Object
+
+↓
+
+Ownership
+
+├── Owner
+├── Organization
+├── Store
+├── Operator
+├── Policy
+├── Permission
+├── Workflow
+└── Audit
+```
+
+Ownership 位于 Governance 中心。
+
+---
+
+# 六、Ownership Object
+
+统一对象：
+
+```text
+BusinessOwnership
+
+├── OwnershipID
+├── ObjectType
+├── ObjectID
+├── OwnerID
+├── OrganizationID
+├── StoreID
+├── EffectiveTime
+├── ExpirationTime
+├── Status
+├── Version
+└── Metadata
+```
+
+所有业务对象共享。
+
+---
+
+# 七、Owner
+
+Owner 是业务对象的拥有者。
+
+例如：
+
+```
+Customer
+
+↓
+
+Customer 自己
+```
+
+或者：
+
+```
+Store
+
+↓
+
+Company
+```
+
+Owner 拥有最高业务归属。
+
+---
+
+# 八、Organization Ownership
+
+所有业务对象必须属于一个 Organization。
+
+例如：
+
+```
+Customer
+
+↓
+
+Organization
+```
+
+支持：
+
+多租户。
+
+集团。
+
+品牌。
+
+加盟体系。
+
+---
+
+# 九、Store Ownership
+
+对于零售行业：
+
+门店也是 Ownership 的组成部分。
+
+例如：
+
+```
+Customer
+
+↓
+
+Store A
+```
+
+客户默认属于：
+
+一个门店。
+
+支持：
+
+跨店转移。
+
+---
+
+# 十、Operator
+
+Operator 表示：
+
+当前执行业务的人。
+
+例如：
+
+```
+Customer
+
+↓
+
+Sales Consultant
+```
+
+Operator：
+
+可以变化。
+
+Owner：
+
+不一定变化。
+
+---
+
+# 十一、Ownership Relationship
+
+统一关系：
+
+```text
+Organization
+
+↓
+
+Store
+
+↓
+
+Employee
+
+↓
+
+Customer
+```
+
+形成：
+
+Ownership Tree。
+
+---
+
+# 十二、Ownership Lifecycle
+
+Ownership 生命周期：
+
+```text
+Assigned
+
+↓
+
+Active
+
+↓
+
+Transferred
+
+↓
+
+Suspended
+
+↓
+
+Expired
+
+↓
+
+Archived
+```
+
+所有变更。
+
+统一治理。
+
+---
+
+# 十三、Ownership Transfer
+
+支持归属转移。
+
+例如：
+
+```
+Customer
+
+Store A
+
+↓
+
+Transfer
+
+↓
+
+Store B
+```
+
+必须：
+
+记录原因。
+
+审批。
+
+审计。
+
+---
+
+# 十四、Ownership Assignment
+
+支持自动分配。
+
+例如：
+
+```
+新客户
+
+↓
+
+Nearest Store
+
+↓
+
+Sales Consultant
+```
+
+Assignment：
+
+可配置。
+
+---
+
+# 十五、Ownership Policy
+
+Ownership：
+
+必须经过：
+
+Business Policy。
+
+例如：
+
+```
+VIP Customer
+
+↓
+
+禁止自动转店
+```
+
+Policy：
+
+控制归属。
+
+---
+
+# 十六、Ownership Rule
+
+Rule：
+
+决定：
+
+是否允许归属变化。
+
+例如：
+
+```
+Customer Purchase
+
+>
+
+100000
+
+↓
+
+禁止自动重新分配
+```
+
+---
+
+# 十七、Ownership Repository
+
+统一 Repository。
+
+```text
+OwnershipRepository
+
+├── Assign
+├── Transfer
+├── Query
+├── Archive
+├── Restore
+```
+
+统一访问。
+
+---
+
+# 十八、Ownership Event
+
+归属变化。
+
+统一事件：
+
+```
+OwnershipAssigned
+
+OwnershipTransferred
+
+OwnershipExpired
+
+OwnershipArchived
+```
+
+事件驱动。
+
+---
+
+# 十九、Ownership Timeline
+
+所有 Ownership：
+
+形成时间轴。
+
+例如：
+
+```text
+Store A
+
+↓
+
+Store B
+
+↓
+
+Store C
+```
+
+支持：
+
+完整历史。
+
+---
+
+# 二十、Ownership Governance
+
+所有 Ownership：
+
+必须：
+
+- 可配置
+- 可查询
+- 可审计
+- 可追踪
+- 可恢复
+- 可版本
+
+统一治理。
+
+---
+
+# 二十一、Ownership 与 Permission
+
+Ownership：
+
+决定：
+
+业务归属。
+
+Permission：
+
+决定：
+
+是否允许操作。
+
+例如：
+
+```
+Owner
+
+≠
+
+Permission
+```
+
+Owner：
+
+默认拥有最高权限。
+
+权限仍由 Permission Model 控制。
+
+---
+
+# 二十二、Ownership 与 Workflow
+
+Workflow：
+
+引用 Ownership。
+
+例如：
+
+```
+Customer Transfer
+
+↓
+
+Workflow
+
+↓
+
+Approve
+
+↓
+
+Transfer
+```
+
+Workflow：
+
+驱动。
+
+Ownership：
+
+更新。
+
+---
+
+# 二十三、Ownership 与 Audit
+
+所有 Ownership：
+
+变化。
+
+统一记录：
+
+```text
+Ownership
+
+↓
+
+Operator
+
+↓
+
+Time
+
+↓
+
+Reason
+
+↓
+
+Approval
+
+↓
+
+Event
+```
+
+形成：
+
+Business Audit Trail。
+
+---
+
+# 二十四、Ownership 与 AI
+
+AI Agent：
+
+必须绑定 Ownership。
+
+例如：
+
+```
+Customer Advisor Agent
+
+↓
+
+Organization
+
+↓
+
+Store
+
+↓
+
+Business Capability
+```
+
+AI：
+
+不能成为无归属对象。
+
+---
+
+# 二十五、Ownership Registry
+
+统一 Registry。
+
+```text
+Ownership Registry
+
+Customer
+
+Product
+
+Store
+
+Membership
+
+Campaign
+
+Workflow
+
+AI Agent
+```
+
+统一维护。
+
+---
+
+# 二十六、未来演进
+
+Business Ownership：
+
+未来演进：
+
+```text
+Static Ownership
+
+↓
+
+Dynamic Ownership
+
+↓
+
+Policy Ownership
+
+↓
+
+Event Ownership
+
+↓
+
+AI Assisted Ownership
+
+↓
+
+Autonomous Ownership
+```
+
+形成：
+
+企业动态归属网络。
+
+---
+
+# 二十七、本章总结
+
+Business Ownership Model 是 JBOS Governance Framework 的归属治理核心。
+
+它统一定义企业所有业务对象的归属关系、转移机制、生命周期、事件模型以及治理方式，为 Permission、Workflow、Audit、Policy、AI Agent 提供统一的业务归属基础。
+
+通过 Business Ownership Model，JBOS 将实现：
+
+- One Ownership Registry（统一归属中心）
+- One Ownership Model（统一归属模型）
+- One Business Responsibility Chain（统一业务责任链）
+- One Governance Foundation（统一治理基础）
+
+未来，Business Ownership 将进一步与 Organization、Knowledge Graph、AI Agent、Digital Twin Enterprise 深度融合，形成企业统一的业务归属网络。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Business Ownership Model 规范 |

@@ -1,0 +1,860 @@
+# DOMAIN-010 Domain Event（领域事件设计规范）
+
+---
+
+**文档编号**：DOMAIN-010
+
+**文档名称**：Domain Event
+
+**中文名称**：领域事件设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 的 Domain Event（领域事件）统一设计规范。
+
+在 JBOS 中，企业经营不是围绕数据库变化，而是围绕**业务事件（Business Event）**进行驱动。
+
+因此：
+
+> Event 是整个 Business Operating System 的神经系统（Business Nervous System）。
+
+所有业务能力、AI、Workflow、通知、数据分析、知识图谱均由 Event 驱动。
+
+---
+
+# 二、什么是 Domain Event
+
+JBOS 定义：
+
+> Domain Event 是领域内已经发生且不可逆的业务事实（Business Fact）。
+
+例如：
+
+```
+Customer Registered
+```
+
+表示：
+
+客户已经注册完成。
+
+而不是：
+
+```
+Register Customer
+```
+
+后者属于：
+
+Command。
+
+---
+
+# 三、Command 与 Event
+
+必须严格区分。
+
+```
+Command
+
+↓
+
+Business Processing
+
+↓
+
+Domain Event
+```
+
+例如：
+
+```
+RegisterCustomerCommand
+
+↓
+
+CustomerRegistrationService
+
+↓
+
+CustomerRegisteredEvent
+```
+
+Command：
+
+请求发生。
+
+Event：
+
+事实发生。
+
+---
+
+# 四、Domain Event 设计原则
+
+所有 Domain Event 必须遵循以下原则。
+
+## Principle-001
+
+Past Tense
+
+全部使用过去式。
+
+例如：
+
+```
+CustomerCreated
+
+CustomerMerged
+
+MembershipUpgraded
+```
+
+禁止：
+
+```
+CreateCustomer
+
+MergeCustomer
+```
+
+---
+
+## Principle-002
+
+Immutable
+
+Event 永远不可修改。
+
+发布后：
+
+永久保留。
+
+---
+
+## Principle-003
+
+Business Semantic
+
+Event 必须表达业务事实。
+
+禁止：
+
+```
+UpdateTable
+
+InsertRecord
+
+ModifyData
+```
+
+---
+
+## Principle-004
+
+Globally Unique
+
+每个 Event。
+
+拥有唯一 EventID。
+
+支持全球唯一。
+
+---
+
+## Principle-005
+
+Replayable
+
+Event 必须支持：
+
+Replay。
+
+用于：
+
+- Event Sourcing
+- Audit
+- AI Learning
+- Timeline
+
+---
+
+# 五、Customer Event Catalog
+
+Customer Domain 建议统一事件目录。
+
+```text
+Customer Event
+
+├── Registration
+├── Profile
+├── Membership
+├── Relationship
+├── Growth
+├── Value
+├── Lifecycle
+├── Interaction
+├── AI
+└── System
+```
+
+---
+
+# 六、Registration Events
+
+客户注册事件。
+
+```
+CustomerRegistered
+
+CustomerActivated
+
+CustomerImported
+
+CustomerVerified
+```
+
+所有客户进入系统。
+
+均产生事件。
+
+---
+
+# 七、Profile Events
+
+资料变化。
+
+```
+CustomerProfileUpdated
+
+CustomerPhoneChanged
+
+CustomerEmailChanged
+
+CustomerAddressChanged
+
+CustomerBirthdayUpdated
+```
+
+Profile：
+
+全部事件化。
+
+---
+
+# 八、Membership Events
+
+会员变化。
+
+```
+MembershipCreated
+
+MembershipActivated
+
+MembershipUpgraded
+
+MembershipRenewed
+
+MembershipExpired
+```
+
+Membership Aggregate。
+
+统一事件。
+
+---
+
+# 九、Relationship Events
+
+关系变化。
+
+```
+RelationshipCreated
+
+RelationshipRemoved
+
+ReferralCreated
+
+AdvisorAssigned
+
+HouseholdCreated
+
+HouseholdMemberAdded
+```
+
+形成：
+
+Relationship Timeline。
+
+---
+
+# 十、Growth Events
+
+成长事件。
+
+```
+GrowthStageChanged
+
+CustomerScoreChanged
+
+CustomerLevelChanged
+
+CustomerAchievementUnlocked
+```
+
+成长：
+
+全部记录。
+
+---
+
+# 十一、Value Events
+
+客户价值变化。
+
+```
+CustomerValueChanged
+
+LifetimeValueCalculated
+
+RFMCalculated
+
+CustomerSegmentChanged
+```
+
+AI。
+
+重新计算。
+
+同样发布事件。
+
+---
+
+# 十二、Lifecycle Events
+
+生命周期变化。
+
+```
+CustomerBecameLead
+
+CustomerActivated
+
+CustomerDormant
+
+CustomerReactivated
+
+CustomerLost
+```
+
+生命周期。
+
+完全事件驱动。
+
+---
+
+# 十三、Interaction Events
+
+客户互动事件。
+
+```
+StoreVisited
+
+ConsultationCreated
+
+MessageReceived
+
+AppointmentBooked
+
+FeedbackSubmitted
+
+ProductCollected
+```
+
+Customer Timeline。
+
+来源：
+
+Interaction Event。
+
+---
+
+# 十四、AI Events
+
+AI 行为事件。
+
+```
+AIInsightGenerated
+
+RecommendationGenerated
+
+RiskDetected
+
+PurchaseIntentDetected
+
+ChurnRiskDetected
+```
+
+AI。
+
+也是 Event Producer。
+
+---
+
+# 十五、System Events
+
+系统事件。
+
+```
+CustomerMerged
+
+CustomerArchived
+
+CustomerRestored
+
+CustomerDeleted(Logical)
+
+DataSynchronized
+```
+
+保证：
+
+系统一致性。
+
+---
+
+# 十六、Event 标准结构
+
+所有 Domain Event 必须遵循统一结构。
+
+```text
+Event
+
+├── EventID
+├── EventType
+├── AggregateID
+├── AggregateType
+├── OccurredAt
+├── TriggeredBy
+├── Source
+├── Version
+├── Payload
+├── Metadata
+└── CorrelationID
+```
+
+统一事件协议。
+
+---
+
+# 十七、Event 生命周期
+
+事件生命周期。
+
+```text
+Raised
+
+↓
+
+Published
+
+↓
+
+Consumed
+
+↓
+
+Archived
+
+↓
+
+Replayed
+```
+
+Event：
+
+永不删除。
+
+只归档。
+
+---
+
+# 十八、Event Bus
+
+JBOS 建议建立统一 Event Bus。
+
+```text
+Customer
+
+↓
+
+Event Bus
+
+↓
+
+Workflow
+
+↓
+
+Notification
+
+↓
+
+Marketing
+
+↓
+
+AI
+
+↓
+
+Analytics
+
+↓
+
+Knowledge Graph
+```
+
+所有 Domain：
+
+共享 Event Bus。
+
+---
+
+# 十九、Event Naming Convention
+
+统一命名：
+
+```
+<Aggregate><PastTense>
+```
+
+例如：
+
+```
+CustomerRegistered
+
+CustomerMerged
+
+MembershipUpgraded
+
+RelationshipCreated
+
+GrowthStageChanged
+```
+
+禁止：
+
+```
+CustomerEvent1
+
+UpdateEvent
+
+ModifyCustomer
+```
+
+---
+
+# 二十、Event Version
+
+所有 Event：
+
+支持版本。
+
+例如：
+
+```
+CustomerRegistered
+
+v1
+
+↓
+
+v2
+
+↓
+
+v3
+```
+
+旧版本：
+
+长期兼容。
+
+禁止破坏性修改。
+
+---
+
+# 二十一、Event 与 Event Sourcing
+
+未来支持：
+
+```text
+Customer Aggregate
+
+↓
+
+Event Stream
+
+↓
+
+Replay
+
+↓
+
+Current State
+```
+
+Aggregate 状态。
+
+由 Event 重建。
+
+支持：
+
+完整经营历史。
+
+---
+
+# 二十二、Event 与 Timeline
+
+Customer Timeline。
+
+本质就是：
+
+Event Timeline。
+
+例如：
+
+```text
+2026-01-01
+
+CustomerRegistered
+
+↓
+
+2026-01-10
+
+StoreVisited
+
+↓
+
+2026-01-15
+
+MembershipActivated
+
+↓
+
+2026-02-03
+
+PurchasedProduct
+
+↓
+
+2026-03-18
+
+CustomerValueChanged
+```
+
+Timeline：
+
+来自：
+
+Event。
+
+---
+
+# 二十三、Event 与 Workflow
+
+Workflow：
+
+监听 Event。
+
+例如：
+
+```
+CustomerRegistered
+
+↓
+
+Welcome Workflow
+
+↓
+
+Send Coupon
+
+↓
+
+Assign Advisor
+
+↓
+
+AI Analysis
+```
+
+Workflow：
+
+不轮询数据库。
+
+监听 Event。
+
+---
+
+# 二十四、Event 与 AI
+
+AI 默认消费：
+
+Event。
+
+例如：
+
+```
+PurchaseCompleted
+
+↓
+
+AI
+
+↓
+
+Value Prediction
+
+↓
+
+CustomerValueChanged
+```
+
+AI。
+
+同时发布：
+
+新 Event。
+
+形成闭环。
+
+---
+
+# 二十五、Event 与 Knowledge Graph
+
+Event。
+
+进入：
+
+Knowledge Graph。
+
+例如：
+
+```text
+(Customer)
+
+↓
+
+Purchased
+
+↓
+
+(Product)
+
+↓
+
+OccurredAt
+
+↓
+
+Time
+```
+
+Knowledge Graph。
+
+持续增长。
+
+---
+
+# 二十六、Enterprise Event Registry
+
+JBOS 建议建立企业统一事件注册中心。
+
+```text
+JBOS Event Registry
+
+├── Customer
+├── Product
+├── Inventory
+├── Sales
+├── Marketing
+├── Finance
+├── Organization
+├── Workflow
+├── AI
+└── Common
+```
+
+统一管理：
+
+- Event Name
+- Owner Domain
+- Version
+- Schema
+- Consumer
+- Publisher
+- 生命周期
+
+任何 Event 发布前必须注册。
+
+---
+
+# 二十七、Event Governance
+
+所有 Domain Event 必须遵循治理规范。
+
+包括：
+
+- Schema Registry
+- Event Version
+- Event Owner
+- Payload Standard
+- Trace ID
+- Correlation ID
+- Idempotency（幂等）
+- Retry Policy（重试策略）
+- Dead Letter Queue（死信队列）
+
+确保事件长期稳定演进。
+
+---
+
+# 二十八、本章总结
+
+Domain Event 是 JBOS Business Operating System 的核心驱动力。
+
+企业经营中的每一次变化都将以 Event 的形式记录、传播和消费。
+
+通过统一的 Event Model，JBOS 将实现：
+
+- One Business Event Model（统一业务事件模型）
+- One Enterprise Event Bus（统一企业事件总线）
+- One Timeline（统一经营时间轴）
+- One Knowledge Stream（统一知识流）
+- One AI Event Pipeline（统一 AI 事件管道）
+
+未来，Event 不仅驱动软件，更驱动企业经营、AI Agent、知识图谱和数字孪生，使 JBOS 从传统 CRUD 系统升级为真正的 **Event-Driven AI Native Business Operating System**。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain Event 设计规范 |

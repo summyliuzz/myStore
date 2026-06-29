@@ -1,0 +1,903 @@
+# DOMAIN-019 Canonical Naming System（统一命名体系）
+
+---
+
+**文档编号**：DOMAIN-019
+
+**文档名称**：Canonical Naming System
+
+**中文名称**：统一命名体系规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Canonical Naming System（统一命名体系）。
+
+命名不是代码风格问题，而是企业语言（Enterprise Language）的组成部分。
+
+随着系统规模扩大，如果没有统一命名：
+
+- 同一个概念出现多个名称
+- API、数据库、事件、AI、文档各自命名
+- 组织之间无法沟通
+- AI 无法理解业务上下文
+
+因此 JBOS 建立统一命名体系（Canonical Naming System），作为整个 Business Operating System 的语言基础。
+
+---
+
+# 二、设计目标（Goals）
+
+统一命名体系应满足：
+
+- One Business Language（统一业务语言）
+- One Technical Language（统一技术语言）
+- One AI Language（统一 AI 理解语言）
+- One Documentation Language（统一文档语言）
+- One Enterprise Dictionary（统一企业词典）
+
+所有领域共享同一套 Vocabulary。
+
+---
+
+# 三、命名设计原则
+
+所有名称必须遵循：
+
+## Principle-001 唯一性（Uniqueness）
+
+一个概念只能有一个标准名称。
+
+例如：
+
+```
+Customer
+```
+
+禁止：
+
+```
+User
+Client
+Member
+Consumer
+Buyer
+```
+
+混用。
+
+---
+
+## Principle-002 业务优先（Business First）
+
+优先采用业务语言。
+
+例如：
+
+```
+Customer
+Membership
+Campaign
+Relationship
+```
+
+而不是：
+
+```
+UserEntity
+MemberTable
+```
+
+---
+
+## Principle-003 可读性（Readable）
+
+名称必须能够让：
+
+- 产品经理
+- 商家
+- 开发人员
+- AI Agent
+
+同时理解。
+
+---
+
+## Principle-004 一致性（Consistency）
+
+所有层：
+
+保持一致。
+
+例如：
+
+```
+Customer
+
+↓
+
+CustomerRepository
+
+↓
+
+CustomerAPI
+
+↓
+
+CustomerEvent
+
+↓
+
+CustomerDTO
+
+↓
+
+customer
+
+↓
+
+customer_id
+```
+
+不允许：
+
+```
+Customer
+
+↓
+
+UserRepository
+
+↓
+
+MemberAPI
+```
+
+---
+
+## Principle-005 可扩展（Scalable）
+
+命名必须能够支持：
+
+- 国际化
+- 多租户
+- 微服务
+- AI
+- MCP
+- Knowledge Graph
+
+---
+
+# 四、Business Vocabulary（业务词汇）
+
+建立企业统一业务词典。
+
+例如：
+
+```
+Customer
+Product
+Order
+Store
+Inventory
+Membership
+Campaign
+Promotion
+Organization
+Employee
+Supplier
+Payment
+Settlement
+Invoice
+Workflow
+Capability
+Policy
+Rule
+Event
+```
+
+所有新概念必须先进入 Vocabulary。
+
+---
+
+# 五、Domain 命名规范
+
+统一采用：
+
+```
+<Business Domain>
+```
+
+例如：
+
+```
+Customer
+
+Product
+
+Sales
+
+Inventory
+
+Finance
+
+Marketing
+
+Workflow
+
+Organization
+
+AI
+```
+
+禁止：
+
+```
+CustomerManagement
+
+ProductModule
+
+InventorySystem
+```
+
+---
+
+# 六、Aggregate 命名
+
+统一：
+
+```
+Customer
+
+Membership
+
+Order
+
+Campaign
+```
+
+禁止：
+
+```
+CustomerAggregateRoot
+
+CustomerEntityRoot
+```
+
+Aggregate 已代表业务对象。
+
+---
+
+# 七、Entity 命名
+
+采用业务名词。
+
+例如：
+
+```
+CustomerIdentity
+
+CustomerProfile
+
+CustomerPreference
+
+CustomerTimeline
+```
+
+禁止：
+
+```
+CustomerData
+
+CustomerRecord
+```
+
+---
+
+# 八、Value Object 命名
+
+统一使用业务语义。
+
+例如：
+
+```
+PhoneNumber
+
+Address
+
+Money
+
+Point
+
+Level
+
+Birthday
+```
+
+禁止：
+
+```
+PhoneVO
+
+AddressObject
+```
+
+---
+
+# 九、Repository 命名
+
+统一：
+
+```
+<Aggregate>Repository
+```
+
+例如：
+
+```
+CustomerRepository
+
+MembershipRepository
+
+InventoryRepository
+```
+
+禁止：
+
+```
+CustomerDAO
+
+CustomerMapper
+
+CustomerStorage
+```
+
+---
+
+# 十、Domain Service 命名
+
+统一：
+
+```
+<Business><Action>Service
+```
+
+例如：
+
+```
+CustomerMergeService
+
+CustomerValueService
+
+MembershipUpgradeService
+```
+
+禁止：
+
+```
+CustomerManager
+
+CustomerUtil
+```
+
+---
+
+# 十一、API 命名规范
+
+REST API：
+
+统一资源命名。
+
+例如：
+
+```
+/customers
+
+/customers/{id}
+
+/memberships
+
+/orders
+```
+
+禁止：
+
+```
+/getCustomer
+
+/updateCustomer
+
+/doMerge
+```
+
+动作属于 HTTP Method。
+
+---
+
+# 十二、Database 命名
+
+采用：
+
+snake_case。
+
+例如：
+
+```
+customer
+
+customer_profile
+
+customer_identity
+
+membership_level
+```
+
+字段：
+
+```
+customer_id
+
+created_at
+
+updated_at
+
+deleted_at
+```
+
+统一：
+
+小写。
+
+下划线。
+
+---
+
+# 十三、Event 命名
+
+统一：
+
+```
+<Aggregate><PastTense>
+```
+
+例如：
+
+```
+CustomerRegistered
+
+MembershipUpgraded
+
+CustomerMerged
+
+OrderPaid
+```
+
+禁止：
+
+```
+CustomerEvent
+
+UpdateEvent
+
+OrderStatusChanged1
+```
+
+---
+
+# 十四、Topic 命名
+
+消息总线。
+
+统一：
+
+```
+domain.aggregate.event
+```
+
+例如：
+
+```
+customer.registered
+
+customer.merged
+
+membership.upgraded
+
+order.paid
+```
+
+支持：
+
+Kafka
+
+RabbitMQ
+
+Pulsar
+
+NATS
+
+---
+
+# 十五、Workflow 命名
+
+统一：
+
+```
+<Business><Purpose>Workflow
+```
+
+例如：
+
+```
+CustomerOnboardingWorkflow
+
+MembershipRenewWorkflow
+
+RefundApprovalWorkflow
+```
+
+禁止：
+
+```
+Flow001
+
+WF02
+```
+
+---
+
+# 十六、Policy 与 Rule 命名
+
+Policy：
+
+```
+MembershipUpgradePolicy
+```
+
+Rule：
+
+```
+MembershipUpgradeEligibilityRule
+```
+
+Decision：
+
+```
+MembershipUpgradeDecision
+```
+
+职责清晰。
+
+---
+
+# 十七、AI 命名
+
+AI Agent：
+
+```
+CustomerAdvisorAgent
+
+SalesAssistantAgent
+
+InventoryPlannerAgent
+```
+
+AI Capability：
+
+```
+CustomerInsightCapability
+
+DemandForecastCapability
+```
+
+Prompt：
+
+```
+CustomerSummaryPrompt
+
+ProductRecommendationPrompt
+```
+
+Memory：
+
+```
+CustomerMemory
+
+StoreMemory
+```
+
+Knowledge：
+
+```
+CustomerKnowledge
+
+ProductKnowledge
+```
+
+---
+
+# 十八、MCP 命名
+
+统一：
+
+```
+<Business>MCPServer
+```
+
+例如：
+
+```
+CustomerMCPServer
+
+InventoryMCPServer
+
+FinanceMCPServer
+```
+
+Tool：
+
+```
+CustomerLookupTool
+
+MembershipQueryTool
+
+InventoryReserveTool
+```
+
+Resource：
+
+```
+CustomerProfileResource
+
+OrderHistoryResource
+```
+
+Prompt：
+
+```
+CustomerAnalysisPrompt
+```
+
+---
+
+# 十九、Capability 命名
+
+能力统一采用：
+
+```
+<Business><Capability>
+```
+
+例如：
+
+```
+CustomerGrowthCapability
+
+CustomerValueCapability
+
+InventoryAllocationCapability
+
+MarketingAutomationCapability
+```
+
+禁止：
+
+```
+GrowthModule
+
+ValueFunction
+```
+
+---
+
+# 二十、版本命名
+
+统一：
+
+```
+v1
+
+v2
+
+v3
+```
+
+文档：
+
+```
+DOMAIN-019-v1.0.0.md
+```
+
+API：
+
+```
+/api/v1/customers
+```
+
+Event：
+
+```
+CustomerRegistered.v1
+```
+
+---
+
+# 二十一、Namespace 命名
+
+统一：
+
+```
+jbos.customer
+
+jbos.inventory
+
+jbos.workflow
+
+jbos.ai
+```
+
+支持：
+
+SDK
+
+事件
+
+MCP
+
+插件。
+
+---
+
+# 二十二、Metadata 命名
+
+统一字段：
+
+```
+created_at
+
+updated_at
+
+created_by
+
+updated_by
+
+tenant_id
+
+organization_id
+
+trace_id
+
+correlation_id
+
+version
+```
+
+所有对象共享。
+
+---
+
+# 二十三、Canonical Dictionary（统一企业词典）
+
+JBOS 建议建立企业统一词典。
+
+包含：
+
+- Business Term
+- Definition
+- Synonym
+- Canonical Name
+- Owner
+- Version
+- Status
+- Domain
+- Translation（多语言）
+
+所有系统必须引用同一词典。
+
+---
+
+# 二十四、AI Semantic Layer（AI 语义层）
+
+Canonical Naming 不仅服务开发，也服务 AI。
+
+统一语义层：
+
+```
+Business Vocabulary
+
+↓
+
+Canonical Dictionary
+
+↓
+
+Knowledge Graph
+
+↓
+
+Embedding
+
+↓
+
+LLM
+
+↓
+
+AI Agent
+```
+
+所有 AI Agent 必须基于统一业务词典理解企业知识。
+
+---
+
+# 二十五、未来演进
+
+Canonical Naming 将演进为：
+
+```
+Enterprise Vocabulary
+
+↓
+
+Canonical Dictionary
+
+↓
+
+Business Ontology
+
+↓
+
+Knowledge Graph
+
+↓
+
+Semantic Layer
+
+↓
+
+Enterprise Knowledge Model
+
+↓
+
+Business Brain
+```
+
+最终形成企业统一语义模型。
+
+---
+
+# 二十六、本章总结
+
+Canonical Naming System 是 JBOS Governance Framework 的语言基础。
+
+它统一规范企业所有业务对象、领域模型、API、数据库、事件、Workflow、AI Agent、MCP Server 与知识模型的命名方式，确保整个 Business Operating System 使用同一套业务语言。
+
+通过 Canonical Naming System，JBOS 将实现：
+
+- One Enterprise Vocabulary（统一企业词汇）
+- One Canonical Dictionary（统一企业词典）
+- One Semantic Layer（统一语义层）
+- One Business Language（统一业务语言）
+
+未来，Canonical Naming 将进一步演进为 Business Ontology，为 Knowledge Graph、RAG、MCP、AI Agent Network、Business Brain 提供统一语义基础，成为整个 JBOS AI Native Architecture 的核心底座。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Canonical Naming System 规范 |

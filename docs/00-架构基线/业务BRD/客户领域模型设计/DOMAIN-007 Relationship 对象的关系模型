@@ -1,0 +1,743 @@
+# DOMAIN-007 Relationship（关系模型设计规范）
+
+---
+
+**文档编号**：DOMAIN-007
+
+**文档名称**：Relationship
+
+**中文名称**：关系模型设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+Relationship（关系）是 Customer Domain 最重要的组成部分之一。
+
+传统 CRM 记录的是：
+
+> Customer Information（客户资料）
+
+而 JBOS 希望建立的是：
+
+> Customer Relationship Network（客户关系网络）
+
+因此，Customer 不再是一个孤立对象，而是整个经营网络中的核心节点（Business Hub）。
+
+Relationship Model 用于统一定义：
+
+- Customer 与 Customer 的关系
+- Customer 与企业的关系
+- Customer 与商品的关系
+- Customer 与订单的关系
+- Customer 与门店的关系
+- Customer 与员工的关系
+- Customer 与 AI 的关系
+
+最终形成 **Business Relationship Graph（BRG）**。
+
+---
+
+# 二、Relationship 在 JBOS 中的定位
+
+Customer 不应该被理解为：
+
+```
+Customer
+```
+
+而应该理解为：
+
+```text
+              Brand
+                │
+                │
+Advisor ───── Customer ───── Household
+                │
+                │
+          Membership
+                │
+                │
+Product ───── Purchase ───── Order
+                │
+                │
+          Community
+                │
+                │
+          AI Assistant
+```
+
+Customer 是整个经营网络的中心节点。
+
+---
+
+# 三、Relationship Design Principles（设计原则）
+
+所有 Relationship 必须遵循以下原则。
+
+## Principle-001
+
+Relationship First
+
+先定义关系。
+
+再定义数据。
+
+---
+
+## Principle-002
+
+Identity Based
+
+所有关系均通过 Identity 建立。
+
+禁止通过姓名、手机号等业务字段关联。
+
+---
+
+## Principle-003
+
+Business Semantic
+
+每一条 Relationship 都必须具有明确业务含义。
+
+例如：
+
+```
+Purchased
+
+Referred
+
+AdvisedBy
+
+BelongsToHousehold
+```
+
+禁止：
+
+```
+Relation1
+
+Relation2
+```
+
+---
+
+## Principle-004
+
+Bidirectional Awareness
+
+关系可以单向维护。
+
+但业务上必须能够双向理解。
+
+例如：
+
+```
+A 推荐 B
+
+↓
+
+B 被 A 推荐
+```
+
+---
+
+## Principle-005
+
+Relationship Is Asset
+
+关系本身就是企业资产。
+
+必须长期保存。
+
+支持版本管理。
+
+支持历史追溯。
+
+---
+
+# 四、Relationship 分类（Relationship Taxonomy）
+
+Customer Domain Relationship 分为六大类。
+
+```text
+Customer Relationship
+
+├── Personal Relationship（人与人）
+
+├── Organization Relationship（人与企业）
+
+├── Business Relationship（人与业务）
+
+├── Commercial Relationship（人与交易）
+
+├── Social Relationship（人与社区）
+
+└── AI Relationship（人与智能）
+```
+
+---
+
+# 五、Personal Relationship（个人关系）
+
+用于描述客户之间的真实关系。
+
+| Relationship | 中文 |
+|--------------|------|
+| SPOUSE | 配偶 |
+| PARENT | 父母 |
+| CHILD | 子女 |
+| SIBLING | 兄弟姐妹 |
+| FRIEND | 朋友 |
+| RELATIVE | 亲属 |
+| COLLEAGUE | 同事 |
+| CLASSMATE | 同学 |
+
+这些关系构成 Household 和 Family Graph。
+
+---
+
+# 六、Organization Relationship（企业关系）
+
+Customer 与企业之间建立长期关系。
+
+```text
+Customer
+
+│
+
+├── Brand
+
+├── Store
+
+├── Advisor
+
+├── Membership
+
+├── Organization
+
+└── Enterprise Account
+```
+
+例如：
+
+```
+Customer
+
+↓
+
+BelongsTo
+
+↓
+
+Brand
+```
+
+表示：
+
+客户属于某品牌经营体系。
+
+---
+
+# 七、Business Relationship（经营关系）
+
+Customer 与经营对象之间的关系。
+
+例如：
+
+| Relationship | 描述 |
+|--------------|------|
+| InterestedIn | 感兴趣 |
+| Followed | 已关注 |
+| Reserved | 已预约 |
+| Consulted | 已咨询 |
+| Owned | 已拥有 |
+| Serviced | 已保养 |
+| Wishlisted | 心愿单 |
+
+这些关系不等于订单。
+
+代表经营过程。
+
+---
+
+# 八、Commercial Relationship（交易关系）
+
+Customer 与商业活动之间建立关系。
+
+例如：
+
+```text
+Customer
+
+↓
+
+Order
+
+↓
+
+Payment
+
+↓
+
+Invoice
+
+↓
+
+AfterSales
+```
+
+Relationship 描述：
+
+不是数据归属。
+
+而是业务连接。
+
+---
+
+# 九、Social Relationship（社交关系）
+
+未来支持：
+
+Community。
+
+例如：
+
+```text
+Customer
+
+↓
+
+MemberOf
+
+↓
+
+Community
+```
+
+或者：
+
+```
+Customer
+
+↓
+
+Joined
+
+↓
+
+Brand Club
+```
+
+形成品牌社区。
+
+---
+
+# 十、AI Relationship（AI关系）
+
+Customer 将拥有 AI 关系。
+
+例如：
+
+```text
+Customer
+
+↓
+
+ServedBy
+
+↓
+
+AI Advisor
+```
+
+或者：
+
+```
+Customer
+
+↓
+
+OwnedBy
+
+↓
+
+Personal AI
+```
+
+未来：
+
+AI 也是 Relationship。
+
+---
+
+# 十一、Relationship Aggregate
+
+Relationship 自身也是独立 Aggregate。
+
+```text
+Relationship Aggregate
+
+Relationship
+
+├── Source Object
+
+├── Target Object
+
+├── Relationship Type
+
+├── Effective Time
+
+├── Expiration Time
+
+├── Status
+
+├── Confidence
+
+└── Metadata
+```
+
+Relationship 可以独立演进。
+
+---
+
+# 十二、Relationship 生命周期
+
+统一生命周期。
+
+```text
+Created
+
+↓
+
+Active
+
+↓
+
+Updated
+
+↓
+
+Suspended
+
+↓
+
+Expired
+
+↓
+
+Archived
+```
+
+关系可以失效。
+
+但不能随意删除。
+
+---
+
+# 十三、Relationship 属性
+
+每条 Relationship 必须包含：
+
+| 属性 | 描述 |
+|------|------|
+| RelationshipID | 唯一标识 |
+| SourceID | 来源对象 |
+| TargetID | 目标对象 |
+| RelationshipType | 关系类型 |
+| Status | 状态 |
+| EffectiveDate | 生效时间 |
+| ExpirationDate | 失效时间 |
+| Confidence | 可信度 |
+| CreatedBy | 创建来源 |
+
+---
+
+# 十四、Relationship Graph（关系图谱）
+
+Customer Domain 建立统一 Graph。
+
+```text
+                 Brand
+                    │
+                    │
+        Advisor ─ Customer ─ Household
+                    │
+                    │
+               Membership
+                    │
+                    │
+      Product ─ Purchase ─ Order
+                    │
+                    │
+               Community
+                    │
+                    │
+               AI Assistant
+```
+
+所有经营行为。
+
+最终进入：
+
+Business Graph。
+
+---
+
+# 十五、Knowledge Graph Mapping
+
+Relationship 默认支持：
+
+Knowledge Graph。
+
+例如：
+
+```
+(Customer)
+
+↓
+
+Purchased
+
+↓
+
+(Product)
+```
+
+或者：
+
+```
+(Customer)
+
+↓
+
+Recommended
+
+↓
+
+(Customer)
+```
+
+统一采用：
+
+Subject
+
+Predicate
+
+Object
+
+三元组模型。
+
+---
+
+# 十六、Relationship Domain Event
+
+Relationship 变化产生事件。
+
+例如：
+
+```
+RelationshipCreated
+
+RelationshipUpdated
+
+RelationshipExpired
+
+RelationshipArchived
+
+ReferralCreated
+
+AdvisorAssigned
+
+HouseholdCreated
+```
+
+Relationship 是重要事件来源。
+
+---
+
+# 十七、API Mapping
+
+统一接口。
+
+```
+POST /relationships
+
+GET /relationships
+
+PUT /relationships/{id}
+
+DELETE /relationships/{id}
+```
+
+Relationship 统一管理。
+
+禁止：
+
+直接修改外键。
+
+---
+
+# 十八、AI Semantic Mapping
+
+AI 默认理解：
+
+```
+Customer
+
+↓
+
+Relationship
+
+↓
+
+Graph
+```
+
+例如：
+
+```
+Customer
+
+↓
+
+Friend
+
+↓
+
+VIP Customer
+```
+
+AI 可进行：
+
+- 推荐
+- 推理
+- 社交分析
+- 客户网络分析
+- 推荐链分析
+
+---
+
+# 十九、Relationship Registry
+
+JBOS 建议建立：
+
+```
+Relationship Registry
+
+Customer
+
+↓
+
+Customer
+
+↓
+
+RelationshipType
+
+↓
+
+Business Meaning
+
+↓
+
+Lifecycle
+
+↓
+
+Owner Domain
+```
+
+统一管理所有关系。
+
+---
+
+# 二十、Business Relationship Matrix（业务关系矩阵）
+
+| Source | Relationship | Target | Owner |
+|----------|-------------|---------|--------|
+| Customer | BelongsTo | Household | Customer |
+| Customer | AdvisedBy | Advisor | Customer |
+| Customer | Holds | Membership | Customer |
+| Customer | Purchased | Product | Sales |
+| Customer | Places | Order | Sales |
+| Customer | Visits | Store | Store |
+| Customer | Participates | Campaign | Marketing |
+| Customer | Receives | AI Recommendation | AI |
+
+Relationship 的 Owner 决定维护责任。
+
+---
+
+# 二十一、未来演进
+
+Relationship 将逐步发展为：
+
+```text
+Relationship
+
+↓
+
+Business Graph
+
+↓
+
+Knowledge Graph
+
+↓
+
+Customer Graph
+
+↓
+
+Enterprise Graph
+
+↓
+
+Digital Twin Graph
+
+↓
+
+Autonomous Business Graph
+```
+
+最终：
+
+JBOS 不再管理数据。
+
+而是管理：
+
+企业经营关系网络。
+
+---
+
+# 二十二、本章总结
+
+Relationship 是 JBOS Customer Domain 的核心能力之一。
+
+Customer 不再是静态资料，而是经营网络中的核心节点。
+
+JBOS 通过统一 Relationship Model，将客户、商品、门店、订单、会员、导购、社区及 AI 全部连接到统一的 Business Relationship Graph 中。
+
+未来，Relationship 将进一步演进为企业知识图谱（Knowledge Graph）和 AI 智能推理网络，为客户经营、精准营销、智能推荐、AI Agent 协同及数字孪生提供统一的关系基础。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain Relationship 规范 |

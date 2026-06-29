@@ -1,0 +1,612 @@
+# DOMAIN-006 Enumeration（枚举设计规范）
+
+---
+
+**文档编号**：DOMAIN-006
+
+**文档名称**：Enumeration
+
+**中文名称**：枚举设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 的统一 Enumeration（枚举）规范。
+
+Enumeration 是 Customer Domain 中最基础的业务语言（Business Vocabulary）。
+
+它用于：
+
+- 定义业务状态
+- 定义业务类型
+- 定义业务分类
+- 定义业务等级
+- 定义业务角色
+- 定义业务来源
+- 定义业务渠道
+- 定义业务行为
+
+Enumeration 是整个 JBOS 统一业务语言（Ubiquitous Language）的组成部分。
+
+任何业务系统不得自行定义重复或冲突的枚举。
+
+---
+
+# 二、为什么需要 Enumeration
+
+传统系统大量存在：
+
+```text
+status=1
+
+status=2
+
+status=3
+
+type=5
+
+level=8
+```
+
+最终没人知道：
+
+```
+1 到底代表什么？
+```
+
+因此 JBOS 要求：
+
+任何状态必须拥有明确业务语义。
+
+例如：
+
+```text
+CustomerStatus.ACTIVE
+
+CustomerStatus.ARCHIVED
+
+MembershipLevel.GOLD
+```
+
+而不是：
+
+```
+status=2
+```
+
+---
+
+# 三、设计原则
+
+所有 Enumeration 必须遵循以下原则。
+
+## Principle-001
+
+Business First
+
+枚举名称必须体现业务意义。
+
+禁止：
+
+```
+TYPE_A
+
+TYPE_B
+```
+
+必须：
+
+```
+CustomerType
+
+MembershipType
+```
+
+---
+
+## Principle-002
+
+Stable
+
+枚举编码一旦发布。
+
+禁止修改。
+
+允许新增。
+
+禁止复用。
+
+---
+
+## Principle-003
+
+Language Neutral
+
+Code 永远采用英文。
+
+DisplayName 可国际化。
+
+例如：
+
+```text
+ACTIVE
+
+激活
+
+Active
+
+有効
+```
+
+---
+
+## Principle-004
+
+Machine Readable
+
+所有 Enumeration 默认支持：
+
+- API
+- Database
+- JSON
+- AI
+- Workflow
+- Rule Engine
+
+统一使用。
+
+---
+
+# 四、Enumeration 分类
+
+JBOS 将枚举划分为六类。
+
+```
+Business Enumeration
+
+├── Status
+├── Type
+├── Level
+├── Category
+├── Source
+└── Action
+```
+
+每一类具有明确职责。
+
+---
+
+# 五、Customer Domain Enumeration 全景
+
+Customer Domain 建议统一维护以下枚举。
+
+```
+Customer Domain
+
+├── CustomerStatus
+├── CustomerType
+├── CustomerSource
+├── CustomerChannel
+├── CustomerGender
+├── CustomerLanguage
+├── CustomerLevel
+├── CustomerLifecycleStage
+├── CustomerGrowthStage
+├── CustomerValueLevel
+├── MembershipLevel
+├── MembershipStatus
+├── RelationshipType
+├── HouseholdRole
+├── ContactType
+├── AddressType
+├── PreferenceType
+├── TagType
+├── SegmentType
+└── AIInsightType
+```
+
+未来所有 Customer Object 均引用这些标准枚举。
+
+---
+
+# 六、CustomerStatus（客户状态）
+
+描述客户当前业务状态。
+
+| Code | 中文 | 说明 |
+|------|------|------|
+| DRAFT | 草稿 | 尚未正式建立 |
+| ACTIVE | 正常 | 正常经营 |
+| INACTIVE | 非活跃 | 长期未互动 |
+| SUSPENDED | 暂停 | 暂停经营 |
+| ARCHIVED | 已归档 | 保留历史 |
+| MERGED | 已合并 | 合并至其他客户 |
+
+说明：
+
+Customer 状态只能通过状态机迁移。
+
+禁止直接修改。
+
+---
+
+# 七、CustomerType（客户类型）
+
+| Code | 中文 |
+|------|------|
+| PERSONAL | 个人客户 |
+| FAMILY | 家庭客户 |
+| CORPORATE | 企业客户 |
+| VIP | VIP客户 |
+| INTERNAL | 内部客户 |
+
+Customer Type 一经建立通常不会频繁变化。
+
+---
+
+# 八、CustomerSource（客户来源）
+
+客户首次进入企业的来源。
+
+| Code | 中文 |
+|------|------|
+| STORE | 门店 |
+| WEBSITE | 官网 |
+| MINI_PROGRAM | 小程序 |
+| SOCIAL_MEDIA | 社交媒体 |
+| REFERRAL | 老客户推荐 |
+| EXHIBITION | 展会 |
+| MARKETPLACE | 电商平台 |
+| IMPORT | 数据导入 |
+| API | 外部接口 |
+
+来源用于经营分析。
+
+不是客户身份。
+
+---
+
+# 九、CustomerChannel（经营渠道）
+
+客户发生经营行为的渠道。
+
+| Code | 中文 |
+|------|------|
+| OFFLINE | 门店 |
+| ONLINE | 官网 |
+| APP | APP |
+| MINI_PROGRAM | 小程序 |
+| LIVE_STREAM | 直播 |
+| COMMUNITY | 社群 |
+| PHONE | 电话 |
+| AI_AGENT | AI顾问 |
+
+一个客户可以拥有多个渠道。
+
+---
+
+# 十、CustomerLifecycleStage（生命周期）
+
+Customer 生命周期采用统一阶段。
+
+```
+Prospect
+
+↓
+
+Lead
+
+↓
+
+New Customer
+
+↓
+
+Active Customer
+
+↓
+
+Loyal Customer
+
+↓
+
+VIP Customer
+
+↓
+
+Dormant Customer
+
+↓
+
+Lost Customer
+```
+
+Lifecycle 由规则引擎计算。
+
+不能人工指定。
+
+---
+
+# 十一、CustomerGrowthStage（成长阶段）
+
+成长体系独立于生命周期。
+
+例如：
+
+| Code | 中文 |
+|------|------|
+| NEW | 新客户 |
+| DEVELOPING | 成长中 |
+| MATURE | 成熟 |
+| ADVOCATE | 品牌推荐者 |
+| PARTNER | 品牌伙伴 |
+
+Growth 更关注关系深度。
+
+---
+
+# 十二、CustomerValueLevel（价值等级）
+
+客户价值采用统一等级。
+
+| Code | 中文 |
+|------|------|
+| LOW | 低价值 |
+| NORMAL | 普通 |
+| HIGH | 高价值 |
+| PREMIUM | 优质 |
+| STRATEGIC | 战略客户 |
+
+Value 由 AI 与规则共同计算。
+
+---
+
+# 十三、MembershipLevel（会员等级）
+
+建议采用统一会员体系。
+
+| Code | 中文 |
+|------|------|
+| BRONZE | 青铜 |
+| SILVER | 白银 |
+| GOLD | 黄金 |
+| PLATINUM | 铂金 |
+| DIAMOND | 钻石 |
+| BLACK | 黑钻 |
+
+会员等级属于 Membership Aggregate。
+
+---
+
+# 十四、RelationshipType（关系类型）
+
+Customer Relationship 使用统一定义。
+
+| Code | 中文 |
+|------|------|
+| SPOUSE | 配偶 |
+| PARENT | 父母 |
+| CHILD | 子女 |
+| FRIEND | 朋友 |
+| COLLEAGUE | 同事 |
+| ADVISOR | 专属顾问 |
+| REFERRER | 推荐人 |
+| REFEREE | 被推荐人 |
+
+未来支持 Knowledge Graph。
+
+---
+
+# 十五、TagType（标签类型）
+
+标签统一分类。
+
+```
+System Tag
+
+↓
+
+Business Tag
+
+↓
+
+AI Tag
+
+↓
+
+Marketing Tag
+
+↓
+
+Custom Tag
+```
+
+不同来源。
+
+统一管理。
+
+---
+
+# 十六、AIInsightType（AI洞察）
+
+AI 输出统一采用标准枚举。
+
+例如：
+
+| Code | 中文 |
+|------|------|
+| CHURN_RISK | 流失风险 |
+| PURCHASE_INTENT | 购买意向 |
+| VALUE_GROWTH | 价值增长 |
+| BIRTHDAY_REMINDER | 生日提醒 |
+| ANNIVERSARY | 纪念日 |
+| CROSS_SELL | 交叉销售 |
+| UP_SELL | 升级销售 |
+
+AI 不输出自由文本类型。
+
+统一语义。
+
+---
+
+# 十七、统一编码规范
+
+所有 Enumeration 统一遵循：
+
+```
+UPPER_SNAKE_CASE
+```
+
+例如：
+
+```
+ACTIVE
+
+NEW_CUSTOMER
+
+PURCHASE_INTENT
+```
+
+禁止：
+
+```
+active
+
+Active
+
+newCustomer
+```
+
+---
+
+# 十八、API Mapping
+
+API 返回统一格式。
+
+```json
+{
+  "code": "ACTIVE",
+  "name": "正常",
+  "displayName": "Active",
+  "sortOrder": 1
+}
+```
+
+任何接口不得直接返回：
+
+```
+status=1
+```
+
+---
+
+# 十九、数据库映射
+
+数据库建议保存：
+
+```
+ACTIVE
+
+GOLD
+
+REFERRAL
+```
+
+而不是：
+
+```
+1
+
+2
+
+3
+```
+
+业务含义永远保留。
+
+数据库更易维护。
+
+---
+
+# 二十、AI Semantic Mapping
+
+AI 统一引用：
+
+```
+CustomerStatus.ACTIVE
+
+MembershipLevel.GOLD
+
+RelationshipType.SPOUSE
+```
+
+避免：
+
+```
+状态=2
+```
+
+AI 语义更加稳定。
+
+---
+
+# 二十一、企业级 Enumeration Registry
+
+JBOS 建议建立统一枚举注册中心。
+
+```
+JBOS Enumeration Registry
+
+├── Customer
+├── Product
+├── Inventory
+├── Sales
+├── Marketing
+├── Finance
+├── Organization
+├── Workflow
+├── AI
+└── Common
+```
+
+任何新枚举必须登记。
+
+禁止各 Domain 重复创建。
+
+---
+
+# 二十二、本章总结
+
+Enumeration 是 JBOS 统一业务语言的重要组成部分。
+
+它不仅用于描述状态、类型和等级，更承担着 API、数据库、规则引擎、事件总线、AI Agent 与知识图谱之间的统一语义桥梁。
+
+通过建立统一的 Enumeration Registry，JBOS 将实现：
+
+- One Business Vocabulary（统一业务词汇）
+- One Enumeration Registry（统一枚举注册中心）
+- One Semantic Standard（统一语义标准）
+- One AI Language（统一 AI 业务语言）
+
+所有 Domain 必须遵循本规范，不得自行定义冲突或重复的业务枚举。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain Enumeration 规范 |

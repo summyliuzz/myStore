@@ -1,0 +1,697 @@
+# DOMAIN-008 Domain Service（领域服务设计规范）
+
+---
+
+**文档编号**：DOMAIN-008
+
+**文档名称**：Domain Service
+
+**中文名称**：领域服务设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 中 Domain Service（领域服务）的统一设计规范。
+
+在 JBOS 中：
+
+> Domain Service 不是 Service Layer（服务层）。
+
+也不是：
+
+- Application Service
+- API Service
+- RPC Service
+- Controller
+
+Domain Service 是：
+
+> **无法自然归属于某一个 Entity、Aggregate 或 Value Object，但又属于领域业务本身的业务能力。**
+
+它负责协调多个 Aggregate、多个 Domain Object 或复杂业务规则。
+
+---
+
+# 二、为什么需要 Domain Service
+
+例如：
+
+```
+Customer.Merge()
+```
+
+涉及：
+
+- Customer Aggregate
+- Membership Aggregate
+- Relationship Aggregate
+- Timeline Aggregate
+- Domain Event
+- 审计
+- 权限
+
+已经超出 Customer Entity 的职责。
+
+因此：
+
+```
+CustomerMergeService
+```
+
+成为 Domain Service。
+
+---
+
+# 三、Domain Service 定义
+
+JBOS 定义：
+
+> Domain Service 是不拥有状态（Stateless）、封装领域规则（Business Rules）、协调多个领域对象完成业务行为的核心业务服务。
+
+它属于 Domain Layer。
+
+不是 Infrastructure Layer。
+
+---
+
+# 四、设计原则（Design Principles）
+
+所有 Domain Service 必须遵循以下原则。
+
+## Principle-001
+
+Business Driven
+
+Service 必须表达业务能力。
+
+例如：
+
+```
+CustomerMergeService
+```
+
+禁止：
+
+```
+CustomerHelper
+
+CustomerUtil
+
+CustomerManager
+```
+
+---
+
+## Principle-002
+
+Stateless
+
+Service 不保存状态。
+
+所有状态属于：
+
+Aggregate。
+
+---
+
+## Principle-003
+
+Orchestration
+
+负责协调多个 Aggregate。
+
+而不是保存数据。
+
+---
+
+## Principle-004
+
+No Persistence
+
+Domain Service 不直接操作数据库。
+
+统一通过：
+
+Repository。
+
+---
+
+## Principle-005
+
+No UI
+
+Domain Service 不处理：
+
+HTTP
+
+REST
+
+GraphQL
+
+RPC
+
+消息协议。
+
+---
+
+# 五、Service 分类
+
+JBOS 将领域服务划分为五类。
+
+```text
+Domain Service
+
+├── Core Domain Service
+├── Coordination Service
+├── Calculation Service
+├── Validation Service
+└── AI Domain Service
+```
+
+---
+
+# 六、Core Domain Service
+
+核心业务服务。
+
+例如：
+
+```
+CustomerMergeService
+
+CustomerGrowthService
+
+CustomerRelationshipService
+
+CustomerValueService
+
+MembershipUpgradeService
+```
+
+这些服务属于：
+
+核心经营能力。
+
+---
+
+# 七、Coordination Service
+
+负责多个 Aggregate 协同。
+
+例如：
+
+```
+Customer
+
+↓
+
+Membership
+
+↓
+
+Timeline
+
+↓
+
+Relationship
+```
+
+统一由：
+
+```
+CustomerOnboardingService
+```
+
+负责。
+
+而不是：
+
+Customer Aggregate。
+
+---
+
+# 八、Calculation Service
+
+负责复杂计算。
+
+例如：
+
+```
+Customer Lifetime Value
+
+Customer Score
+
+Growth Score
+
+RFM
+
+Customer Health Score
+```
+
+这些算法。
+
+不属于 Entity。
+
+属于：
+
+Calculation Service。
+
+---
+
+# 九、Validation Service
+
+复杂规则校验。
+
+例如：
+
+```
+是否允许合并客户？
+
+是否允许升级会员？
+
+是否允许归档？
+
+是否允许恢复？
+
+是否允许修改身份？
+```
+
+统一：
+
+Validation Service。
+
+---
+
+# 十、AI Domain Service
+
+AI 也是 Domain Service。
+
+例如：
+
+```
+CustomerInsightService
+
+CustomerRecommendationService
+
+CustomerSegmentationService
+
+CustomerPredictionService
+
+CustomerRiskAnalysisService
+```
+
+AI 不属于 Infrastructure。
+
+属于：
+
+Domain Intelligence。
+
+---
+
+# 十一、Customer Domain Service Catalog
+
+建议建立统一服务目录。
+
+```text
+Customer Domain
+
+├── CustomerRegistrationService
+├── CustomerMergeService
+├── CustomerLifecycleService
+├── CustomerGrowthService
+├── CustomerValueService
+├── CustomerRelationshipService
+├── CustomerSegmentationService
+├── MembershipService
+├── CustomerBehaviorService
+├── CustomerTimelineService
+├── CustomerInsightService
+├── CustomerRecommendationService
+├── CustomerPredictionService
+└── CustomerValidationService
+```
+
+---
+
+# 十二、Domain Service 与 Aggregate 的关系
+
+```text
+                Customer Aggregate
+                        │
+                        │
+         ┌──────────────┼──────────────┐
+         │              │              │
+Membership Aggregate  Timeline Aggregate  Relationship Aggregate
+         │              │              │
+         └──────────────┼──────────────┘
+                        │
+                        ▼
+              CustomerMergeService
+```
+
+Domain Service：
+
+协调。
+
+Aggregate：
+
+执行业务一致性。
+
+---
+
+# 十三、Service 输入输出规范
+
+Domain Service：
+
+输入：
+
+```
+Command
+
+Context
+
+Repository
+
+Policy
+```
+
+输出：
+
+```
+Aggregate
+
+Domain Event
+
+Result
+```
+
+禁止：
+
+返回数据库对象。
+
+---
+
+# 十四、Service 与 Repository
+
+Domain Service。
+
+只能：
+
+```
+Repository.Load()
+
+Repository.Save()
+```
+
+禁止：
+
+```
+SQL
+
+Mapper
+
+DAO
+```
+
+Repository 是唯一持久化入口。
+
+---
+
+# 十五、Service 与 Domain Event
+
+Service 完成业务后。
+
+发布：
+
+```
+CustomerMerged
+
+CustomerCreated
+
+MembershipUpgraded
+
+CustomerValueChanged
+```
+
+Service 不负责：
+
+事件分发。
+
+由 Event Bus 完成。
+
+---
+
+# 十六、Service 与 Policy
+
+Service 不保存规则。
+
+规则来自：
+
+```
+Policy
+```
+
+例如：
+
+```
+MergePolicy
+
+MembershipPolicy
+
+GrowthPolicy
+```
+
+Service 调用：
+
+Policy。
+
+执行：
+
+Rule。
+
+---
+
+# 十七、API Mapping
+
+Application Service：
+
+```
+POST
+
+↓
+
+CustomerMergeApplicationService
+```
+
+调用：
+
+```
+CustomerMergeService
+```
+
+调用：
+
+```
+Customer Aggregate
+```
+
+形成：
+
+```text
+Controller
+
+↓
+
+Application Service
+
+↓
+
+Domain Service
+
+↓
+
+Aggregate
+
+↓
+
+Repository
+```
+
+职责清晰。
+
+---
+
+# 十八、AI Mapping
+
+AI Agent。
+
+统一调用：
+
+```
+CustomerRecommendationService
+
+CustomerInsightService
+
+CustomerPredictionService
+```
+
+而不是：
+
+Repository。
+
+AI 输出：
+
+Business Command。
+
+不是：
+
+SQL。
+
+---
+
+# 十九、Service 命名规范
+
+统一采用：
+
+```
+<Business><Capability>Service
+```
+
+例如：
+
+```
+CustomerMergeService
+
+CustomerGrowthService
+
+CustomerInsightService
+
+MembershipUpgradeService
+
+CustomerValidationService
+```
+
+禁止：
+
+```
+CustomerManager
+
+CustomerProcessor
+
+CustomerEngine
+
+CustomerHelper
+```
+
+---
+
+# 二十、未来演进
+
+Domain Service。
+
+未来演进：
+
+```text
+Domain Service
+
+↓
+
+Event Driven Service
+
+↓
+
+AI Native Service
+
+↓
+
+Autonomous Service
+
+↓
+
+Business Capability
+
+↓
+
+Business Agent
+
+↓
+
+Autonomous Operating Unit
+```
+
+未来：
+
+Service。
+
+将逐步演变为：
+
+AI Business Capability。
+
+---
+
+# 二十一、Service Registry
+
+JBOS 建议建立统一：
+
+```
+Domain Service Registry
+
+Customer
+
+Product
+
+Inventory
+
+Sales
+
+Marketing
+
+Finance
+
+Organization
+
+Workflow
+
+AI
+```
+
+每一个 Domain Service：
+
+统一登记。
+
+统一版本。
+
+统一生命周期。
+
+---
+
+# 二十二、本章总结
+
+Domain Service 是 JBOS Domain Layer 的核心组成部分。
+
+它负责封装无法归属于单一 Entity 或 Aggregate 的业务能力，协调多个业务对象完成复杂经营流程，并通过 Repository、Policy、Domain Event 等机制保证业务一致性。
+
+JBOS 将 Domain Service 定义为企业经营能力（Business Capability）的标准实现，而不仅仅是传统软件中的业务类。
+
+未来，Domain Service 将进一步演进为 AI Native Business Capability，为智能经营、自动化运营和 AI Agent 提供统一的业务能力接口。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain Service 设计规范 |

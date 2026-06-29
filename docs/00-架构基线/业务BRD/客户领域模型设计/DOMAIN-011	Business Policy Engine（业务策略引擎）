@@ -1,0 +1,856 @@
+# DOMAIN-011 Business Policy Engine（业务策略引擎）
+
+---
+
+**文档编号**：DOMAIN-011
+
+**文档名称**：Business Policy Engine
+
+**中文名称**：业务策略引擎规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Business Policy Engine（业务策略引擎）。
+
+Business Policy Engine 是整个 Business Operating System 的统一策略中心。
+
+负责：
+
+- 企业经营策略
+- 业务决策
+- 权限策略
+- AI策略
+- 风险控制
+- 自动审批
+- 生命周期控制
+- 合规策略
+
+JBOS 中：
+
+所有业务决策都必须经过 Policy。
+
+而不是写死在代码中。
+
+---
+
+# 二、为什么需要 Policy Engine
+
+传统系统：
+
+```
+if(level=="VIP")
+
+{
+
+discount=20%
+
+}
+```
+
+策略写死。
+
+修改一次：
+
+需要：
+
+开发
+
+↓
+
+测试
+
+↓
+
+发布
+
+↓
+
+上线
+
+↓
+
+停机
+
+企业无法快速经营。
+
+JBOS：
+
+```
+Policy
+
+↓
+
+Rule
+
+↓
+
+Decision
+
+↓
+
+Execution
+```
+
+业务：
+
+无需改代码。
+
+修改：
+
+Policy 即可。
+
+---
+
+# 三、Policy 在 JBOS 中的位置
+
+```
+Business Capability
+
+↓
+
+Business Policy
+
+↓
+
+Business Rule
+
+↓
+
+Decision
+
+↓
+
+Action
+```
+
+所有业务能力。
+
+最终都由：
+
+Policy 控制。
+
+---
+
+# 四、Policy Definition
+
+JBOS 定义：
+
+> Business Policy 是企业经营过程中，用于约束、指导、控制业务行为的统一决策规范。
+
+例如：
+
+```
+会员升级策略
+
+价格策略
+
+库存策略
+
+营销策略
+
+客户策略
+
+审批策略
+
+AI推荐策略
+
+风控策略
+```
+
+全部属于：
+
+Policy。
+
+---
+
+# 五、Business Policy Architecture
+
+```
+Business Policy Engine
+
+├── Customer Policy
+
+├── Product Policy
+
+├── Order Policy
+
+├── Pricing Policy
+
+├── Membership Policy
+
+├── Promotion Policy
+
+├── Inventory Policy
+
+├── Finance Policy
+
+├── Approval Policy
+
+├── Workflow Policy
+
+├── AI Policy
+
+└── Security Policy
+```
+
+所有 Domain：
+
+共享。
+
+---
+
+# 六、Policy Layer
+
+JBOS 建议建立统一 Policy Layer。
+
+```
+Presentation
+
+↓
+
+Application
+
+↓
+
+Domain
+
+↓
+
+Policy
+
+↓
+
+Rule Engine
+
+↓
+
+Infrastructure
+```
+
+Policy：
+
+独立于：
+
+Application。
+
+独立于：
+
+Domain Service。
+
+---
+
+# 七、Policy 生命周期
+
+```
+Draft
+
+↓
+
+Review
+
+↓
+
+Approved
+
+↓
+
+Published
+
+↓
+
+Effective
+
+↓
+
+Expired
+
+↓
+
+Archived
+```
+
+任何 Policy。
+
+都有生命周期。
+
+---
+
+# 八、Policy 分类
+
+JBOS 建议统一分为八类。
+
+```
+Business Policy
+
+├── Validation Policy
+├── Decision Policy
+├── Authorization Policy
+├── Pricing Policy
+├── Lifecycle Policy
+├── AI Policy
+├── Compliance Policy
+└── Risk Policy
+```
+
+---
+
+# 九、Customer Policy
+
+例如：
+
+```
+Customer Merge Policy
+
+Customer Archive Policy
+
+Customer Reactivate Policy
+
+Customer Value Policy
+
+Customer Growth Policy
+
+Customer Segmentation Policy
+```
+
+统一管理。
+
+---
+
+# 十、Membership Policy
+
+例如：
+
+```
+Membership Upgrade Policy
+
+Membership Downgrade Policy
+
+Membership Renewal Policy
+
+Membership Expiration Policy
+
+Membership Benefit Policy
+```
+
+统一策略。
+
+统一版本。
+
+---
+
+# 十一、Pricing Policy
+
+价格策略。
+
+例如：
+
+```
+VIP Discount
+
+Holiday Promotion
+
+Member Price
+
+Coupon Priority
+
+Regional Pricing
+
+Gold Pricing
+```
+
+未来：
+
+全部配置化。
+
+---
+
+# 十二、Inventory Policy
+
+库存策略。
+
+例如：
+
+```
+Reservation Policy
+
+Allocation Policy
+
+Transfer Policy
+
+Safety Stock Policy
+
+Replenishment Policy
+```
+
+支持：
+
+规则引擎。
+
+---
+
+# 十三、Approval Policy
+
+审批策略。
+
+例如：
+
+```
+Refund Approval
+
+Discount Approval
+
+Purchase Approval
+
+Transfer Approval
+
+Customer Merge Approval
+```
+
+Workflow：
+
+直接引用。
+
+---
+
+# 十四、AI Policy
+
+AI：
+
+必须遵循：
+
+Policy。
+
+例如：
+
+```
+Recommendation Policy
+
+Prediction Policy
+
+Segmentation Policy
+
+Conversation Policy
+
+Privacy Policy
+
+Risk Policy
+```
+
+AI：
+
+不能自由决定。
+
+Policy：
+
+最终控制。
+
+---
+
+# 十五、Policy Object
+
+所有 Policy。
+
+统一结构。
+
+```
+Policy
+
+├── PolicyID
+
+├── Name
+
+├── Domain
+
+├── Scope
+
+├── Version
+
+├── Status
+
+├── Owner
+
+├── Priority
+
+├── Effective Time
+
+├── Expiration Time
+
+├── Rule Set
+
+├── Decision Tree
+
+├── Metadata
+```
+
+统一对象。
+
+---
+
+# 十六、Policy Decision Flow
+
+```
+Business Request
+
+↓
+
+Policy Engine
+
+↓
+
+Rule Engine
+
+↓
+
+Decision
+
+↓
+
+Action
+
+↓
+
+Domain Event
+```
+
+所有业务。
+
+统一流程。
+
+---
+
+# 十七、Policy 与 Rule
+
+二者职责不同。
+
+```
+Policy
+
+↓
+
+定义经营原则
+
+↓
+
+Rule
+
+↓
+
+执行具体条件
+
+↓
+
+Decision
+
+↓
+
+输出结果
+```
+
+例如：
+
+```
+Policy
+
+VIP折扣
+
+↓
+
+Rule
+
+消费>10000
+
+↓
+
+Decision
+
+九折
+
+↓
+
+Action
+
+生成订单
+```
+
+---
+
+# 十八、Policy Registry
+
+JBOS 建议建立：
+
+```
+Policy Registry
+
+Customer
+
+Membership
+
+Pricing
+
+Promotion
+
+Workflow
+
+Finance
+
+Inventory
+
+Marketing
+
+AI
+
+Common
+```
+
+所有 Policy。
+
+统一登记。
+
+---
+
+# 十九、Policy Version
+
+所有策略：
+
+必须支持：
+
+Version。
+
+例如：
+
+```
+Membership Upgrade Policy
+
+V1
+
+↓
+
+V2
+
+↓
+
+V3
+```
+
+支持：
+
+灰度。
+
+回滚。
+
+审计。
+
+---
+
+# 二十、Policy Event
+
+Policy 变化。
+
+产生：
+
+```
+PolicyCreated
+
+PolicyUpdated
+
+PolicyPublished
+
+PolicyExpired
+
+PolicyArchived
+```
+
+Workflow。
+
+AI。
+
+统一监听。
+
+---
+
+# 二十一、Policy 与 AI Agent
+
+未来：
+
+AI Agent。
+
+不直接执行业务。
+
+而是：
+
+```
+AI Agent
+
+↓
+
+Policy Engine
+
+↓
+
+Decision
+
+↓
+
+Business Capability
+
+↓
+
+Domain Service
+```
+
+Policy：
+
+永远拥有最终决策权。
+
+---
+
+# 二十二、Policy Governance
+
+JBOS 建议建立统一治理体系。
+
+包括：
+
+- Policy Registry
+- Policy Owner
+- Policy Reviewer
+- Policy Approval
+- Policy Version
+- Policy Rollback
+- Policy Audit
+- Policy Traceability
+- Policy Dependency
+
+确保：
+
+企业所有经营策略：
+
+可追踪。
+
+可审计。
+
+可恢复。
+
+---
+
+# 二十三、Business Capability 与 Policy 的关系
+
+```
+Customer Capability
+
+↓
+
+Customer Policy
+
+↓
+
+Customer Rules
+
+↓
+
+Decision
+
+↓
+
+Customer Service
+
+↓
+
+Repository
+
+↓
+
+Event
+```
+
+Policy：
+
+成为：
+
+Business Capability 的决策中心。
+
+---
+
+# 二十四、未来演进
+
+Business Policy。
+
+未来：
+
+```
+Static Policy
+
+↓
+
+Configurable Policy
+
+↓
+
+Rule Engine
+
+↓
+
+Decision Engine
+
+↓
+
+AI Assisted Policy
+
+↓
+
+Autonomous Policy
+
+↓
+
+Business Brain
+```
+
+最终：
+
+JBOS：
+
+所有经营决策。
+
+由：
+
+Business Brain。
+
+统一控制。
+
+---
+
+# 二十五、本章总结
+
+Business Policy Engine 是 JBOS Governance Framework 的核心能力。
+
+它将企业经营策略从代码中解耦，形成统一的策略中心，使所有业务能力、AI Agent、Workflow、规则引擎和审批流程共享同一套经营决策体系。
+
+通过 Business Policy Engine，JBOS 将实现：
+
+- One Enterprise Policy Center（统一企业策略中心）
+- One Decision Engine（统一决策引擎）
+- One Governance Framework（统一治理框架）
+- One AI Decision Layer（统一 AI 决策层）
+
+未来，Business Policy Engine 将进一步演进为 JBOS 的 Business Brain，为 AI Native Business Operating System 提供统一的经营决策能力。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Business Policy Engine 规范 |

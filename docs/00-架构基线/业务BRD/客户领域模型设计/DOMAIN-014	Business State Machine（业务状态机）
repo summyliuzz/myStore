@@ -1,0 +1,837 @@
+# DOMAIN-014 Business State Machine（业务状态机）
+
+---
+
+**文档编号**：DOMAIN-014
+
+**文档名称**：Business State Machine
+
+**中文名称**：业务状态机规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Business State Machine（业务状态机）。
+
+Business State Machine 是 Business Operating System 的运行时治理核心。
+
+所有业务对象必须拥有统一状态模型。
+
+包括：
+
+- Customer
+- Product
+- Membership
+- Order
+- Inventory
+- Campaign
+- Workflow
+- Policy
+- Rule
+- AI Agent
+- Capability
+
+所有状态变化必须由 State Machine 控制。
+
+---
+
+# 二、为什么需要 State Machine
+
+传统系统：
+
+```
+status = 3
+```
+
+或者：
+
+```
+status = ACTIVE
+```
+
+系统不知道：
+
+为什么能修改？
+
+谁允许修改？
+
+是否允许跳过状态？
+
+是否允许回退？
+
+JBOS：
+
+所有状态变化：
+
+必须经过：
+
+State Machine。
+
+---
+
+# 三、Business State 定义
+
+JBOS 定义：
+
+> Business State 是业务对象在某一生命周期阶段下所处的唯一运行状态。
+
+State：
+
+表示：
+
+当前。
+
+不是：
+
+整个生命周期。
+
+---
+
+# 四、Lifecycle 与 State
+
+二者关系：
+
+```text
+Lifecycle
+
+↓
+
+Phase
+
+↓
+
+State Machine
+
+↓
+
+Current State
+
+↓
+
+Transition
+
+↓
+
+Business Action
+```
+
+Lifecycle：
+
+决定：
+
+阶段。
+
+State：
+
+决定：
+
+运行状态。
+
+---
+
+# 五、State Machine 组成
+
+统一模型。
+
+```text
+State Machine
+
+├── State
+├── Transition
+├── Trigger
+├── Condition
+├── Guard
+├── Action
+├── Event
+└── History
+```
+
+---
+
+# 六、统一状态模型
+
+JBOS 建议所有对象支持统一状态。
+
+```text
+Created
+
+↓
+
+Pending
+
+↓
+
+Approved
+
+↓
+
+Active
+
+↓
+
+Suspended
+
+↓
+
+Rejected
+
+↓
+
+Expired
+
+↓
+
+Archived
+```
+
+允许扩展。
+
+禁止：
+
+任意新增状态。
+
+---
+
+# 七、State Object
+
+统一状态对象。
+
+```text
+BusinessState
+
+├── StateID
+├── StateCode
+├── Name
+├── Description
+├── Category
+├── Lifecycle
+├── Version
+├── Metadata
+```
+
+所有对象：
+
+共享。
+
+---
+
+# 八、Transition（状态迁移）
+
+状态不能直接修改。
+
+必须：
+
+Transition。
+
+例如：
+
+```text
+Pending
+
+↓
+
+Approve
+
+↓
+
+Approved
+```
+
+禁止：
+
+```
+Pending
+
+↓
+
+Archived
+```
+
+除非：
+
+Policy。
+
+允许。
+
+---
+
+# 九、Trigger（触发器）
+
+状态变化。
+
+必须：
+
+Trigger。
+
+例如：
+
+```
+Customer Purchase
+
+↓
+
+Membership Upgrade
+```
+
+或者：
+
+```
+Payment Success
+
+↓
+
+Order Paid
+```
+
+Trigger：
+
+驱动：
+
+Transition。
+
+---
+
+# 十、Guard（守卫条件）
+
+Transition：
+
+必须经过 Guard。
+
+例如：
+
+```
+Order Total >0
+
+AND
+
+Inventory Available
+
+AND
+
+Payment Success
+```
+
+全部成立。
+
+才允许：
+
+Transition。
+
+---
+
+# 十一、Action（动作）
+
+状态迁移。
+
+自动执行：
+
+Action。
+
+例如：
+
+```
+Order Paid
+
+↓
+
+Generate Invoice
+
+↓
+
+Notify Warehouse
+
+↓
+
+Publish Event
+```
+
+Action：
+
+属于：
+
+State Machine。
+
+---
+
+# 十二、Customer State Machine
+
+示例：
+
+```text
+Prospect
+
+↓
+
+Registered
+
+↓
+
+Activated
+
+↓
+
+Member
+
+↓
+
+VIP
+
+↓
+
+Dormant
+
+↓
+
+Lost
+
+↓
+
+Archived
+```
+
+AI。
+
+Workflow。
+
+统一监听。
+
+---
+
+# 十三、Order State Machine
+
+统一模型。
+
+```text
+Created
+
+↓
+
+Pending Payment
+
+↓
+
+Paid
+
+↓
+
+Picking
+
+↓
+
+Shipped
+
+↓
+
+Delivered
+
+↓
+
+Completed
+
+↓
+
+Closed
+```
+
+禁止：
+
+```
+Created
+
+↓
+
+Delivered
+```
+
+---
+
+# 十四、Workflow State Machine
+
+Workflow。
+
+统一状态。
+
+```text
+Draft
+
+↓
+
+Published
+
+↓
+
+Running
+
+↓
+
+Paused
+
+↓
+
+Completed
+
+↓
+
+Archived
+```
+
+---
+
+# 十五、AI Agent State Machine
+
+AI Agent。
+
+生命周期中的状态。
+
+```text
+Created
+
+↓
+
+Training
+
+↓
+
+Ready
+
+↓
+
+Serving
+
+↓
+
+Optimizing
+
+↓
+
+Suspended
+
+↓
+
+Retired
+```
+
+---
+
+# 十六、State Transition Rule
+
+统一模型。
+
+```text
+Current State
+
+↓
+
+Transition
+
+↓
+
+Guard
+
+↓
+
+Action
+
+↓
+
+Event
+
+↓
+
+Next State
+```
+
+任何状态变化。
+
+必须遵循。
+
+---
+
+# 十七、State Registry
+
+JBOS 建议建立统一 State Registry。
+
+```text
+State Registry
+
+Customer
+
+Product
+
+Order
+
+Inventory
+
+Workflow
+
+Policy
+
+Rule
+
+Capability
+
+AI
+```
+
+统一维护：
+
+- State Code
+- State Name
+- Owner
+- Version
+- Transition
+
+---
+
+# 十八、State Event
+
+状态变化。
+
+发布：
+
+```
+StateChanged
+
+StateActivated
+
+StateSuspended
+
+StateExpired
+
+StateArchived
+```
+
+形成：
+
+Timeline。
+
+---
+
+# 十九、State Governance
+
+所有状态：
+
+必须：
+
+- 可追踪
+- 可回放
+- 可恢复
+- 可审计
+- 可版本
+- 可配置
+
+禁止：
+
+直接更新状态字段。
+
+---
+
+# 二十、State 与 Policy
+
+状态迁移：
+
+必须经过：
+
+```
+Policy
+
+↓
+
+Rule
+
+↓
+
+Decision
+
+↓
+
+Transition
+```
+
+Policy：
+
+拥有最终控制权。
+
+---
+
+# 二十一、State 与 Workflow
+
+Workflow：
+
+监听：
+
+State。
+
+例如：
+
+```
+Order
+
+↓
+
+Paid
+
+↓
+
+Warehouse Workflow
+
+↓
+
+Picking
+```
+
+Workflow：
+
+不是修改状态。
+
+而是：
+
+响应状态。
+
+---
+
+# 二十二、State 与 AI
+
+AI：
+
+识别：
+
+State。
+
+例如：
+
+```
+Customer
+
+Dormant
+
+↓
+
+AI
+
+↓
+
+Win-back Campaign
+```
+
+AI。
+
+不修改状态。
+
+只建议：
+
+Decision。
+
+---
+
+# 二十三、State History
+
+每次迁移。
+
+必须记录：
+
+```text
+State History
+
+State
+
+↓
+
+Transition
+
+↓
+
+Operator
+
+↓
+
+Time
+
+↓
+
+Reason
+
+↓
+
+Event
+```
+
+形成：
+
+Business Timeline。
+
+---
+
+# 二十四、未来演进
+
+Business State Machine。
+
+未来：
+
+```text
+Static State
+
+↓
+
+Configurable State
+
+↓
+
+Visual State Machine
+
+↓
+
+Distributed State Machine
+
+↓
+
+AI Adaptive State Machine
+
+↓
+
+Autonomous State Machine
+```
+
+最终：
+
+形成：
+
+Business Runtime Engine。
+
+---
+
+# 二十五、本章总结
+
+Business State Machine 是 JBOS Governance Framework 的运行时核心。
+
+它统一定义企业所有业务对象的状态、状态迁移、触发器、守卫条件、动作及事件机制，使所有业务运行都遵循统一的状态治理模型。
+
+通过 Business State Machine，JBOS 将实现：
+
+- One Enterprise State Machine（统一企业状态机）
+- One Runtime Governance（统一运行治理）
+- One Transition Engine（统一状态迁移引擎）
+- One Business Runtime（统一业务运行时）
+
+未来，Business State Machine 将与 Lifecycle、Policy、Rule、Workflow、Event、AI Agent 深度融合，共同构成 JBOS 的 Business Runtime Engine。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Business State Machine 规范 |

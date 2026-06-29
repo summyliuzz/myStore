@@ -1,0 +1,883 @@
+# DOMAIN-016 Business Permission Model（业务权限模型）
+
+---
+
+**文档编号**：DOMAIN-016
+
+**文档名称**：Business Permission Model
+
+**中文名称**：业务权限模型规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Business Permission Model（业务权限模型）。
+
+Business Permission 是企业经营系统中最核心的治理能力之一。
+
+它负责回答：
+
+- 谁可以访问业务对象？
+- 谁可以执行业务能力？
+- 谁可以审批业务流程？
+- 谁可以查看经营数据？
+- AI Agent 是否拥有权限？
+- 多组织、多品牌、多门店如何统一授权？
+
+Business Permission 是 Business Ownership、Business Policy、Business Rule、Business Audit 的重要组成部分。
+
+所有业务能力均必须经过统一权限控制。
+
+---
+
+# 二、为什么需要 Permission
+
+传统系统通常只有：
+
+```
+Role
+
+↓
+
+Menu
+
+↓
+
+Button
+```
+
+这种模型只能解决：
+
+页面权限。
+
+无法解决：
+
+- 数据权限
+- 能力权限
+- API 权限
+- Workflow 权限
+- AI 权限
+- 多组织权限
+- 多租户权限
+
+JBOS 将权限提升为企业经营治理能力。
+
+---
+
+# 三、Business Permission 定义
+
+JBOS 定义：
+
+> Business Permission 是企业主体在特定业务上下文中，对业务对象、业务能力、业务数据和业务流程执行操作的授权关系。
+
+Permission 决定：
+
+**允许做什么。**
+
+Ownership 决定：
+
+**对象属于谁。**
+
+二者职责不同。
+
+---
+
+# 四、Permission Design Principles
+
+所有 Permission 必须遵循：
+
+## Principle-001
+
+Least Privilege
+
+默认最小权限。
+
+任何主体：
+
+默认无权限。
+
+必须经过授权。
+
+---
+
+## Principle-002
+
+Business Driven
+
+权限来源于：
+
+业务职责。
+
+不是：
+
+技术角色。
+
+---
+
+## Principle-003
+
+Policy Controlled
+
+所有权限。
+
+必须受到：
+
+Business Policy。
+
+控制。
+
+---
+
+## Principle-004
+
+Context Aware
+
+权限必须结合：
+
+- 租户
+- 组织
+- 门店
+- 时间
+- 生命周期
+- 当前业务上下文
+
+动态判断。
+
+---
+
+## Principle-005
+
+Auditable
+
+所有授权。
+
+所有权限变化。
+
+所有权限使用。
+
+必须：
+
+可追踪。
+
+可审计。
+
+---
+
+# 五、Permission Architecture
+
+统一架构：
+
+```text
+Identity
+
+↓
+
+Role
+
+↓
+
+Permission
+
+↓
+
+Business Capability
+
+↓
+
+Business Object
+
+↓
+
+Audit
+```
+
+Permission：
+
+连接：
+
+身份。
+
+能力。
+
+对象。
+
+---
+
+# 六、Permission Object
+
+统一对象：
+
+```text
+BusinessPermission
+
+├── PermissionID
+├── PermissionCode
+├── Name
+├── Category
+├── Resource
+├── Action
+├── Scope
+├── Policy
+├── Status
+├── Version
+└── Metadata
+```
+
+所有权限共享。
+
+---
+
+# 七、Permission Subject
+
+权限主体：
+
+包括：
+
+```text
+Employee
+
+Role
+
+Department
+
+Organization
+
+Store
+
+Application
+
+Workflow
+
+AI Agent
+```
+
+未来支持：
+
+任何 Identity。
+
+---
+
+# 八、Permission Resource
+
+权限资源：
+
+包括：
+
+```text
+Customer
+
+Order
+
+Inventory
+
+Campaign
+
+Membership
+
+Store
+
+Workflow
+
+Report
+
+Dashboard
+
+API
+```
+
+统一资源模型。
+
+---
+
+# 九、Permission Action
+
+统一动作：
+
+```text
+Create
+
+Read
+
+Update
+
+Delete
+
+Approve
+
+Reject
+
+Assign
+
+Transfer
+
+Export
+
+Import
+
+Execute
+
+Manage
+```
+
+所有 Capability：
+
+统一动作。
+
+---
+
+# 十、Permission Scope
+
+权限范围：
+
+```text
+Tenant
+
+↓
+
+Organization
+
+↓
+
+Region
+
+↓
+
+Store
+
+↓
+
+Department
+
+↓
+
+Employee
+
+↓
+
+Customer
+```
+
+支持：
+
+逐级继承。
+
+---
+
+# 十一、Role Permission
+
+Role：
+
+负责聚合权限。
+
+例如：
+
+```text
+Store Manager
+
+↓
+
+Customer Management
+
+Inventory Management
+
+Sales Report
+
+Campaign Approval
+```
+
+Role：
+
+不是权限。
+
+Role：
+
+拥有权限。
+
+---
+
+# 十二、Capability Permission
+
+JBOS 权限控制：
+
+能力。
+
+例如：
+
+```text
+CustomerGrowthCapability
+
+↓
+
+Execute
+```
+
+而不是：
+
+页面按钮。
+
+---
+
+# 十三、Data Permission
+
+数据权限：
+
+统一管理。
+
+例如：
+
+```
+Store A
+
+只能查看：
+
+Store A Customer
+```
+
+支持：
+
+数据隔离。
+
+---
+
+# 十四、API Permission
+
+所有 API：
+
+必须：
+
+权限验证。
+
+例如：
+
+```text
+GET /customers
+
+↓
+
+Customer.Read
+```
+
+统一：
+
+Gateway。
+
+验证。
+
+---
+
+# 十五、Workflow Permission
+
+Workflow：
+
+节点权限。
+
+例如：
+
+```text
+Discount Approval
+
+↓
+
+Store Manager
+
+↓
+
+Regional Manager
+```
+
+流程驱动。
+
+权限。
+
+---
+
+# 十六、AI Permission
+
+AI Agent：
+
+必须拥有权限。
+
+例如：
+
+```text
+Customer Advisor Agent
+
+↓
+
+Customer.Read
+
+↓
+
+Customer.Analysis
+
+↓
+
+Recommendation.Generate
+```
+
+AI：
+
+不能绕过权限体系。
+
+---
+
+# 十七、Permission Repository
+
+统一 Repository：
+
+```text
+PermissionRepository
+
+├── Grant
+├── Revoke
+├── Query
+├── Validate
+├── Refresh
+```
+
+统一访问。
+
+---
+
+# 十八、Permission Event
+
+权限变化：
+
+发布事件：
+
+```
+PermissionGranted
+
+PermissionRevoked
+
+PermissionUpdated
+
+PermissionExpired
+```
+
+所有事件。
+
+进入 Audit。
+
+---
+
+# 十九、Permission Lifecycle
+
+生命周期：
+
+```text
+Requested
+
+↓
+
+Approved
+
+↓
+
+Granted
+
+↓
+
+Active
+
+↓
+
+Suspended
+
+↓
+
+Revoked
+
+↓
+
+Archived
+```
+
+支持：
+
+动态授权。
+
+---
+
+# 二十、Permission Policy
+
+权限：
+
+必须遵循：
+
+Business Policy。
+
+例如：
+
+```
+总部
+
+允许：
+
+查看所有门店
+
+门店
+
+仅允许：
+
+查看本店数据
+```
+
+Policy：
+
+控制权限边界。
+
+---
+
+# 二十一、Permission Rule
+
+Rule：
+
+决定：
+
+是否允许授权。
+
+例如：
+
+```
+Role == StoreManager
+
+AND
+
+Organization == Same
+
+↓
+
+Grant
+```
+
+Rule：
+
+负责判断。
+
+---
+
+# 二十二、Permission Audit
+
+所有权限：
+
+必须记录：
+
+```text
+Permission
+
+↓
+
+Subject
+
+↓
+
+Operator
+
+↓
+
+Time
+
+↓
+
+Reason
+
+↓
+
+Approval
+```
+
+支持：
+
+完整审计。
+
+---
+
+# 二十三、Permission Registry
+
+统一 Registry：
+
+```text
+Customer
+
+Membership
+
+Order
+
+Inventory
+
+Workflow
+
+Marketing
+
+Finance
+
+AI
+```
+
+统一维护：
+
+Permission Code。
+
+Permission Name。
+
+Permission Version。
+
+---
+
+# 二十四、Permission Governance
+
+所有权限：
+
+必须：
+
+- 可配置
+- 可继承
+- 可审批
+- 可追踪
+- 可审计
+- 可版本化
+
+统一治理。
+
+---
+
+# 二十五、Permission 与 Ownership
+
+Ownership：
+
+决定：
+
+业务归属。
+
+Permission：
+
+决定：
+
+是否允许操作。
+
+例如：
+
+```
+Customer
+
+Owner：
+
+Store A
+
+Permission：
+
+Regional Manager
+```
+
+拥有权限。
+
+不代表拥有对象。
+
+---
+
+# 二十六、Permission 与 AI Governance
+
+AI：
+
+所有行为：
+
+必须：
+
+```text
+Permission
+
+↓
+
+Policy
+
+↓
+
+Rule
+
+↓
+
+Audit
+
+↓
+
+Execution
+```
+
+AI：
+
+永远不能直接执行未经授权的业务。
+
+---
+
+# 二十七、未来演进
+
+Business Permission：
+
+未来：
+
+```text
+Static Permission
+
+↓
+
+Role Permission
+
+↓
+
+Policy Permission
+
+↓
+
+Context Permission
+
+↓
+
+AI Adaptive Permission
+
+↓
+
+Autonomous Permission
+```
+
+形成：
+
+动态权限网络。
+
+---
+
+# 二十八、本章总结
+
+Business Permission Model 是 JBOS Governance Framework 的访问控制核心。
+
+它统一定义企业所有业务对象、业务能力、数据资源、API、Workflow 与 AI Agent 的授权模型，实现统一的身份认证、权限控制、上下文判断与审计治理。
+
+通过 Business Permission Model，JBOS 将实现：
+
+- One Permission Registry（统一权限中心）
+- One Authorization Model（统一授权模型）
+- One Capability Permission（统一能力权限）
+- One Governance Access Control（统一治理访问控制）
+
+未来，Business Permission 将进一步与 Ownership、Policy、Rule、Workflow、Audit、AI Governance 深度融合，形成企业级 Zero Trust Business Security（零信任业务安全体系）。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Business Permission Model 规范 |

@@ -1,0 +1,956 @@
+# DOMAIN-020 AI Native Extension Framework（AI 原生扩展框架）
+
+---
+
+**文档编号**：DOMAIN-020
+
+**文档名称**：AI Native Extension Framework
+
+**中文名称**：AI 原生扩展框架规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的 AI Native Extension Framework。
+
+本框架不是为系统增加 AI 功能。
+
+而是定义：
+
+> **如何让整个 Business Operating System 从第一天开始就是 AI Native。**
+
+AI 不属于某个模块。
+
+AI 是整个 Business Operating System 的基础能力。
+
+未来：
+
+Customer
+
+↓
+
+Product
+
+↓
+
+Marketing
+
+↓
+
+Sales
+
+↓
+
+Store
+
+↓
+
+Organization
+
+↓
+
+Workflow
+
+↓
+
+Knowledge
+
+↓
+
+Business Brain
+
+全部运行于 AI Native Framework。
+
+---
+
+# 二、什么是 AI Native Business Operating System
+
+JBOS 定义：
+
+> AI Native Business Operating System 是以业务能力（Business Capability）为核心，以企业知识（Enterprise Knowledge）为基础，以 AI Agent 为执行单元，以 Business Brain 为决策中心的新一代企业经营操作系统。
+
+其核心不是 Chat。
+
+而是：
+
+企业经营。
+
+---
+
+# 三、AI Native Architecture
+
+统一架构：
+
+```text
+Presentation Layer
+        │
+Business Capability Layer
+        │
+Business Governance Layer
+        │
+AI Native Layer
+        │
+Enterprise Knowledge Layer
+        │
+Enterprise Data Layer
+        │
+Infrastructure Layer
+```
+
+AI Native Layer。
+
+贯穿整个系统。
+
+---
+
+# 四、AI Native Design Principles
+
+所有 AI 能力必须遵循：
+
+## Principle-001
+
+Business First
+
+AI 服务业务。
+
+不是业务服务 AI。
+
+---
+
+## Principle-002
+
+Knowledge Driven
+
+AI 必须基于企业知识。
+
+禁止：
+
+脱离企业上下文回答。
+
+---
+
+## Principle-003
+
+Policy Governed
+
+AI 所有行为。
+
+必须经过：
+
+Business Policy。
+
+Business Rule。
+
+Permission。
+
+Audit。
+
+---
+
+## Principle-004
+
+Explainable
+
+所有 AI 决策。
+
+必须：
+
+可解释。
+
+可追踪。
+
+可审计。
+
+---
+
+## Principle-005
+
+Human in the Loop
+
+高风险经营决策。
+
+必须支持：
+
+人工确认。
+
+---
+
+# 五、AI Native Capability
+
+AI 成为企业能力。
+
+例如：
+
+```text
+Customer Insight
+
+Sales Recommendation
+
+Inventory Forecast
+
+Marketing Planning
+
+Business Diagnosis
+
+Operation Assistant
+
+Decision Assistant
+
+Knowledge Assistant
+```
+
+每一个都是：
+
+Business Capability。
+
+---
+
+# 六、AI Agent Framework
+
+统一 Agent 模型。
+
+```text
+AI Agent
+
+├── Identity
+├── Role
+├── Capability
+├── Goal
+├── Tool
+├── Memory
+├── Knowledge
+├── Context
+├── Policy
+├── Workflow
+└── Audit
+```
+
+AI Agent：
+
+也是：
+
+Business Object。
+
+---
+
+# 七、Agent 分类
+
+JBOS 建议建立 Agent Catalog。
+
+例如：
+
+```text
+Customer Advisor Agent
+
+Sales Consultant Agent
+
+Marketing Planner Agent
+
+Inventory Planner Agent
+
+Store Manager Agent
+
+Finance Assistant Agent
+
+Operation Assistant Agent
+
+Business Analyst Agent
+
+CEO Assistant Agent
+```
+
+未来：
+
+允许：
+
+Agent Marketplace。
+
+---
+
+# 八、Multi-Agent Collaboration
+
+多个 Agent。
+
+共同完成业务。
+
+例如：
+
+```text
+Customer Agent
+
+↓
+
+Marketing Agent
+
+↓
+
+Promotion Agent
+
+↓
+
+Sales Agent
+
+↓
+
+Finance Agent
+```
+
+形成：
+
+Business Agent Network。
+
+---
+
+# 九、Business Brain
+
+Business Brain 是 JBOS 的最高决策层。
+
+职责：
+
+- 综合分析
+- 经营预测
+- 风险识别
+- 能力推荐
+- 策略建议
+- AI 协调
+- Business KPI 优化
+
+Business Brain：
+
+不直接执行。
+
+只输出：
+
+Decision。
+
+---
+
+# 十、Enterprise Knowledge
+
+AI 的知识来源。
+
+包括：
+
+```text
+Business Knowledge
+
+Customer Knowledge
+
+Product Knowledge
+
+Operation Knowledge
+
+Workflow Knowledge
+
+Policy Knowledge
+
+Rule Knowledge
+
+Document Knowledge
+```
+
+统一：
+
+Knowledge Hub。
+
+---
+
+# 十一、Knowledge Graph
+
+建立企业知识图谱。
+
+核心节点：
+
+```text
+Customer
+
+Product
+
+Order
+
+Membership
+
+Store
+
+Employee
+
+Supplier
+
+Campaign
+
+Capability
+
+Policy
+
+Rule
+
+Workflow
+
+Agent
+```
+
+关系：
+
+统一建模。
+
+支持：
+
+推理。
+
+检索。
+
+推荐。
+
+---
+
+# 十二、Enterprise Memory
+
+AI Memory 分层：
+
+```text
+Conversation Memory
+
+↓
+
+Task Memory
+
+↓
+
+Business Memory
+
+↓
+
+Enterprise Memory
+
+↓
+
+Long-term Memory
+```
+
+Business Memory：
+
+属于：
+
+企业资产。
+
+不是：
+
+模型资产。
+
+---
+
+# 十三、RAG Framework
+
+统一采用：
+
+Retrieval-Augmented Generation。
+
+知识来源：
+
+```text
+Document
+
+Wiki
+
+Policy
+
+Rule
+
+Workflow
+
+Knowledge Graph
+
+Business Data
+```
+
+禁止：
+
+模型凭空回答。
+
+---
+
+# 十四、MCP Framework
+
+JBOS 全面兼容 MCP（Model Context Protocol）。
+
+统一模型：
+
+```text
+AI Agent
+
+↓
+
+MCP Client
+
+↓
+
+MCP Server
+
+↓
+
+Business Capability
+
+↓
+
+Repository
+
+↓
+
+Domain
+```
+
+所有业务能力都可以通过 MCP 暴露。
+
+---
+
+# 十五、Tool Calling Framework
+
+AI 不直接调用数据库。
+
+统一：
+
+```text
+Agent
+
+↓
+
+Tool
+
+↓
+
+Application Service
+
+↓
+
+Domain Service
+
+↓
+
+Repository
+```
+
+所有 Tool 必须：
+
+注册。
+
+授权。
+
+审计。
+
+版本化。
+
+---
+
+# 十六、Context Framework
+
+统一 Context。
+
+包括：
+
+```text
+Tenant Context
+
+Organization Context
+
+Store Context
+
+Customer Context
+
+Business Context
+
+Workflow Context
+
+Security Context
+
+Conversation Context
+```
+
+AI 回答必须绑定 Context。
+
+---
+
+# 十七、Prompt Framework
+
+统一 Prompt 管理。
+
+Prompt：
+
+也是：
+
+Business Asset。
+
+统一对象：
+
+```text
+Prompt
+
+Version
+
+Owner
+
+Policy
+
+Capability
+
+Language
+
+Scenario
+```
+
+支持：
+
+版本。
+
+审批。
+
+灰度。
+
+---
+
+# 十八、Business Copilot
+
+JBOS 内置企业经营 Copilot。
+
+例如：
+
+```text
+门店经营 Copilot
+
+导购 Copilot
+
+老板 Copilot
+
+总部 Copilot
+
+财务 Copilot
+
+运营 Copilot
+```
+
+Copilot。
+
+不是聊天机器人。
+
+而是：
+
+经营助手。
+
+---
+
+# 十九、Enterprise Context Protocol（ECP）
+
+在 MCP 之上，JBOS 定义 Enterprise Context Protocol（ECP）。
+
+作用：
+
+统一传递企业经营上下文。
+
+包括：
+
+```text
+Tenant
+
+Organization
+
+Store
+
+Role
+
+Permission
+
+Capability
+
+Policy
+
+Workflow
+
+Knowledge
+
+Language
+```
+
+AI 始终运行在企业上下文内。
+
+---
+
+# 二十、AI Governance
+
+所有 AI 必须经过：
+
+```text
+Identity
+
+↓
+
+Permission
+
+↓
+
+Policy
+
+↓
+
+Rule
+
+↓
+
+Audit
+
+↓
+
+Version
+
+↓
+
+Evaluation
+```
+
+任何 AI 输出。
+
+都必须可治理。
+
+---
+
+# 二十一、AI Evaluation
+
+统一建立 AI Evaluation Center。
+
+评估：
+
+- 正确率
+- 幻觉率
+- 命中率
+- 业务准确率
+- 推荐效果
+- 用户满意度
+- Token 成本
+- ROI
+
+持续优化。
+
+---
+
+# 二十二、AI Security
+
+统一安全框架：
+
+- Prompt Injection 防护
+- 数据脱敏
+- 权限隔离
+- 多租户隔离
+- AI 操作审计
+- 输出过滤
+- 敏感数据控制
+- 模型切换管理
+
+符合企业级安全要求。
+
+---
+
+# 二十三、AI Native Runtime
+
+未来运行架构：
+
+```text
+Business Capability
+
+↓
+
+Business Governance
+
+↓
+
+AI Agent Runtime
+
+↓
+
+Knowledge Runtime
+
+↓
+
+Workflow Runtime
+
+↓
+
+Event Runtime
+
+↓
+
+Infrastructure Runtime
+```
+
+所有 Runtime 协同运行。
+
+---
+
+# 二十四、Digital Twin Enterprise
+
+未来 JBOS 支持：
+
+Enterprise Digital Twin。
+
+包括：
+
+```text
+Organization Twin
+
+Customer Twin
+
+Store Twin
+
+Inventory Twin
+
+Marketing Twin
+
+Financial Twin
+
+Capability Twin
+```
+
+AI 基于数字孪生进行模拟和预测。
+
+---
+
+# 二十五、Business Brain Evolution
+
+Business Brain 演进路线：
+
+```text
+Business Dashboard
+
+↓
+
+Business Analytics
+
+↓
+
+Business Intelligence
+
+↓
+
+Business Recommendation
+
+↓
+
+Business Decision
+
+↓
+
+Business Brain
+
+↓
+
+Autonomous Business
+```
+
+最终实现：
+
+自治经营。
+
+---
+
+# 二十六、AI Native Roadmap
+
+JBOS AI 演进：
+
+```text
+AI Assistant
+
+↓
+
+Business Copilot
+
+↓
+
+Single Agent
+
+↓
+
+Multi-Agent
+
+↓
+
+Business Brain
+
+↓
+
+Enterprise Digital Twin
+
+↓
+
+Autonomous Business Operating System
+```
+
+---
+
+# 二十七、与 JBOS Governance Framework 的关系
+
+AI Native Framework 建立在前置治理能力之上：
+
+```text
+Business Ownership
+        │
+Business Permission
+        │
+Business Audit
+        │
+Business Versioning
+        │
+Canonical Naming
+        │
+AI Native Extension Framework
+```
+
+AI 不绕过治理，而是依赖治理。
+
+---
+
+# 二十八、本章总结
+
+AI Native Extension Framework 是 JBOS Governance Framework 的最终组成部分，也是整个 Architecture Baseline 的收官文档。
+
+它定义了企业级 AI 的统一架构，包括：
+
+- AI Agent Framework
+- Multi-Agent Collaboration
+- Business Brain
+- Enterprise Knowledge
+- Knowledge Graph
+- Enterprise Memory
+- RAG Framework
+- MCP Framework
+- Tool Calling Framework
+- Enterprise Context Protocol（ECP）
+- AI Governance
+- Digital Twin Enterprise
+
+通过 AI Native Extension Framework，JBOS 将实现：
+
+- One Enterprise AI Platform（统一企业 AI 平台）
+- One Business Brain（统一企业经营大脑）
+- One Knowledge Hub（统一知识中心）
+- One Agent Network（统一智能体网络）
+- One AI Native Business Operating System（统一 AI 原生经营操作系统）
+
+未来，JBOS 将从传统 SaaS 平台演进为真正具备**自主分析、辅助决策、协同执行、持续学习**能力的企业经营基础设施。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，完成 AI Native Extension Framework，Governance Framework 全部收官 |

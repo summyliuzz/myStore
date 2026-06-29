@@ -1,0 +1,755 @@
+# DOMAIN-012 Business Rule Framework（业务规则框架）
+
+---
+
+**文档编号**：DOMAIN-012
+
+**文档名称**：Business Rule Framework
+
+**中文名称**：业务规则框架规范
+
+**所属体系**：JBOS Governance Framework
+
+**所属领域**：Common Governance Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS 的 Business Rule Framework（业务规则框架）。
+
+Business Rule 是企业经营过程中最核心的执行逻辑。
+
+JBOS 将所有业务规则统一管理，实现：
+
+- 配置化
+- 可视化
+- 可组合
+- 可追踪
+- 可版本化
+- 可审计
+- 可测试
+- AI 可理解
+
+所有 Domain 的业务规则必须遵循本规范。
+
+---
+
+# 二、Business Rule 定义
+
+JBOS 定义：
+
+> Business Rule 是企业经营过程中用于判断业务条件、约束业务行为、驱动业务决策的最小执行单元。
+
+Rule 不表达战略。
+
+也不表达流程。
+
+它只表达：
+
+**成立什么条件，产生什么结果。**
+
+例如：
+
+```
+IF
+
+Customer.TotalAmount >=100000
+
+THEN
+
+Membership=Diamond
+```
+
+---
+
+# 三、Policy 与 Rule 的关系
+
+Business Governance 分层如下：
+
+```text
+Business Strategy
+
+↓
+
+Business Policy
+
+↓
+
+Business Rule
+
+↓
+
+Decision
+
+↓
+
+Workflow
+
+↓
+
+Execution
+```
+
+职责：
+
+| 层 | 职责 |
+|------|------|
+| Strategy | 企业经营方向 |
+| Policy | 企业经营原则 |
+| Rule | 条件判断 |
+| Decision | 输出业务决策 |
+| Workflow | 执行业务流程 |
+
+---
+
+# 四、Rule Design Principles（设计原则）
+
+所有 Rule 必须遵循：
+
+## Principle-001
+
+Atomic
+
+一个 Rule。
+
+只表达一个业务判断。
+
+禁止：
+
+一个 Rule 完成多个业务。
+
+---
+
+## Principle-002
+
+Business Language
+
+Rule 使用业务语言。
+
+例如：
+
+```
+Customer Lifetime Value
+
+Membership Level
+
+Purchase Amount
+```
+
+禁止：
+
+数据库字段。
+
+---
+
+## Principle-003
+
+Configurable
+
+所有 Rule。
+
+默认支持：
+
+配置。
+
+无需修改代码。
+
+---
+
+## Principle-004
+
+Composable
+
+多个 Rule。
+
+组成：
+
+Rule Set。
+
+支持：
+
+AND
+
+OR
+
+NOT
+
+Priority
+
+---
+
+## Principle-005
+
+Versionable
+
+每一个 Rule。
+
+拥有：
+
+Version。
+
+支持：
+
+灰度。
+
+回滚。
+
+历史查询。
+
+---
+
+# 五、Business Rule Architecture
+
+```text
+Business Rule Framework
+
+├── Validation Rule
+├── Decision Rule
+├── Calculation Rule
+├── Eligibility Rule
+├── Assignment Rule
+├── Approval Rule
+├── Notification Rule
+├── AI Rule
+└── Compliance Rule
+```
+
+---
+
+# 六、Validation Rule
+
+用于业务校验。
+
+例如：
+
+```
+手机号唯一
+
+身份证唯一
+
+会员编号唯一
+
+年龄合法
+
+库存充足
+```
+
+返回：
+
+Pass / Fail。
+
+---
+
+# 七、Decision Rule
+
+用于经营决策。
+
+例如：
+
+```
+VIP客户
+
+↓
+
+是否允许九折
+
+↓
+
+Decision
+```
+
+输出：
+
+Business Decision。
+
+---
+
+# 八、Calculation Rule
+
+负责业务计算。
+
+例如：
+
+```
+积分
+
+成长值
+
+客户价值
+
+RFM
+
+佣金
+
+税率
+
+折扣
+```
+
+统一计算规则。
+
+---
+
+# 九、Eligibility Rule
+
+判断是否满足资格。
+
+例如：
+
+```
+是否允许升级会员
+
+是否允许退款
+
+是否允许参加活动
+
+是否允许领取优惠券
+```
+
+---
+
+# 十、Assignment Rule
+
+自动分配。
+
+例如：
+
+```
+客户
+
+↓
+
+自动分配导购
+
+↓
+
+自动分配门店
+
+↓
+
+自动分配AI Agent
+```
+
+---
+
+# 十一、Approval Rule
+
+审批规则。
+
+例如：
+
+```
+折扣>15%
+
+↓
+
+主管审批
+
+↓
+
+区域经理审批
+```
+
+Workflow：
+
+直接引用。
+
+---
+
+# 十二、AI Rule
+
+AI 必须遵循 Rule。
+
+例如：
+
+```
+推荐频率
+
+营销限制
+
+隐私限制
+
+风险等级
+
+输出可信度
+```
+
+AI：
+
+不能绕过规则。
+
+---
+
+# 十三、Rule Object
+
+所有 Rule。
+
+统一结构。
+
+```text
+Rule
+
+├── RuleID
+├── RuleCode
+├── Name
+├── Category
+├── Domain
+├── Version
+├── Priority
+├── Condition
+├── Action
+├── Effective Time
+├── Expiration Time
+├── Status
+├── Metadata
+```
+
+---
+
+# 十四、Rule Set
+
+多个 Rule。
+
+组成：
+
+Rule Set。
+
+例如：
+
+```
+Membership Rule Set
+
+Customer Value Rule Set
+
+Promotion Rule Set
+
+Pricing Rule Set
+
+Approval Rule Set
+```
+
+Rule Set。
+
+属于：
+
+Policy。
+
+---
+
+# 十五、Rule Execution
+
+统一执行流程。
+
+```text
+Business Request
+
+↓
+
+Load Policy
+
+↓
+
+Load Rule Set
+
+↓
+
+Evaluate Rules
+
+↓
+
+Generate Decision
+
+↓
+
+Execute Capability
+
+↓
+
+Publish Event
+```
+
+---
+
+# 十六、Rule DSL（规则表达语言）
+
+JBOS 建议建立统一 DSL。
+
+例如：
+
+```text
+WHEN
+
+Customer.Level == GOLD
+
+AND
+
+PurchaseAmount >5000
+
+THEN
+
+Discount=10%
+```
+
+未来支持：
+
+- JSON
+- YAML
+- DSL
+- DMN
+- 可视化规则编辑器
+
+统一解析。
+
+---
+
+# 十七、Rule Registry
+
+JBOS 建议建立统一 Rule Registry。
+
+```text
+Rule Registry
+
+Customer
+
+Membership
+
+Pricing
+
+Inventory
+
+Marketing
+
+Workflow
+
+Finance
+
+AI
+
+Security
+```
+
+统一维护：
+
+- Rule Code
+- Rule Owner
+- Rule Version
+- Rule Status
+- Rule Dependency
+
+---
+
+# 十八、Rule Version
+
+所有 Rule。
+
+必须支持：
+
+```
+Rule V1
+
+↓
+
+Rule V2
+
+↓
+
+Rule V3
+```
+
+支持：
+
+- 灰度发布
+- 回滚
+- A/B Testing
+- 多租户差异化
+
+---
+
+# 十九、Rule Event
+
+规则变化。
+
+发布：
+
+```
+RuleCreated
+
+RuleUpdated
+
+RulePublished
+
+RuleDisabled
+
+RuleArchived
+```
+
+支持：
+
+事件驱动治理。
+
+---
+
+# 二十、Rule Governance
+
+所有 Rule 必须：
+
+- 可追踪（Traceable）
+- 可审计（Auditable）
+- 可测试（Testable）
+- 可回放（Replayable）
+- 可模拟（Simulation）
+- 可解释（Explainable）
+
+企业能够知道：
+
+**为什么系统会做出这个决策。**
+
+---
+
+# 二十一、Rule 与 AI
+
+AI 不直接生成业务决策。
+
+统一流程：
+
+```text
+AI Analysis
+
+↓
+
+Business Rule
+
+↓
+
+Decision
+
+↓
+
+Workflow
+
+↓
+
+Execution
+```
+
+AI：
+
+负责预测。
+
+Rule：
+
+负责决策。
+
+形成：
+
+Human + Rule + AI。
+
+---
+
+# 二十二、Rule 与 Capability
+
+Business Capability：
+
+不包含业务规则。
+
+而是：
+
+```text
+Capability
+
+↓
+
+Policy
+
+↓
+
+Rule
+
+↓
+
+Decision
+
+↓
+
+Capability Execute
+```
+
+职责完全分离。
+
+---
+
+# 二十三、未来演进
+
+Business Rule。
+
+未来：
+
+```text
+Static Rule
+
+↓
+
+Configurable Rule
+
+↓
+
+Visual Rule
+
+↓
+
+Decision Model
+
+↓
+
+AI Assisted Rule
+
+↓
+
+Self Learning Rule
+
+↓
+
+Autonomous Business Rule
+```
+
+最终：
+
+Rule。
+
+逐渐形成：
+
+企业经营知识。
+
+---
+
+# 二十四、本章总结
+
+Business Rule Framework 是 JBOS Governance Framework 的执行核心。
+
+它负责承载企业所有可配置、可治理、可解释的业务规则，并通过 Rule、Rule Set、Decision、Policy 等机制形成统一的经营决策体系。
+
+通过 Business Rule Framework，JBOS 将实现：
+
+- One Rule Registry（统一规则中心）
+- One Rule Language（统一规则语言）
+- One Decision Model（统一决策模型）
+- One Explainable Business Engine（统一可解释经营引擎）
+
+未来，Business Rule 将成为企业知识资产的重要组成部分，为 AI Agent、Workflow、Decision Engine 和 Business Brain 提供统一的业务规则基础。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Business Rule Framework 规范 |
