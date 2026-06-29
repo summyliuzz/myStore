@@ -1,0 +1,685 @@
+# DOMAIN-004 Entity（实体设计规范）
+
+---
+
+**文档编号**：DOMAIN-004
+
+**文档名称**：Entity
+
+**中文名称**：实体设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 中 **Entity（实体）** 的统一设计规范。
+
+Entity 是 Customer Domain 中具有**唯一业务身份（Business Identity）**、**生命周期（Lifecycle）**和**业务行为（Business Behavior）**的核心业务对象。
+
+本规范不仅适用于 Customer Domain，也将作为整个 JBOS 所有 Domain（Product、Sales、Inventory、Marketing、Finance 等）的统一 Entity 设计标准。
+
+---
+
+# 二、什么是 Entity（Entity Definition）
+
+在 JBOS 中：
+
+> **Entity 是能够独立存在、拥有唯一身份、能够持续变化，并且需要长期追踪历史的业务对象。**
+
+Entity 的重点不是属性。
+
+而是：
+
+**Identity（身份）**
+
+例如：
+
+```
+Customer
+
+CustomerID = CUS-10000001
+```
+
+即使：
+
+- 姓名改变
+- 手机改变
+- 地址改变
+- 标签改变
+
+它仍然是同一个 Customer。
+
+因为：
+
+**Identity 永远不变。**
+
+---
+
+# 三、Entity 的基本特征（Characteristics）
+
+每一个 Entity 必须满足以下特征。
+
+| 特征 | 是否必须 |
+|------|----------|
+| 唯一身份（Identity） | ✅ |
+| 生命周期（Lifecycle） | ✅ |
+| 状态（State） | ✅ |
+| 可修改（Mutable） | ✅ |
+| 可审计（Auditable） | ✅ |
+| 可版本管理（Versioned） | ✅ |
+| 可发布事件（Domain Event） | ✅ |
+
+---
+
+# 四、Customer Domain Entity 全景
+
+Customer Domain 包含以下 Canonical Entity。
+
+| Entity | Aggregate |
+|---------|-----------|
+| Customer | Customer Aggregate |
+| Membership | Membership Aggregate |
+| Household | Household Aggregate |
+| CustomerRelationship | Relationship Aggregate |
+| CustomerGrowth | Growth Aggregate |
+| CustomerValue | Value Aggregate |
+| CustomerTimeline | Timeline Aggregate |
+| CustomerPreference | Preference Aggregate |
+| CustomerSegment | Segment Aggregate（未来） |
+
+以上 Entity 均拥有独立 Identity。
+
+---
+
+# 五、Entity 生命周期（Entity Lifecycle）
+
+所有 Entity 都遵循统一生命周期。
+
+```
+Create
+
+↓
+
+Active
+
+↓
+
+Updated
+
+↓
+
+Suspended
+
+↓
+
+Archived
+
+↓
+
+Restored
+
+↓
+
+Retired
+```
+
+说明：
+
+- Create：创建
+- Active：正常使用
+- Updated：发生业务变更
+- Suspended：暂停使用
+- Archived：归档
+- Restored：恢复
+- Retired：永久停用（保留历史）
+
+Entity 默认禁止物理删除（Physical Delete）。
+
+---
+
+# 六、Entity 标准结构（Canonical Entity Structure）
+
+每一个 Entity 必须包含以下结构。
+
+```
+Entity
+
+├── Identity
+
+├── State
+
+├── Attributes
+
+├── Behaviors
+
+├── Business Rules
+
+├── Domain Events
+
+├── Relationships
+
+├── Permissions
+
+├── Audit
+
+├── Version
+
+└── Metadata
+```
+
+这是 JBOS Entity 的统一规范。
+
+---
+
+# 七、Entity Identity（实体身份）
+
+Identity 是 Entity 最重要的组成部分。
+
+每个 Entity 必须拥有：
+
+| 属性 | 说明 |
+|------|------|
+| ID | 全局唯一标识 |
+| Code | 可读编码（可选） |
+| UUID | 全局唯一 UUID |
+| External ID | 外部系统标识（可选） |
+
+例如：
+
+```
+CustomerID
+
+CUS-000000001
+```
+
+Identity 一经创建：
+
+永久不可修改。
+
+---
+
+# 八、Entity Attributes（实体属性）
+
+Entity 属性分为四类。
+
+## 8.1 Business Attributes（业务属性）
+
+例如：
+
+Customer：
+
+- Name
+- Birthday
+- Gender
+
+---
+
+## 8.2 Operational Attributes（经营属性）
+
+例如：
+
+- CustomerValue
+- GrowthStage
+- LifecycleStage
+
+---
+
+## 8.3 System Attributes（系统属性）
+
+例如：
+
+- CreatedTime
+- UpdatedTime
+- Version
+
+---
+
+## 8.4 Extension Attributes（扩展属性）
+
+企业可增加：
+
+Custom Fields。
+
+保持扩展能力。
+
+---
+
+# 九、Entity Behavior（业务行为）
+
+Entity 不只是数据。
+
+Entity 应包含业务行为。
+
+例如：
+
+Customer：
+
+```
+Register()
+
+Activate()
+
+Merge()
+
+Archive()
+
+Restore()
+
+UpgradeMembership()
+
+UpdateProfile()
+
+ChangePreference()
+```
+
+行为必须符合业务规则。
+
+禁止贫血模型（Anemic Domain Model）。
+
+---
+
+# 十、Entity Relationships（实体关系）
+
+Customer Entity 与其他 Entity 建立关系。
+
+```
+Customer
+
+├── Membership
+
+├── Household
+
+├── Relationship
+
+├── Growth
+
+├── Value
+
+├── Timeline
+
+├── Preference
+```
+
+所有关系均通过 Identity 建立。
+
+禁止对象嵌套无限增长。
+
+---
+
+# 十一、Entity Business Rules（业务规则）
+
+所有 Entity 必须维护自身业务规则。
+
+例如：
+
+Customer：
+
+Rule-001
+
+CustomerID 不允许修改。
+
+---
+
+Rule-002
+
+Customer 不允许重复创建。
+
+---
+
+Rule-003
+
+Customer Archive 后：
+
+禁止继续经营。
+
+---
+
+Rule-004
+
+Customer Merge：
+
+必须保留完整历史。
+
+---
+
+# 十二、Entity Domain Events（领域事件）
+
+Entity 生命周期变化必须产生 Event。
+
+例如：
+
+```
+CustomerCreated
+
+CustomerUpdated
+
+CustomerMerged
+
+CustomerArchived
+
+CustomerRestored
+
+CustomerDeleted（逻辑删除）
+
+CustomerValueChanged
+
+CustomerGrowthChanged
+```
+
+Entity 是 Domain Event 的主要来源。
+
+---
+
+# 十三、Entity Repository（实体仓储）
+
+每一个 Entity 必须拥有唯一 Repository。
+
+例如：
+
+```
+CustomerRepository
+
+MembershipRepository
+
+GrowthRepository
+```
+
+Repository 负责：
+
+- Load
+- Save
+- Find
+- Exists
+- Archive
+
+禁止：
+
+Repository 编写复杂业务逻辑。
+
+---
+
+# 十四、Entity 审计（Audit）
+
+所有 Entity 默认开启审计。
+
+记录：
+
+- 创建人
+- 创建时间
+- 修改人
+- 修改时间
+- 修改内容
+- 来源系统
+- AI 修改记录
+- 操作终端
+
+形成完整审计链。
+
+---
+
+# 十五、Entity Version（版本）
+
+Entity 默认支持：
+
+Version。
+
+采用：
+
+Optimistic Lock（乐观锁）。
+
+例如：
+
+```
+Version
+
+1
+
+↓
+
+2
+
+↓
+
+3
+
+↓
+
+4
+```
+
+任何修改：
+
+Version 自动增加。
+
+---
+
+# 十六、Entity 权限（Permission）
+
+Entity 支持：
+
+对象级权限。
+
+例如：
+
+```
+Customer
+
+↓
+
+Read
+
+Write
+
+Archive
+
+Merge
+
+Export
+
+Share
+```
+
+权限由 Authorization Policy 控制。
+
+---
+
+# 十七、Entity 与数据库映射（Persistence Mapping）
+
+Entity ≠ Database Table。
+
+例如：
+
+```
+Customer Entity
+
+↓
+
+customer
+
+customer_profile
+
+customer_contact
+
+customer_address
+
+customer_extension
+```
+
+一个 Entity 可以对应多个数据表。
+
+数据库结构不得决定 Entity 设计。
+
+---
+
+# 十八、Entity 与 AI 映射（AI Semantic Mapping）
+
+AI 不直接理解数据库。
+
+AI 理解：
+
+Canonical Entity。
+
+例如：
+
+```
+Customer
+
+↓
+
+Identity
+
+↓
+
+Profile
+
+↓
+
+Lifecycle
+
+↓
+
+Relationship
+
+↓
+
+Value
+
+↓
+
+Growth
+```
+
+AI Agent 统一引用 Canonical Entity。
+
+形成统一知识语义。
+
+---
+
+# 十九、Customer Entity 标准模板（Canonical Entity Template）
+
+未来 Customer.md 必须采用以下模板。
+
+```
+Customer
+
+Definition
+
+Purpose
+
+Identity
+
+Lifecycle
+
+State
+
+Attributes
+
+Behaviors
+
+Business Rules
+
+Relationships
+
+Commands
+
+Events
+
+Permissions
+
+Audit
+
+Version
+
+Repository
+
+Persistence Mapping
+
+API Mapping
+
+AI Semantic Mapping
+
+Examples
+
+Future Extension
+```
+
+所有 Domain Entity 保持一致。
+
+---
+
+# 二十、未来演进（Future Evolution）
+
+Entity 将逐步演进。
+
+```
+Entity
+
+↓
+
+Canonical Entity
+
+↓
+
+Semantic Entity
+
+↓
+
+Knowledge Entity
+
+↓
+
+AI Native Entity
+
+↓
+
+Digital Twin Entity
+
+↓
+
+Autonomous Business Entity
+```
+
+最终：
+
+Entity 不再只是业务对象。
+
+而成为：
+
+企业知识网络中的核心节点。
+
+---
+
+# 二十一、本章总结
+
+Entity 是 JBOS 中最重要的业务对象，也是整个 Canonical Model 的核心组成部分。
+
+JBOS 将 Entity 定义为具有唯一身份、生命周期、状态、行为和业务规则的业务主体，而不是数据库中的一张表。
+
+通过统一 Entity 规范，JBOS 将实现：
+
+- One Entity Specification（统一实体规范）
+- One Identity Model（统一身份模型）
+- One Behavior Model（统一行为模型）
+- One Semantic Model（统一语义模型）
+
+为 DDD、微服务、事件驱动架构、数据库设计、API 设计以及 AI Agent 提供一致的业务对象标准。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Entity 统一规范 |

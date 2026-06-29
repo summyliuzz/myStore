@@ -1,0 +1,469 @@
+# DOMAIN-002 Customer Domain Boundary（客户领域边界）
+
+---
+
+**文档编号**：DOMAIN-002
+
+**文档名称**：Customer Domain Boundary
+
+**中文名称**：客户领域边界
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件用于定义 Customer Domain 在 JBOS 中的业务边界（Business Boundary）、系统边界（System Boundary）以及数据边界（Data Boundary）。
+
+Customer Domain 是 JBOS 的 Customer System of Record（客户主数据领域）。
+
+本文件用于明确：
+
+- Customer Domain 应负责什么
+- Customer Domain 不负责什么
+- 哪些对象属于 Customer Domain
+- 哪些对象属于其他 Domain
+- Domain 之间如何协作
+- Domain 之间如何保持低耦合
+
+本文件是整个 Customer Domain 的最高边界定义。
+
+---
+
+# 二、Boundary 定义原则（Boundary Principles）
+
+Customer Domain 的边界遵循以下原则。
+
+## Principle-001
+
+One Responsibility
+
+一个业务对象只能属于一个 Domain。
+
+---
+
+## Principle-002
+
+One Owner
+
+一个业务能力只能有一个 Owner。
+
+禁止多个 Domain 同时维护同一业务能力。
+
+---
+
+## Principle-003
+
+Loose Coupling
+
+Domain 之间不得直接共享数据库。
+
+统一通过：
+
+- Domain API
+- Domain Event
+- Domain Service
+
+进行协作。
+
+---
+
+## Principle-004
+
+Business Ownership
+
+边界按照业务划分。
+
+而不是按照数据库划分。
+
+---
+
+## Principle-005
+
+High Cohesion
+
+Customer Domain 内部保持高内聚。
+
+Customer 相关能力全部集中于本领域。
+
+---
+
+# 三、Customer Domain 职责范围（In Scope）
+
+Customer Domain 负责以下业务能力。
+
+| 能力 | 是否负责 |
+|------|----------|
+| Customer Identity | ✅ |
+| Customer Master | ✅ |
+| Customer Profile | ✅ |
+| Customer Lifecycle | ✅ |
+| Customer Growth | ✅ |
+| Customer Value | ✅ |
+| Customer Relationship | ✅ |
+| Household | ✅ |
+| Referral | ✅ |
+| Membership | ✅ |
+| Customer Behavior | ✅ |
+| Customer Timeline | ✅ |
+| Customer Tag | ✅ |
+| Customer Segment | ✅ |
+| AI Customer Insight | ✅ |
+
+以上能力均属于 Customer Domain。
+
+---
+
+# 四、Out of Scope（非职责范围）
+
+Customer Domain 不负责以下能力。
+
+| 能力 | Owner Domain |
+|------|-------------|
+| 商品 | Product Domain |
+| 库存 | Inventory Domain |
+| 销售订单 | Sales Domain |
+| 采购 | Procurement Domain |
+| 财务 | Finance Domain |
+| 门店 | Store Domain |
+| 员工 | Organization Domain |
+| 营销活动 | Marketing Domain |
+| 权限 | IAM Domain |
+| 消息通知 | Notification Domain |
+
+Customer Domain 不得维护上述业务对象。
+
+---
+
+# 五、Customer Domain Owner
+
+Customer Domain 是以下对象的唯一 Owner。
+
+| Object | Owner |
+|---------|-------|
+| Customer | Customer Domain |
+| CustomerIdentity | Customer Domain |
+| CustomerProfile | Customer Domain |
+| CustomerGrowth | Customer Domain |
+| CustomerLifecycle | Customer Domain |
+| CustomerValue | Customer Domain |
+| Household | Customer Domain |
+| Referral | Customer Domain |
+| Membership | Customer Domain |
+| Advisor Relationship | Customer Domain |
+
+其它 Domain 只能引用。
+
+不得修改。
+
+---
+
+# 六、Customer Domain 不拥有的数据
+
+例如：
+
+销售订单。
+
+```
+Order
+```
+
+属于：
+
+Sales Domain。
+
+Customer Domain 仅保存：
+
+```
+CustomerID
+```
+
+不得保存：
+
+Order 明细。
+
+同样：
+
+Inventory。
+
+Product。
+
+Payment。
+
+均如此。
+
+保持：
+
+Single Ownership。
+
+---
+
+# 七、Bounded Context（限界上下文）
+
+Customer Domain 包含以下 Context。
+
+```
+Customer Domain
+
+├── Identity Context
+
+├── Profile Context
+
+├── Lifecycle Context
+
+├── Growth Context
+
+├── Value Context
+
+├── Relationship Context
+
+├── Membership Context
+
+├── Behavior Context
+
+├── Timeline Context
+
+└── AI Context
+```
+
+各 Context 可独立演进。
+
+但统一属于 Customer Domain。
+
+---
+
+# 八、Context Mapping（上下文关系）
+
+```
+                    Product Domain
+                          │
+                          │
+                          ▼
+Inventory ◀──── Sales ───▶ Customer
+                          │
+                          │
+                          ▼
+                    Marketing
+                          │
+                          ▼
+                       Finance
+```
+
+Customer Domain 位于整个经营系统中心。
+
+其它 Domain 均依赖 Customer。
+
+Customer 不依赖其它 Domain 的业务实现。
+
+---
+
+# 九、跨领域协作原则（Cross Domain Collaboration）
+
+Customer Domain 与其它 Domain 协作采用以下方式。
+
+| 协作方式 | 是否允许 |
+|----------|----------|
+| API | ✅ |
+| Domain Event | ✅ |
+| Query Service | ✅ |
+| Graph API | ✅ |
+| Database Join | ❌ |
+| Foreign Key 跨库 | ❌ |
+| Shared Table | ❌ |
+
+---
+
+# 十、Customer Domain 对外提供能力（Published Capabilities）
+
+Customer Domain 对外发布以下能力。
+
+| Capability | Consumer |
+|------------|----------|
+| Customer Query | Sales |
+| Customer Search | Store |
+| Customer Profile | Marketing |
+| Customer Value | CRM |
+| Membership | POS |
+| Customer Timeline | Service |
+| Customer Insight | AI |
+
+所有能力通过公开接口提供。
+
+---
+
+# 十一、Customer Domain 对外事件（Published Events）
+
+Customer Domain 发布以下标准事件。
+
+| Event |
+|--------|
+| CustomerCreated |
+| CustomerUpdated |
+| CustomerMerged |
+| CustomerArchived |
+| CustomerValueChanged |
+| CustomerGrowthChanged |
+| CustomerLifecycleChanged |
+| CustomerRelationshipCreated |
+| MembershipUpgraded |
+| CustomerSegmentChanged |
+
+所有事件均属于 Canonical Event。
+
+---
+
+# 十二、Customer Domain 消费事件（Consumed Events）
+
+Customer Domain 订阅以下事件。
+
+| Event | Source Domain |
+|--------|---------------|
+| OrderCompleted | Sales |
+| PaymentCompleted | Finance |
+| ProductPurchased | Sales |
+| ActivityJoined | Marketing |
+| JewelryServiced | Service |
+| StoreVisited | Store |
+
+Customer Domain 根据这些事件更新客户经营数据。
+
+---
+
+# 十三、领域数据边界（Data Boundary）
+
+Customer Domain 维护以下数据。
+
+```
+Customer
+
+Identity
+
+Profile
+
+Growth
+
+Lifecycle
+
+Behavior
+
+Relationship
+
+Membership
+
+Preference
+
+Timeline
+```
+
+不维护：
+
+```
+Order
+
+Inventory
+
+Product
+
+Invoice
+
+Supplier
+
+Warehouse
+```
+
+---
+
+# 十四、领域安全边界（Security Boundary）
+
+Customer Domain 属于企业核心数据域。
+
+必须支持：
+
+- 数据脱敏
+- 数据权限
+- 审计日志
+- 数据版本
+- AI 数据访问控制
+- 隐私授权
+- 数据保留策略
+
+Customer Domain 是企业最高等级的数据资产之一。
+
+---
+
+# 十五、未来扩展边界（Future Boundary）
+
+Customer Domain 未来扩展包括：
+
+```
+Customer Graph
+
+↓
+
+Knowledge Graph
+
+↓
+
+AI Memory
+
+↓
+
+Digital Human
+
+↓
+
+Customer Digital Twin
+
+↓
+
+Autonomous Customer Agent
+```
+
+边界保持稳定。
+
+能力持续增强。
+
+---
+
+# 十六、Boundary Checklist（领域边界检查清单）
+
+新增任何 Customer 能力时，应检查：
+
+- 是否属于 Customer Domain？
+- 是否已有 Domain Owner？
+- 是否违反 Single Source of Truth？
+- 是否需要新增 Domain Event？
+- 是否需要新增 Canonical Object？
+- 是否影响其它 Domain？
+- 是否需要更新 API Contract？
+
+只有通过检查后，方可纳入 Customer Domain。
+
+---
+
+# 十七、本章总结
+
+Customer Domain 是 JBOS 中唯一负责客户主数据、客户关系、客户成长及客户价值管理的领域。
+
+它以业务能力而非数据库作为边界，通过 API 与 Domain Event 与其他领域协作，确保整个系统保持高内聚、低耦合、职责清晰。
+
+本文件确立了 Customer Domain 的职责边界、数据边界、上下文边界及协作规则，并为后续 Product、Sales、Inventory、Marketing、Finance 等领域提供统一的领域建模规范。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain 边界规范 |

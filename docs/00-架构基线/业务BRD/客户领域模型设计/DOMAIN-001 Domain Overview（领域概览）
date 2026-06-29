@@ -1,0 +1,532 @@
+# DOMAIN-001 Customer Domain Overview（客户领域概览）
+
+---
+
+**文档编号**：DOMAIN-001
+
+**文档名称**：Customer Domain Overview
+
+**中文名称**：客户领域概览
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件用于定义 **JBOS（Jewelry Business Operating System）** 中 Customer Domain（客户领域）的整体定位、职责边界、设计原则及核心业务模型。
+
+本文件不是产品需求文档（PRD）、业务需求文档（BRD）或软件需求文档（SRD）。
+
+本文件属于 **Canonical Model（统一业务模型）**，用于建立整个 JBOS 的统一业务语言（Ubiquitous Language）。
+
+所有研发团队、产品团队、AI Agent、数据库、API、事件总线及业务系统，均应引用本文件作为 Customer Domain 的唯一标准定义。
+
+---
+
+# 二、领域定位（Domain Position）
+
+Customer Domain 是 JBOS 最核心的业务领域之一。
+
+Customer Domain 负责回答整个经营系统最根本的问题：
+
+> **企业正在经营谁？**
+
+Customer Domain 不负责销售，不负责库存，不负责订单。
+
+Customer Domain 负责建立企业对于客户的统一认知。
+
+Customer Domain 是：
+
+整个 JBOS 的 Customer Source of Truth（客户唯一事实来源）。
+
+---
+
+# 三、领域愿景（Domain Vision）
+
+JBOS 不把 Customer 理解为：
+
+```
+客户资料
+```
+
+也不理解为：
+
+```
+CRM会员
+```
+
+而是理解为：
+
+> 一个持续成长、持续经营、持续创造价值的经营主体（Business Subject）。
+
+因此：
+
+Customer Domain 的目标不是保存客户。
+
+而是：
+
+持续理解客户。
+
+持续经营客户。
+
+持续陪伴客户。
+
+最终帮助企业建立长期客户资产。
+
+---
+
+# 四、领域使命（Domain Mission）
+
+Customer Domain 负责建立企业统一客户经营体系。
+
+主要职责包括：
+
+- 建立统一客户身份（Identity）
+- 建立统一客户画像（Profile）
+- 建立客户生命周期（Lifecycle）
+- 建立客户成长体系（Growth）
+- 建立客户价值体系（Value）
+- 建立客户关系网络（Relationship）
+- 建立客户行为体系（Behavior）
+- 建立客户知识体系（Knowledge）
+- 建立 AI Customer Intelligence
+
+最终形成：
+
+Customer Operating System。
+
+---
+
+# 五、领域核心职责（Core Responsibilities）
+
+Customer Domain 包含以下九项核心能力。
+
+| 能力 | 描述 |
+|------|------|
+| Identity | 客户身份管理 |
+| Profile | 客户画像管理 |
+| Lifecycle | 生命周期管理 |
+| Value | 客户价值管理 |
+| Growth | 客户成长管理 |
+| Relationship | 客户关系管理 |
+| Behavior | 客户行为管理 |
+| Membership | 会员管理 |
+| Intelligence | AI 客户智能 |
+
+这些能力共同构成 Customer Domain。
+
+---
+
+# 六、领域设计目标（Design Goals）
+
+Customer Domain 的建设目标如下。
+
+## Goal-001
+
+建立统一 Customer Object。
+
+整个企业只有一个 Customer。
+
+不存在多个客户模型。
+
+---
+
+## Goal-002
+
+建立统一 Customer ID。
+
+Customer ID 是整个 JBOS 唯一客户标识。
+
+所有系统均引用 Customer ID。
+
+---
+
+## Goal-003
+
+建立统一 Customer Language。
+
+Customer Domain 输出：
+
+统一业务语言。
+
+统一对象定义。
+
+统一业务规则。
+
+---
+
+## Goal-004
+
+建立统一 Customer Graph。
+
+Customer 不再是单一对象。
+
+Customer 应形成：
+
+Customer Graph。
+
+包括：
+
+客户；
+
+家庭；
+
+珠宝；
+
+企业；
+
+导购；
+
+品牌；
+
+社区。
+
+---
+
+## Goal-005
+
+建立 AI Native Customer。
+
+Customer Domain 必须天然支持：
+
+AI；
+
+LLM；
+
+Knowledge Graph；
+
+Memory；
+
+Agent；
+
+Workflow。
+
+---
+
+# 七、领域设计原则（Design Principles）
+
+## Principle-001
+
+Single Source of Truth
+
+整个 JBOS。
+
+Customer 只能存在一个事实来源。
+
+---
+
+## Principle-002
+
+Business First
+
+Customer Model 优先体现业务。
+
+而非数据库结构。
+
+---
+
+## Principle-003
+
+AI Native
+
+所有 Customer Object。
+
+默认支持 AI。
+
+---
+
+## Principle-004
+
+Event Driven
+
+Customer 的任何变化。
+
+都应产生 Domain Event。
+
+---
+
+## Principle-005
+
+Relationship Driven
+
+Customer 永远存在于关系网络中。
+
+而不是孤立存在。
+
+---
+
+## Principle-006
+
+Extensible
+
+任何企业。
+
+任何品牌。
+
+任何国家。
+
+均可扩展。
+
+---
+
+# 八、领域组成（Domain Composition）
+
+Customer Domain 由以下子领域组成。
+
+```text
+Customer Domain
+
+├── Identity
+
+├── Profile
+
+├── Lifecycle
+
+├── Growth
+
+├── Value
+
+├── Behavior
+
+├── Relationship
+
+├── Membership
+
+├── Timeline
+
+├── Household
+
+├── Referral
+
+├── Advisor
+
+├── Community
+
+├── Jewelry Ownership
+
+├── AI Intelligence
+```
+
+这些 Sub Domain 相互协作，共同组成完整的 Customer Domain。
+
+---
+
+# 九、领域价值（Business Value）
+
+Customer Domain 为企业创造以下价值：
+
+## 对企业
+
+- 建立统一客户资产
+- 建立长期客户经营体系
+- 提高客户终身价值（LTV）
+- 提高经营效率
+- 支撑 AI 决策
+
+---
+
+## 对导购
+
+- 全面了解客户
+- 提升成交效率
+- 建立长期客户关系
+- 提高服务质量
+
+---
+
+## 对客户
+
+- 获得一致体验
+- 获得持续服务
+- 获得个性化推荐
+- 建立长期品牌关系
+
+---
+
+## 对 AI
+
+- 提供统一客户知识
+- 提供统一业务语义
+- 提供统一记忆来源
+- 提供统一推理对象
+
+---
+
+# 十、Customer Domain 在 JBOS 中的位置
+
+```text
+JBOS
+
+├── Customer Domain
+│
+├── Product Domain
+│
+├── Inventory Domain
+│
+├── Procurement Domain
+│
+├── Sales Domain
+│
+├── Marketing Domain
+│
+├── Finance Domain
+│
+├── Organization Domain
+│
+├── AI Domain
+│
+└── Platform Domain
+```
+
+Customer Domain 与其他领域共同组成 JBOS 的业务领域模型。
+
+---
+
+# 十一、统一业务语言（Ubiquitous Language）
+
+Customer Domain 建立以下统一术语。
+
+| Term | 中文 | 定义 |
+|------|------|------|
+| Customer | 客户主体 | 企业经营对象 |
+| Customer Identity | 客户身份 | 唯一身份标识 |
+| Customer Profile | 客户画像 | 客户认知模型 |
+| Customer Lifecycle | 生命周期 | 客户成长阶段 |
+| Customer Value | 客户价值 | 综合经营价值 |
+| Customer Growth | 客户成长 | 客户成长体系 |
+| Customer Relationship | 客户关系 | 客户关系网络 |
+| Household | 家庭 | 家庭经营单位 |
+| Advisor | 客户顾问 | 导购服务关系 |
+| Referral | 推荐关系 | 客户裂变关系 |
+| Membership | 会员体系 | 权益管理体系 |
+
+以上术语是 Customer Domain 官方术语。
+
+所有文档统一引用。
+
+---
+
+# 十二、Canonical Model 输出范围
+
+Customer Canonical Model 最终输出以下标准。
+
+```text
+Customer Canonical Model
+
+├── Domain Overview
+
+├── Domain Boundary
+
+├── Aggregate
+
+├── Entity
+
+├── Value Object
+
+├── Enumeration
+
+├── Relationship
+
+├── Domain Service
+
+├── Repository
+
+├── Domain Event
+
+├── Domain Policy
+
+├── Business Rules
+
+├── Lifecycle
+
+├── State Machine
+
+├── Ownership
+
+├── Permission
+
+├── Audit
+
+├── Version
+
+├── Naming Convention
+
+└── Future Extension
+```
+
+上述文档共同构成 Customer Canonical Model。
+
+---
+
+# 十三、引用关系（Dependencies）
+
+Customer Domain 是以下体系的基础：
+
+- BRD（Business Requirement）
+- SRD（Software Requirement）
+- DDD（Domain Driven Design）
+- Architecture Baseline
+- Database Schema
+- API Specification
+- Event Bus
+- Workflow Engine
+- Knowledge Graph
+- AI Agent Framework
+- Prompt Engineering
+- RAG Knowledge Base
+
+任何下游文档不得重新定义 Customer 业务对象。
+
+---
+
+# 十四、未来演进路线（Roadmap）
+
+Customer Domain 将按照以下阶段持续演进。
+
+| 阶段 | 内容 |
+|------|------|
+| Phase 1 | Canonical Model |
+| Phase 2 | Event Model |
+| Phase 3 | State Machine |
+| Phase 4 | Business Rules |
+| Phase 5 | Architecture Model |
+| Phase 6 | API Contract |
+| Phase 7 | AI Native Customer Domain |
+| Phase 8 | Autonomous Customer Operating System |
+
+---
+
+# 十五、本章总结
+
+Customer Domain 是 JBOS 中最核心的业务领域之一，也是整个经营操作系统的客户认知中心。
+
+它不是传统 CRM 的客户资料模块，而是企业客户资产、客户关系、客户价值、客户成长及 AI 智能经营的统一基础。
+
+通过建立统一的 Customer Canonical Model，JBOS 将实现：
+
+- 一个 Customer（One Customer）
+- 一个 Customer ID（One Identity）
+- 一套统一业务语言（One Ubiquitous Language）
+- 一个统一客户知识图谱（One Customer Knowledge Graph）
+- 一个 AI Native Customer Operating System
+
+Customer Domain 将作为整个 JBOS 的第一块领域基石，为后续 Product、Sales、Inventory、Marketing、Finance 等所有领域提供统一的业务建模标准。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 Customer Domain 顶层架构定义 |

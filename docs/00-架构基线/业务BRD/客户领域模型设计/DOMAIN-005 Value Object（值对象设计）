@@ -1,0 +1,736 @@
+# DOMAIN-005 Value Object（值对象设计规范）
+
+---
+
+**文档编号**：DOMAIN-005
+
+**文档名称**：Value Object
+
+**中文名称**：值对象设计规范
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 中 Value Object（值对象）的统一设计规范。
+
+Value Object 是 Customer Domain 中最基础的业务构件。
+
+它不具有业务身份（Identity），但能够准确表达业务语义（Business Semantic）。
+
+本规范同时作为整个 JBOS 所有 Domain 的统一 Value Object 标准。
+
+包括：
+
+- Product Domain
+- Inventory Domain
+- Sales Domain
+- Finance Domain
+- Organization Domain
+- Marketing Domain
+
+全部采用同一套规范。
+
+---
+
+# 二、什么是 Value Object
+
+JBOS 定义：
+
+> Value Object 是没有业务身份（Identity）、不可变（Immutable）、具有明确业务语义（Business Semantic）的业务对象。
+
+例如：
+
+```
+CustomerName
+
+PhoneNumber
+
+Email
+
+Address
+
+Birthday
+
+Money
+
+Weight
+
+Language
+
+Currency
+```
+
+这些对象没有生命周期。
+
+它们表达的是：
+
+一个业务值。
+
+---
+
+# 三、设计原则
+
+所有 Value Object 必须遵循以下原则。
+
+## Principle-001
+
+Immutable（不可变）
+
+任何修改都应创建新的 Value Object。
+
+禁止修改已有对象。
+
+---
+
+## Principle-002
+
+No Identity
+
+Value Object 永远没有：
+
+ID
+
+UUID
+
+Identity
+
+---
+
+## Principle-003
+
+Value Equality
+
+判断是否相同。
+
+比较 Value。
+
+而不是引用地址。
+
+---
+
+## Principle-004
+
+Self Validation
+
+每一个 Value Object。
+
+负责校验自己是否合法。
+
+例如：
+
+PhoneNumber。
+
+Email。
+
+Money。
+
+---
+
+## Principle-005
+
+Business Semantic
+
+Value Object 必须表达：
+
+业务语义。
+
+禁止：
+
+String。
+
+Integer。
+
+Decimal。
+
+直接表达业务。
+
+例如：
+
+错误：
+
+```
+String phone
+```
+
+正确：
+
+```
+PhoneNumber phone
+```
+
+---
+
+# 四、Value Object 分类
+
+JBOS 建议建立统一 Value Object Library。
+
+分为五大类。
+
+---
+
+## 4.1 Identity Value Object
+
+用于表达身份。
+
+例如：
+
+```
+CustomerCode
+
+MembershipCode
+
+StoreCode
+
+OrderNumber
+```
+
+---
+
+## 4.2 Basic Value Object
+
+基础值对象。
+
+例如：
+
+```
+Name
+
+PhoneNumber
+
+Email
+
+Birthday
+
+Gender
+
+Language
+```
+
+---
+
+## 4.3 Business Value Object
+
+业务值对象。
+
+例如：
+
+```
+CustomerLevel
+
+GrowthStage
+
+ValueScore
+
+RelationshipType
+
+MembershipLevel
+```
+
+---
+
+## 4.4 Financial Value Object
+
+经营值对象。
+
+例如：
+
+```
+Money
+
+Currency
+
+Discount
+
+TaxRate
+
+Point
+```
+
+---
+
+## 4.5 Industry Value Object
+
+珠宝行业对象。
+
+例如：
+
+```
+GoldWeight
+
+DiamondCarat
+
+Purity
+
+CertificateNumber
+
+StoneGrade
+```
+
+整个 JBOS 共用。
+
+---
+
+# 五、Customer Domain Value Object
+
+Customer Domain 推荐使用以下 Value Object。
+
+| Value Object | 描述 |
+|--------------|------|
+| CustomerName | 客户姓名 |
+| PhoneNumber | 手机号码 |
+| EmailAddress | 邮箱 |
+| Birthday | 出生日期 |
+| Gender | 性别 |
+| Address | 地址 |
+| Language | 语言 |
+| Currency | 默认货币 |
+| CustomerTag | 标签 |
+| CustomerScore | 客户评分 |
+
+这些对象全部不可变。
+
+---
+
+# 六、标准结构
+
+所有 Value Object 必须包含：
+
+```
+Definition
+
+Purpose
+
+Attributes
+
+Validation
+
+Normalization
+
+Serialization
+
+Localization
+
+Examples
+```
+
+统一规范。
+
+---
+
+# 七、标准校验
+
+例如：
+
+PhoneNumber。
+
+```
+13800138000
+```
+
+必须：
+
+合法。
+
+符合国家规则。
+
+支持国际号码。
+
+---
+
+Email。
+
+必须：
+
+RFC 标准。
+
+统一小写。
+
+去空格。
+
+---
+
+Money。
+
+必须：
+
+货币。
+
+金额。
+
+精度。
+
+统一管理。
+
+---
+
+# 八、国际化规范
+
+所有 Value Object。
+
+默认支持：
+
+Localization。
+
+例如：
+
+Address。
+
+中国：
+
+```
+广东省
+
+深圳市
+
+南山区
+```
+
+日本：
+
+```
+東京都
+
+港区
+```
+
+美国：
+
+```
+California
+
+San Francisco
+```
+
+统一对象。
+
+不同国家格式。
+
+---
+
+# 九、JSON Mapping
+
+统一 JSON。
+
+例如：
+
+```
+PhoneNumber
+
+↓
+
+{
+    "countryCode":"+86",
+    "number":"13800138000"
+}
+```
+
+Money。
+
+```
+{
+    "currency":"CNY",
+    "amount":1000.00
+}
+```
+
+统一 API。
+
+---
+
+# 十、Persistence Mapping
+
+Value Object。
+
+可以：
+
+Embedded。
+
+例如：
+
+```
+Customer
+
+↓
+
+Name
+
+Phone
+
+Birthday
+```
+
+无需单独数据表。
+
+复杂对象。
+
+可拆分多个字段。
+
+---
+
+# 十一、API Mapping
+
+API 永远暴露：
+
+Business Value。
+
+而不是：
+
+数据库字段。
+
+例如：
+
+```
+phone
+
+↓
+
+PhoneNumber
+```
+
+而不是：
+
+```
+phone_number
+
+country_code
+
+mobile
+```
+
+---
+
+# 十二、AI Semantic Mapping
+
+AI 默认理解：
+
+Canonical Value Object。
+
+例如：
+
+```
+Money
+
+↓
+
+金额
+
+货币
+
+汇率
+
+精度
+```
+
+AI 不需要理解数据库。
+
+---
+
+# 十三、典型示例
+
+CustomerName
+
+```
+Definition
+
+客户真实姓名。
+```
+
+Validation
+
+```
+不能为空。
+
+长度：
+
+2~50。
+```
+
+Normalization
+
+```
+Trim。
+
+Unicode Normalization。
+```
+
+---
+
+PhoneNumber。
+
+Validation。
+
+```
+国家码。
+
+手机号。
+
+唯一规则。
+```
+
+---
+
+Money。
+
+Validation。
+
+```
+金额 ≥0。
+
+统一四舍五入。
+
+Currency 必填。
+```
+
+---
+
+# 十四、禁止事项
+
+禁止：
+
+```
+String birthday
+
+String phone
+
+String address
+
+Decimal money
+```
+
+必须：
+
+```
+Birthday
+
+PhoneNumber
+
+Address
+
+Money
+```
+
+形成统一业务语言。
+
+---
+
+# 十五、未来扩展
+
+未来：
+
+```
+Value Object
+
+↓
+
+Canonical Value Object
+
+↓
+
+Semantic Value Object
+
+↓
+
+Knowledge Value Object
+
+↓
+
+AI Native Value Object
+```
+
+Value Object。
+
+将进入：
+
+Knowledge Graph。
+
+成为：
+
+AI Memory。
+
+统一语义。
+
+---
+
+# 十六、Value Object Library
+
+JBOS 建议建立：
+
+```
+Common
+
+└── ValueObjects
+
+      Name
+
+      PhoneNumber
+
+      Email
+
+      Address
+
+      Money
+
+      Currency
+
+      Percentage
+
+      Weight
+
+      Dimension
+
+      Language
+
+      TimeZone
+
+      DateRange
+
+      GoldWeight
+
+      DiamondCarat
+
+      Purity
+
+      CertificateNumber
+```
+
+所有 Domain。
+
+共同引用。
+
+---
+
+# 十七、本章总结
+
+Value Object 是 JBOS 最基础的业务表达单元，也是整个 Canonical Model 的基础类型系统。
+
+JBOS 不再将 Value Object 视为简单的数据封装，而是将其定义为具有业务语义、统一校验、统一国际化、统一 API 表达及 AI 可理解能力的标准业务对象。
+
+通过建立 Enterprise Canonical Value Object Specification，JBOS 将形成：
+
+- One Business Type System（统一业务类型系统）
+- One Semantic Language（统一业务语义）
+- One Validation Standard（统一校验标准）
+- One AI Semantic Layer（统一 AI 语义层）
+
+为所有 Domain 提供一致的基础能力。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Value Object 统一规范 |

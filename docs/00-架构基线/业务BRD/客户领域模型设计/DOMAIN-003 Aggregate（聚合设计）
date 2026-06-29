@@ -1,0 +1,589 @@
+# DOMAIN-003 Customer Aggregate（客户聚合设计）
+
+---
+
+**文档编号**：DOMAIN-003
+
+**文档名称**：Customer Aggregate
+
+**中文名称**：客户聚合设计
+
+**所属体系**：JBOS Canonical Model
+
+**所属领域**：Customer Domain
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 Customer Domain 的 Aggregate（聚合）设计规范。
+
+Aggregate 是 Customer Domain 的事务一致性边界（Transactional Consistency Boundary），也是整个领域模型中最重要的业务一致性单元。
+
+本规范用于统一：
+
+- Aggregate Root
+- Entity Tree
+- Value Object
+- Transaction Boundary
+- Invariant（业务不变量）
+- Domain Event
+- Repository
+- Command
+
+所有 Customer 相关的数据修改，必须通过 Aggregate Root 完成。
+
+任何系统不得绕过 Aggregate Root 修改领域数据。
+
+---
+
+# 二、Aggregate 设计原则
+
+Customer Domain 所有 Aggregate 必须遵循以下原则。
+
+## Principle-001
+
+一个 Aggregate 只有一个 Root。
+
+---
+
+## Principle-002
+
+外部系统只能引用 Aggregate Root。
+
+不得直接引用内部 Entity。
+
+---
+
+## Principle-003
+
+一次事务只能修改一个 Aggregate。
+
+跨 Aggregate 必须通过 Domain Event 完成。
+
+---
+
+## Principle-004
+
+Aggregate 负责维护业务一致性。
+
+数据库一致性不是 Aggregate 的职责。
+
+---
+
+## Principle-005
+
+Aggregate 应尽可能小。
+
+保持高性能。
+
+避免巨大 Aggregate。
+
+---
+
+# 三、Customer Domain Aggregate 划分
+
+Customer Domain 建议拆分如下 Aggregate。
+
+| Aggregate | Aggregate Root | 是否独立 |
+|------------|---------------|-----------|
+| Customer Aggregate | Customer | √ |
+| Membership Aggregate | Membership | √ |
+| Household Aggregate | Household | √ |
+| Customer Relationship Aggregate | Relationship | √ |
+| Customer Growth Aggregate | GrowthProfile | √ |
+| Customer Value Aggregate | CustomerValue | √ |
+| Customer Timeline Aggregate | Timeline | √ |
+| Customer Preference Aggregate | Preference | √ |
+
+Customer Domain 不建议设计成一个超级 Aggregate。
+
+---
+
+# 四、Customer Aggregate Root
+
+Customer Aggregate 是整个 Customer Domain 的核心。
+
+```
+Customer Aggregate
+
+Customer (Aggregate Root)
+
+├── CustomerIdentity
+
+├── CustomerProfile
+
+├── CustomerContact
+
+├── CustomerAddress
+
+├── CustomerPreference
+
+├── CustomerBehavior Snapshot
+
+└── CustomerAIProfile
+```
+
+Customer 是唯一 Aggregate Root。
+
+---
+
+# 五、Aggregate Root 职责
+
+Customer Root 负责：
+
+- 创建客户
+- 更新客户
+- 激活客户
+- 注销客户
+- 合并客户
+- 修改基础信息
+- 校验业务规则
+- 发布领域事件
+
+Root 不负责：
+
+- 销售订单
+- 商品
+- 库存
+- 支付
+- 财务
+
+这些属于其它 Domain。
+
+---
+
+# 六、Aggregate 内部 Entity
+
+Customer Aggregate 内部包含以下 Entity。
+
+| Entity | 生命周期 | 是否独立引用 |
+|---------|----------|-------------|
+| CustomerIdentity | 跟随 Customer | 否 |
+| CustomerProfile | 跟随 Customer | 否 |
+| CustomerContact | 跟随 Customer | 否 |
+| CustomerAddress | 跟随 Customer | 否 |
+| CustomerPreference | 跟随 Customer | 否 |
+| CustomerAIProfile | 跟随 Customer | 否 |
+
+所有 Entity 生命周期依附 Customer。
+
+不得独立存在。
+
+---
+
+# 七、Aggregate Value Object
+
+Customer Aggregate 包含以下 Value Object。
+
+| Value Object | 示例 |
+|--------------|------|
+| CustomerName | 张三 |
+| PhoneNumber | 138xxxx |
+| Email | xxx@xx.com |
+| Birthday | 1996-01-01 |
+| Gender | Male |
+| Language | zh-CN |
+| Currency | CNY |
+| Address | Address VO |
+
+Value Object 不具有业务身份。
+
+仅描述业务属性。
+
+---
+
+# 八、Aggregate 不变量（Invariant）
+
+Customer Aggregate 必须始终满足以下业务不变量。
+
+## Invariant-001
+
+Customer ID 全局唯一。
+
+---
+
+## Invariant-002
+
+一个 Customer 只能拥有一个 Identity。
+
+---
+
+## Invariant-003
+
+Identity 一旦建立。
+
+不得修改唯一标识。
+
+---
+
+## Invariant-004
+
+Customer 删除采用 Archive。
+
+不得物理删除。
+
+---
+
+## Invariant-005
+
+Customer 必须至少拥有一种联系方式。
+
+---
+
+## Invariant-006
+
+Customer 状态必须符合状态机定义。
+
+---
+
+# 九、事务边界（Transaction Boundary）
+
+Customer Aggregate 内允许：
+
+```
+创建 Customer
+
+↓
+
+创建 Identity
+
+↓
+
+创建 Profile
+
+↓
+
+创建 Contact
+
+↓
+
+提交事务
+```
+
+属于一个事务。
+
+以下操作：
+
+```
+Customer
+
+↓
+
+Sales Order
+```
+
+属于两个 Aggregate。
+
+必须采用：
+
+Domain Event。
+
+---
+
+# 十、Aggregate Command
+
+Customer Aggregate 对外提供 Command。
+
+| Command | 描述 |
+|----------|------|
+| CreateCustomer | 创建客户 |
+| UpdateCustomer | 更新客户 |
+| MergeCustomer | 合并客户 |
+| ArchiveCustomer | 客户归档 |
+| RestoreCustomer | 恢复客户 |
+| ChangeProfile | 更新画像 |
+| UpdatePreference | 更新偏好 |
+
+Command 是唯一写入口。
+
+---
+
+# 十一、Aggregate Domain Event
+
+Customer Aggregate 发布以下事件。
+
+| Event | 描述 |
+|--------|------|
+| CustomerCreated | 创建客户 |
+| CustomerUpdated | 客户更新 |
+| CustomerMerged | 客户合并 |
+| CustomerArchived | 客户归档 |
+| CustomerRestored | 客户恢复 |
+| CustomerProfileChanged | 画像变化 |
+| CustomerPreferenceChanged | 偏好变化 |
+
+任何状态变化均应发布 Event。
+
+---
+
+# 十二、Repository
+
+Customer Aggregate 对应唯一 Repository。
+
+```
+CustomerRepository
+```
+
+Repository 提供：
+
+- Save
+- Load
+- FindById
+- FindByIdentity
+- Exists
+- Archive
+
+禁止 Repository 承载复杂业务逻辑。
+
+---
+
+# 十三、Aggregate 生命周期
+
+```
+Create
+
+↓
+
+Active
+
+↓
+
+Inactive
+
+↓
+
+Archived
+
+↓
+
+Restored
+```
+
+所有状态变化必须经过 Aggregate Root。
+
+不得直接更新数据库状态。
+
+---
+
+# 十四、Aggregate 与其它 Aggregate 的关系
+
+```
+Customer Aggregate
+
+│
+
+├──────── Membership Aggregate
+
+│
+
+├──────── Growth Aggregate
+
+│
+
+├──────── Value Aggregate
+
+│
+
+├──────── Household Aggregate
+
+│
+
+├──────── Relationship Aggregate
+
+│
+
+└──────── Timeline Aggregate
+```
+
+这些 Aggregate 相互协作。
+
+但事务独立。
+
+---
+
+# 十五、Event Storming 映射
+
+典型业务流：
+
+```
+Command
+
+↓
+
+CreateCustomer
+
+↓
+
+Customer Aggregate
+
+↓
+
+CustomerCreated
+
+↓
+
+Membership Aggregate
+
+↓
+
+CreateMembership
+
+↓
+
+MembershipCreated
+
+↓
+
+Marketing Domain
+
+↓
+
+SendWelcomeMessage
+```
+
+整个流程通过事件驱动完成。
+
+---
+
+# 十六、数据库映射建议
+
+```
+Aggregate
+
+↓
+
+Customer
+
+↓
+
+customer
+
+customer_profile
+
+customer_contact
+
+customer_address
+
+customer_preference
+```
+
+一个 Aggregate 可以对应多个表。
+
+但只有一个 Root。
+
+---
+
+# 十七、API 映射建议
+
+建议：
+
+```
+POST /customers
+
+PUT /customers/{id}
+
+GET /customers/{id}
+
+DELETE /customers/{id}
+
+POST /customers/{id}/merge
+
+PUT /customers/{id}/preference
+```
+
+API 必须对应 Aggregate Command。
+
+禁止直接暴露 Entity。
+
+---
+
+# 十八、AI Agent 映射
+
+AI 不直接访问数据库。
+
+AI 应调用：
+
+```
+Customer Aggregate
+
+↓
+
+CustomerRepository
+
+↓
+
+Customer Domain Service
+```
+
+AI 输出：
+
+Command。
+
+由 Aggregate 执行业务。
+
+保证业务一致性。
+
+---
+
+# 十九、Aggregate 演进路线
+
+Phase 1
+
+Customer Aggregate
+
+↓
+
+Phase 2
+
+Event Driven Aggregate
+
+↓
+
+Phase 3
+
+CQRS Aggregate
+
+↓
+
+Phase 4
+
+Event Sourcing Aggregate
+
+↓
+
+Phase 5
+
+AI Native Aggregate
+
+↓
+
+Phase 6
+
+Autonomous Business Aggregate
+
+---
+
+# 二十、本章总结
+
+Customer Aggregate 是 Customer Domain 的事务一致性核心，也是整个客户领域的唯一写模型（Write Model）。
+
+它以 Customer 作为 Aggregate Root，统一管理客户身份、画像、联系方式、偏好等内部实体，通过 Command 执行业务操作，通过 Domain Event 与其他聚合和领域协作。
+
+这一设计确保了 Customer Domain 能够保持高内聚、低耦合，并为未来的 Event-Driven Architecture、CQRS、Event Sourcing 以及 AI Native Business Operating System 提供稳定的领域基础。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，定义 Customer Aggregate 模型 |
