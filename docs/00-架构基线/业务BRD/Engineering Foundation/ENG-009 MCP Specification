@@ -1,0 +1,1002 @@
+# ENG-009 MCP Specification（Model Context Protocol 规范）
+
+---
+
+**文档编号**：ENG-009
+
+**文档名称**：MCP Specification
+
+**中文名称**：Model Context Protocol（MCP）规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Business Runtime Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一 Model Context Protocol（MCP）规范。
+
+MCP 是 JBOS AI Runtime 与 Business Capability 之间的标准能力协议（Capability Protocol）。
+
+它不是 API 的替代，而是企业能力向 AI Agent 暴露的统一协议。
+
+所有 AI Agent、Business Brain、Workflow Runtime、External AI Platform 均应通过 MCP 访问企业经营能力。
+
+---
+
+# 二、Architecture Position
+
+JBOS Runtime：
+
+```text
+Business Capability
+
+↓
+
+Application Service
+
+↓
+
+Business Runtime
+
+├── API Runtime
+├── Event Runtime
+├── Workflow Runtime
+├── Agent Runtime
+├── MCP Runtime
+└── Knowledge Runtime
+```
+
+MCP Runtime：
+
+负责：
+
+统一能力发现。
+
+统一能力调用。
+
+统一上下文管理。
+
+统一 AI 安全。
+
+---
+
+# 三、What is MCP
+
+在 JBOS 中：
+
+MCP 定义为：
+
+> Business Capability Discovery & Execution Protocol
+
+即：
+
+企业能力发现协议。
+
+而不是：
+
+模型通信协议。
+
+MCP：
+
+让 AI：
+
+能够理解：
+
+企业有什么能力。
+
+能够做什么。
+
+如何调用。
+
+什么时候调用。
+
+调用后发生什么。
+
+---
+
+# 四、Architecture Goals
+
+MCP：
+
+需要实现：
+
+- Capability Discovery
+- Capability Invocation
+- Context Management
+- Permission Control
+- AI Governance
+- Tool Standardization
+- Vendor Independence
+- Multi-Agent Collaboration
+
+---
+
+# 五、Design Principles
+
+所有 MCP：
+
+遵循：
+
+## Principle-001
+
+Capability First
+
+MCP：
+
+暴露：
+
+Business Capability。
+
+不是：
+
+数据库。
+
+不是：
+
+Service。
+
+---
+
+## Principle-002
+
+Contract First
+
+所有 Tool：
+
+必须：
+
+Schema。
+
+Input。
+
+Output。
+
+Permission。
+
+统一描述。
+
+---
+
+## Principle-003
+
+Governance First
+
+所有调用：
+
+必须：
+
+Permission。
+
+Policy。
+
+Audit。
+
+---
+
+## Principle-004
+
+Vendor Neutral
+
+支持：
+
+OpenAI
+
+Anthropic
+
+Google
+
+Azure
+
+DeepSeek
+
+Qwen
+
+Claude
+
+Gemini
+
+统一协议。
+
+---
+
+## Principle-005
+
+Discoverable
+
+Agent：
+
+无需硬编码。
+
+自动发现：
+
+Capability。
+
+---
+
+# 六、MCP Runtime
+
+统一 Runtime：
+
+```text
+Agent
+
+↓
+
+MCP Client
+
+↓
+
+MCP Runtime
+
+↓
+
+Capability Registry
+
+↓
+
+Business Capability
+
+↓
+
+Workflow
+
+↓
+
+Event
+
+↓
+
+Response
+```
+
+MCP：
+
+成为：
+
+统一入口。
+
+---
+
+# 七、MCP Canonical Model
+
+统一对象：
+
+```text
+MCP Capability
+
+├── CapabilityID
+├── CapabilityCode
+├── CapabilityName
+├── Domain
+├── Description
+├── InputSchema
+├── OutputSchema
+├── Permission
+├── Policy
+├── Event
+├── Workflow
+├── Version
+├── Owner
+├── Status
+└── Metadata
+```
+
+统一管理。
+
+---
+
+# 八、Capability Registry
+
+统一注册：
+
+```text
+Capability Registry
+
+├── Customer
+├── Membership
+├── Sales
+├── Marketing
+├── Inventory
+├── Organization
+├── Finance
+├── Workflow
+├── Knowledge
+└── AI
+```
+
+所有：
+
+Business Capability：
+
+必须注册。
+
+---
+
+# 九、MCP Server
+
+每个 Domain：
+
+可拥有：
+
+```text
+Customer MCP Server
+
+Membership MCP Server
+
+Inventory MCP Server
+
+Marketing MCP Server
+```
+
+也支持：
+
+Enterprise MCP Gateway。
+
+---
+
+# 十、MCP Gateway
+
+统一入口：
+
+负责：
+
+```text
+Authentication
+
+Authorization
+
+Routing
+
+Rate Limit
+
+Audit
+
+Capability Discovery
+
+Policy Check
+```
+
+所有 Agent：
+
+统一接入。
+
+---
+
+# 十一、Capability Discovery
+
+Agent：
+
+请求：
+
+```
+Discover Capability
+```
+
+返回：
+
+```text
+Capability
+
+Description
+
+Input
+
+Output
+
+Permission
+
+Workflow
+
+Example
+```
+
+无需：
+
+Prompt 写死。
+
+---
+
+# 十二、Tool Definition
+
+每一个 Tool：
+
+统一：
+
+```text
+Tool
+
+├── Name
+├── Description
+├── Domain
+├── InputSchema
+├── OutputSchema
+├── Example
+├── Permission
+├── Cost
+├── SLA
+```
+
+形成：
+
+Tool Registry。
+
+---
+
+# 十三、Context Management
+
+统一 Context：
+
+```text
+Tenant
+
+Organization
+
+Store
+
+Operator
+
+Language
+
+Currency
+
+Timezone
+
+Conversation
+
+Business Goal
+```
+
+所有调用：
+
+自动传递。
+
+---
+
+# 十四、Prompt Independence
+
+Agent：
+
+不依赖：
+
+Prompt。
+
+而依赖：
+
+Capability。
+
+Prompt：
+
+只是：
+
+Instruction。
+
+Business Logic：
+
+来自：
+
+Capability。
+
+---
+
+# 十五、Knowledge Integration
+
+MCP：
+
+统一：
+
+Knowledge。
+
+例如：
+
+```text
+Business SOP
+
+Pricing Policy
+
+Promotion Rule
+
+CRM Knowledge
+
+Product Knowledge
+```
+
+Agent：
+
+统一引用。
+
+---
+
+# 十六、Workflow Integration
+
+MCP：
+
+能够：
+
+调用：
+
+Workflow。
+
+例如：
+
+```text
+Create Customer
+
+↓
+
+Start Customer Onboarding Workflow
+```
+
+Workflow：
+
+也是：
+
+Capability。
+
+---
+
+# 十七、Event Integration
+
+MCP：
+
+调用完成：
+
+发布：
+
+Business Event。
+
+例如：
+
+```text
+Create Membership
+
+↓
+
+MembershipCreated
+```
+
+统一：
+
+Event Runtime。
+
+---
+
+# 十八、Permission Model
+
+统一权限：
+
+```text
+Capability Permission
+
+↓
+
+Tool Permission
+
+↓
+
+Data Permission
+
+↓
+
+Tenant Permission
+```
+
+AI：
+
+不能：
+
+越权。
+
+---
+
+# 十九、Policy Engine
+
+所有 MCP：
+
+执行：
+
+```text
+Risk Policy
+
+Discount Policy
+
+Privacy Policy
+
+Approval Policy
+
+Compliance Policy
+```
+
+统一：
+
+Governance。
+
+---
+
+# 二十、Audit Model
+
+所有调用：
+
+记录：
+
+```text
+Agent
+
+Goal
+
+Capability
+
+Input
+
+Output
+
+Tool
+
+Workflow
+
+Event
+
+Result
+
+Reason
+```
+
+支持：
+
+Explainability。
+
+---
+
+# 二十一、Version Management
+
+Capability：
+
+版本：
+
+```text
+Customer.Create.v1
+
+Customer.Create.v2
+```
+
+Agent：
+
+支持：
+
+自动升级。
+
+兼容旧版本。
+
+---
+
+# 二十二、Capability Composition
+
+多个 Capability：
+
+组成：
+
+```text
+Customer Analysis
+
+↓
+
+Member Analysis
+
+↓
+
+Recommendation
+
+↓
+
+Marketing Workflow
+```
+
+形成：
+
+Composite Capability。
+
+---
+
+# 二十三、Multi-Agent Collaboration
+
+多个 Agent：
+
+共享：
+
+Capability。
+
+例如：
+
+```text
+Sales Agent
+
+↓
+
+Customer Capability
+
+↓
+
+Marketing Capability
+
+↓
+
+Inventory Capability
+```
+
+统一：
+
+MCP。
+
+---
+
+# 二十四、Business Brain
+
+Business Brain：
+
+统一调用：
+
+```text
+Capability Registry
+
+↓
+
+Planning
+
+↓
+
+Workflow
+
+↓
+
+Execution
+
+↓
+
+Evaluation
+```
+
+所有能力：
+
+来自：
+
+MCP。
+
+---
+
+# 二十五、Security
+
+统一安全：
+
+包括：
+
+- Identity
+- Authentication
+- Authorization
+- Encryption
+- Tenant Isolation
+- Prompt Protection
+- Tool Validation
+
+统一：
+
+Zero Trust。
+
+---
+
+# 二十六、Observability
+
+统一监控：
+
+```text
+Capability Usage
+
+Latency
+
+Failure
+
+Cost
+
+Success
+
+Popularity
+
+Agent Distribution
+```
+
+进入：
+
+Observability。
+
+---
+
+# 二十七、Open MCP Compatibility
+
+JBOS：
+
+兼容：
+
+标准 MCP。
+
+支持：
+
+- Local MCP Server
+- Remote MCP Server
+- Enterprise MCP Server
+- Cloud MCP Server
+
+统一协议。
+
+---
+
+# 二十八、Enterprise MCP Fabric
+
+JBOS：
+
+建立：
+
+Enterprise Capability Fabric。
+
+```text
+Business Capability
+
+↓
+
+Capability Registry
+
+↓
+
+MCP Runtime
+
+↓
+
+AI Agent
+
+↓
+
+Business Brain
+
+↓
+
+Enterprise Intelligence
+```
+
+形成：
+
+企业能力网络。
+
+---
+
+# 二十九、Future Evolution
+
+未来：
+
+MCP：
+
+演进：
+
+```text
+Capability API
+
+↓
+
+MCP
+
+↓
+
+Capability Mesh
+
+↓
+
+Enterprise Knowledge Fabric
+
+↓
+
+Business Brain
+
+↓
+
+Autonomous Enterprise Runtime
+```
+
+最终：
+
+企业能力：
+
+全部：
+
+Agent Native。
+
+---
+
+# 三十、本章总结
+
+MCP Specification 是 JBOS AI Runtime 与 Business Capability 之间的统一协议规范。
+
+本规范建立了：
+
+- One Capability Registry（统一能力注册中心）
+- One MCP Runtime（统一 MCP 运行时）
+- One Capability Contract（统一能力契约）
+- One Tool Registry（统一工具注册中心）
+- One Enterprise Capability Fabric（统一企业能力网络）
+- One AI Governance Model（统一 AI 治理模型）
+
+在 JBOS 中，MCP 不只是一个 AI 协议，而是企业能力的标准化暴露层。
+
+它使 API、Workflow、Event、Knowledge、AI Agent 共同组成统一的 Capability Fabric，让企业经营能力能够被任何符合标准的 AI Agent 自动发现、自动理解、自动调用，实现真正意义上的 AI Native Business Operating System。
+
+---
+
+# 附录 A：JBOS MCP 分层架构
+
+```text
+Business Capability
+        │
+Application Service
+        │
+Capability Registry
+        │
+MCP Runtime
+├───────────────┐
+│ Tool Registry │
+│ Context       │
+│ Policy        │
+│ Permission    │
+│ Audit         │
+└───────────────┘
+        │
+AI Agent
+        │
+Business Brain
+```
+
+---
+
+# 附录 B：Capability Registry 示例
+
+| Domain | Capability | MCP Tool |
+|----------|------------|----------|
+| Customer | Customer.Create | customer.create |
+| Customer | Customer.Merge | customer.merge |
+| Membership | Membership.Upgrade | membership.upgrade |
+| Sales | Order.Create | sales.order.create |
+| Inventory | Inventory.Allocate | inventory.allocate |
+| Marketing | Campaign.Start | marketing.campaign.start |
+| Workflow | Workflow.Start | workflow.start |
+| AI | Customer Insight | ai.customer.insight |
+
+---
+
+# 附录 C：推荐 MCP Server 拆分
+
+```text
+Enterprise MCP Gateway
+│
+├── Customer MCP Server
+├── Membership MCP Server
+├── Sales MCP Server
+├── Marketing MCP Server
+├── Inventory MCP Server
+├── Organization MCP Server
+├── Workflow MCP Server
+├── Knowledge MCP Server
+└── Analytics MCP Server
+```
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS MCP Specification |

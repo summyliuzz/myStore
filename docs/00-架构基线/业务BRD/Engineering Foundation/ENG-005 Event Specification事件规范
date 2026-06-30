@@ -1,0 +1,961 @@
+# ENG-005 Event Specification（事件规范）
+
+---
+
+**文档编号**：ENG-005
+
+**文档名称**：Event Specification
+
+**中文名称**：事件规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一 Event Specification（事件规范）。
+
+Business Event 是 JBOS 各微服务之间进行业务协作、数据同步、AI 协同以及 Workflow 编排的核心通信机制。
+
+本规范定义：
+
+- Business Event Canonical Model
+- Event Contract
+- Event Lifecycle
+- Event Naming
+- Event Governance
+- Event Versioning
+- Event Security
+- Event Bus
+- Event Store
+- Event Replay
+- AI Event Integration
+
+所有跨服务业务协作必须优先采用 Business Event，而不是同步 API。
+
+---
+
+# 二、为什么需要 Event
+
+传统系统：
+
+```text
+A Service
+
+↓
+
+Call B
+
+↓
+
+Call C
+
+↓
+
+Call D
+```
+
+形成：
+
+- 强耦合
+- 链式调用
+- 性能下降
+- 难以扩展
+- 难以增加 AI
+
+JBOS：
+
+```text
+Customer Service
+
+↓
+
+CustomerRegistered Event
+
+↓
+
+Membership
+
+Marketing
+
+Points
+
+AI
+
+BI
+
+Notification
+```
+
+发布一次。
+
+多个服务订阅。
+
+天然解耦。
+
+---
+
+# 三、Architecture Principles
+
+所有 Event 必须遵循：
+
+## Principle-001
+
+Business First
+
+事件描述：
+
+业务事实（Business Fact）。
+
+不是：
+
+技术动作。
+
+正确：
+
+```text
+CustomerRegistered
+```
+
+错误：
+
+```text
+InsertCustomer
+```
+
+---
+
+## Principle-002
+
+Immutable
+
+事件：
+
+不可修改。
+
+不可覆盖。
+
+只能：
+
+追加。
+
+---
+
+## Principle-003
+
+Past Tense
+
+事件：
+
+表示：
+
+已经发生。
+
+统一采用过去式。
+
+例如：
+
+```text
+CustomerRegistered
+
+MembershipActivated
+
+OrderPaid
+
+InventoryAllocated
+```
+
+禁止：
+
+```text
+RegisterCustomer
+
+CreateOrder
+
+UpdateInventory
+```
+
+---
+
+## Principle-004
+
+Event Driven
+
+跨服务：
+
+优先：
+
+Business Event。
+
+API：
+
+仅用于：
+
+同步查询。
+
+---
+
+## Principle-005
+
+Replayable
+
+所有 Event：
+
+必须支持：
+
+Replay。
+
+---
+
+# 四、Event Architecture
+
+统一架构：
+
+```text
+Business Capability
+
+↓
+
+Domain Event
+
+↓
+
+Application Event
+
+↓
+
+Event Bus
+
+↓
+
+Subscriber
+
+↓
+
+Business Process
+```
+
+事件：
+
+成为系统协作中心。
+
+---
+
+# 五、Business Event Canonical Model
+
+统一对象：
+
+```text
+BusinessEvent
+
+├── EventID
+├── EventName
+├── EventType
+├── Aggregate
+├── AggregateID
+├── Version
+├── TenantID
+├── OrganizationID
+├── StoreID
+├── Timestamp
+├── TraceID
+├── CorrelationID
+├── Source
+├── Payload
+├── Metadata
+└── Signature
+```
+
+所有 Event：
+
+统一结构。
+
+---
+
+# 六、Event Classification
+
+统一分类：
+
+```text
+Domain Event
+
+Application Event
+
+Integration Event
+
+System Event
+
+Workflow Event
+
+AI Event
+
+Audit Event
+
+Notification Event
+```
+
+各类事件职责独立。
+
+---
+
+# 七、Domain Event
+
+Domain Event：
+
+描述：
+
+领域事实。
+
+例如：
+
+```text
+CustomerRegistered
+
+CustomerMerged
+
+MembershipUpgraded
+
+OrderCompleted
+
+InventoryAdjusted
+```
+
+Domain Event：
+
+只能由 Aggregate 发布。
+
+---
+
+# 八、Application Event
+
+Application Event：
+
+用于：
+
+业务流程编排。
+
+例如：
+
+```text
+CustomerRegistrationCompleted
+
+PromotionExecutionStarted
+
+WorkflowApproved
+```
+
+由：
+
+Application Layer 发布。
+
+---
+
+# 九、Integration Event
+
+用于：
+
+外部系统同步。
+
+例如：
+
+```text
+ERPOrderCreated
+
+CRMCustomerUpdated
+
+POSInventoryChanged
+```
+
+避免：
+
+直接暴露 Domain Event。
+
+---
+
+# 十、System Event
+
+系统事件：
+
+例如：
+
+```text
+ServiceStarted
+
+ConfigurationChanged
+
+UserLoggedIn
+
+PermissionChanged
+```
+
+用于：
+
+系统治理。
+
+---
+
+# 十一、AI Event
+
+AI：
+
+统一事件：
+
+```text
+PromptExecuted
+
+KnowledgeRetrieved
+
+RecommendationGenerated
+
+AgentTaskCompleted
+
+DecisionApproved
+```
+
+所有 AI：
+
+必须事件化。
+
+---
+
+# 十二、Event Naming
+
+统一命名：
+
+```
+<Entity><PastTense>
+
+CustomerRegistered
+
+OrderPaid
+
+InventoryAllocated
+```
+
+禁止：
+
+```
+CustomerRegister
+
+CustomerUpdate
+
+DoSomething
+```
+
+---
+
+# 十三、Event Payload
+
+统一 Payload：
+
+```json
+{
+  "eventId":"",
+  "eventName":"",
+  "aggregateId":"",
+  "occurredAt":"",
+  "operator":"",
+  "tenantId":"",
+  "data":{}
+}
+```
+
+禁止：
+
+暴露数据库对象。
+
+---
+
+# 十四、Event Metadata
+
+统一 Metadata：
+
+```text
+TraceID
+
+CorrelationID
+
+RequestID
+
+Source
+
+Version
+
+Environment
+
+Region
+
+Locale
+```
+
+支持：
+
+全链路追踪。
+
+---
+
+# 十五、Event Versioning
+
+统一版本：
+
+```
+CustomerRegistered.v1
+
+CustomerRegistered.v2
+```
+
+消费者：
+
+按版本消费。
+
+禁止：
+
+覆盖旧结构。
+
+---
+
+# 十六、Event Store
+
+所有 Business Event：
+
+进入：
+
+```
+Event Store
+```
+
+统一保存：
+
+- Event
+- Metadata
+- Version
+- Audit
+
+支持：
+
+Replay。
+
+---
+
+# 十七、Event Bus
+
+统一总线：
+
+支持：
+
+```text
+Kafka
+
+RabbitMQ
+
+Pulsar
+
+Cloud Event Bus
+```
+
+业务层：
+
+不感知：
+
+具体实现。
+
+---
+
+# 十八、Event Ordering
+
+同一 Aggregate：
+
+必须保证：
+
+事件顺序。
+
+例如：
+
+```text
+CustomerCreated
+
+↓
+
+MembershipActivated
+
+↓
+
+CustomerMerged
+```
+
+避免：
+
+乱序。
+
+---
+
+# 十九、Exactly Once & Idempotency
+
+消费者：
+
+必须支持：
+
+幂等。
+
+例如：
+
+```
+EventID
+```
+
+重复消费：
+
+不能重复执行业务。
+
+---
+
+# 二十、Outbox Pattern
+
+所有业务事件：
+
+统一采用：
+
+```text
+Business Transaction
+
+↓
+
+Outbox Table
+
+↓
+
+Event Publisher
+
+↓
+
+Event Bus
+```
+
+保证：
+
+最终一致性。
+
+---
+
+# 二十一、Saga Pattern
+
+跨服务事务：
+
+统一采用：
+
+```text
+Local Transaction
+
+↓
+
+Business Event
+
+↓
+
+Next Transaction
+```
+
+形成：
+
+Saga。
+
+禁止：
+
+分布式数据库事务。
+
+---
+
+# 二十二、Dead Letter Queue（DLQ）
+
+消费失败：
+
+进入：
+
+DLQ。
+
+支持：
+
+- Retry
+- Manual Replay
+- Compensation
+
+保证：
+
+业务可靠性。
+
+---
+
+# 二十三、Event Replay
+
+支持：
+
+Replay。
+
+例如：
+
+```text
+Customer Timeline
+
+↓
+
+Replay
+
+↓
+
+Business State
+```
+
+支持：
+
+AI 学习。
+
+数据恢复。
+
+历史分析。
+
+---
+
+# 二十四、Event Governance
+
+统一治理：
+
+包括：
+
+- Event Registry
+- Event Owner
+- Version
+- Schema
+- SLA
+- Subscriber
+- Audit
+
+所有事件：
+
+进入：
+
+Event Registry。
+
+---
+
+# 二十五、Event Security
+
+所有 Event：
+
+支持：
+
+- Signature
+- Encryption
+- Permission
+- Tenant Isolation
+- Audit
+
+保证：
+
+跨组织安全。
+
+---
+
+# 二十六、CloudEvents Compatibility
+
+JBOS 推荐采用 CloudEvents 标准作为统一事件封装协议。
+
+标准字段包括：
+
+```text
+id
+source
+type
+subject
+time
+specversion
+datacontenttype
+data
+```
+
+Business Payload：
+
+放置于：
+
+```
+data
+```
+
+支持：
+
+跨平台。
+
+跨云。
+
+跨语言。
+
+---
+
+# 二十七、AsyncAPI Specification
+
+所有异步事件：
+
+必须自动生成：
+
+```
+AsyncAPI Document
+```
+
+包括：
+
+- Publisher
+- Subscriber
+- Payload Schema
+- Version
+- Example
+
+禁止：
+
+人工维护事件文档。
+
+---
+
+# 二十八、AI Native Event Bus
+
+AI：
+
+订阅：
+
+Business Event。
+
+例如：
+
+```text
+CustomerRegistered
+
+↓
+
+Customer Insight Agent
+
+↓
+
+Generate Profile
+
+↓
+
+CustomerProfileGenerated
+```
+
+AI：
+
+也是 Event Producer。
+
+也是 Event Consumer。
+
+---
+
+# 二十九、Future Evolution
+
+JBOS Event：
+
+未来演进：
+
+```text
+Business Event
+
+↓
+
+Enterprise Event Bus
+
+↓
+
+Event Store
+
+↓
+
+Knowledge Graph
+
+↓
+
+Business Brain
+
+↓
+
+Autonomous Event Network
+```
+
+形成：
+
+企业经营神经网络。
+
+---
+
+# 三十、本章总结
+
+Event Specification 是 JBOS Engineering Foundation 中连接所有微服务、Workflow、AI Agent 与业务能力的核心规范。
+
+本规范统一定义了：
+
+- One Business Event Model（统一业务事件模型）
+- One Event Contract（统一事件契约）
+- One Event Registry（统一事件注册中心）
+- One Event Store（统一事件存储）
+- One Event Bus（统一事件总线）
+- One Event Governance（统一事件治理）
+
+未来，所有跨服务协作将以 Event 为中心，通过 Event 驱动 Workflow、AI、BI、Integration 以及 Business Brain，构建真正的 Event Driven Business Operating System。
+
+---
+
+## 附录 A：Business Event 命名规范
+
+| Domain | Event |
+|----------|-------|
+| Customer | CustomerRegistered |
+| Customer | CustomerMerged |
+| Membership | MembershipActivated |
+| Membership | MembershipLevelChanged |
+| Sales | OrderCreated |
+| Sales | OrderPaid |
+| Sales | OrderCancelled |
+| Inventory | InventoryAllocated |
+| Inventory | InventoryAdjusted |
+| Marketing | CampaignStarted |
+| Marketing | CouponRedeemed |
+| Organization | EmployeeAssigned |
+| AI | RecommendationGenerated |
+| AI | AgentTaskCompleted |
+
+---
+
+## 附录 B：推荐目录结构
+
+```text
+event
+├── canonical
+├── domain
+├── application
+├── integration
+├── system
+├── ai
+├── registry
+├── publisher
+├── subscriber
+├── outbox
+├── replay
+├── store
+└── schema
+```
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Event Specification 规范 |

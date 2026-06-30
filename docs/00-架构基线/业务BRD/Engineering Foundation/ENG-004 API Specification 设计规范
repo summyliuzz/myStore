@@ -1,0 +1,834 @@
+# ENG-004 API Specification（API 规范）
+
+---
+
+**文档编号**：ENG-004
+
+**文档名称**：API Specification
+
+**中文名称**：API 规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一 API 规范。
+
+API 是系统能力（Business Capability）的标准化访问入口，而不是数据库接口。
+
+所有业务能力必须通过统一 API 对外提供，确保：
+
+- 统一接口规范
+- 统一安全认证
+- 统一权限控制
+- 统一错误处理
+- 统一版本管理
+- 统一可观测性
+- AI Agent 可调用
+- MCP 可发现
+- SDK 可自动生成
+
+本规范适用于：
+
+- Internal API
+- External API
+- Partner API
+- Open API
+- AI API
+- MCP API
+
+---
+
+# 二、设计目标（Architecture Goals）
+
+JBOS API 需要实现：
+
+- Business First（业务优先）
+- Contract First（契约优先）
+- Capability Driven（能力驱动）
+- Resource Oriented（资源导向）
+- Secure by Default（默认安全）
+- Version Compatible（版本兼容）
+- Discoverable（可发现）
+- AI Ready（AI 原生）
+
+---
+
+# 三、API Design Principles（API 设计原则）
+
+所有 API 必须遵循以下原则。
+
+## Principle-001
+
+Business Capability First
+
+API 对应业务能力。
+
+而不是数据库。
+
+例如：
+
+```
+POST /customers/register
+```
+
+而不是：
+
+```
+insertCustomer()
+```
+
+---
+
+## Principle-002
+
+Contract First
+
+先设计 Contract。
+
+再开发。
+
+Contract 包括：
+
+- Request
+- Response
+- Error
+- Permission
+- Event
+
+统一管理。
+
+---
+
+## Principle-003
+
+Stateless
+
+API 必须无状态。
+
+请求必须包含完整上下文。
+
+服务器不保存会话状态。
+
+---
+
+## Principle-004
+
+Idempotent
+
+重复请求。
+
+结果必须一致。
+
+例如：
+
+```
+PUT
+
+DELETE
+```
+
+必须支持幂等。
+
+---
+
+## Principle-005
+
+Consistent
+
+统一：
+
+命名。
+
+分页。
+
+过滤。
+
+排序。
+
+错误。
+
+返回格式。
+
+---
+
+# 四、API Architecture
+
+统一模型：
+
+```text
+Client
+
+↓
+
+API Gateway
+
+↓
+
+Application Service
+
+↓
+
+Domain Service
+
+↓
+
+Repository
+```
+
+API：
+
+只能调用：
+
+Application Service。
+
+禁止：
+
+直接访问：
+
+Repository。
+
+---
+
+# 五、API Classification
+
+统一分类：
+
+```text
+Open API
+
+Internal API
+
+Partner API
+
+Admin API
+
+Mobile API
+
+AI API
+
+MCP API
+```
+
+不同 API：
+
+统一规范。
+
+---
+
+# 六、API Canonical Model
+
+统一对象：
+
+```text
+Business API
+
+├── API ID
+├── API Name
+├── Capability
+├── Domain
+├── Version
+├── Protocol
+├── Method
+├── URI
+├── Permission
+├── Request
+├── Response
+├── Event
+├── Error
+├── Owner
+├── Status
+└── Metadata
+```
+
+所有 API：
+
+统一注册。
+
+---
+
+# 七、URI Design
+
+统一 URI：
+
+```
+/api/v1/customers
+
+/api/v1/memberships
+
+/api/v1/orders
+
+/api/v1/campaigns
+```
+
+采用：
+
+复数。
+
+小写。
+
+短横线。
+
+例如：
+
+```
+/customer-profile
+
+/customer-tags
+```
+
+禁止：
+
+```
+getCustomerInfo
+
+saveCustomer
+```
+
+---
+
+# 八、HTTP Method
+
+统一定义：
+
+| Method | Purpose |
+|----------|----------|
+| GET | 查询 |
+| POST | 创建 |
+| PUT | 整体更新 |
+| PATCH | 局部更新 |
+| DELETE | 删除 |
+| OPTIONS | 能力发现 |
+
+禁止：
+
+GET：
+
+修改数据。
+
+---
+
+# 九、Request Specification
+
+统一请求：
+
+```json
+{
+  "requestId": "",
+  "timestamp": "",
+  "operator": "",
+  "tenantId": "",
+  "organizationId": "",
+  "storeId": "",
+  "data": {}
+}
+```
+
+所有请求：
+
+统一 Header。
+
+统一 Context。
+
+---
+
+# 十、Response Specification
+
+统一响应：
+
+```json
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": "",
+  "data": {},
+  "traceId": "",
+  "timestamp": ""
+}
+```
+
+保持一致。
+
+---
+
+# 十一、Error Specification
+
+统一错误：
+
+```text
+Business Error
+
+Validation Error
+
+Permission Error
+
+Authentication Error
+
+System Error
+
+Integration Error
+```
+
+例如：
+
+```json
+{
+  "code":"CUSTOMER_NOT_FOUND",
+  "message":"Customer does not exist."
+}
+```
+
+禁止：
+
+直接返回：
+
+Exception。
+
+---
+
+# 十二、Pagination Specification
+
+统一分页：
+
+```json
+{
+  "page":1,
+  "size":20,
+  "total":320,
+  "items":[]
+}
+```
+
+默认：
+
+分页查询。
+
+禁止：
+
+无限返回。
+
+---
+
+# 十三、Filtering & Sorting
+
+统一：
+
+```
+?status=ACTIVE
+
+?sort=createTime,desc
+
+?page=1
+
+&size=20
+```
+
+统一 Query Parameter。
+
+---
+
+# 十四、Authentication
+
+统一认证：
+
+支持：
+
+```
+OAuth2
+
+OIDC
+
+JWT
+
+API Key
+```
+
+内部：
+
+Service Account。
+
+AI：
+
+Agent Identity。
+
+---
+
+# 十五、Authorization
+
+所有 API：
+
+必须：
+
+Permission。
+
+例如：
+
+```
+Customer.Read
+
+Customer.Update
+
+Order.Approve
+```
+
+统一：
+
+Business Permission。
+
+---
+
+# 十六、API Version
+
+统一版本：
+
+```
+/api/v1/
+
+/api/v2/
+```
+
+Major：
+
+路径升级。
+
+Minor：
+
+向后兼容。
+
+禁止：
+
+覆盖旧版本。
+
+---
+
+# 十七、API Documentation
+
+所有 API：
+
+必须生成：
+
+```
+OpenAPI
+
+Swagger
+
+AsyncAPI（异步）
+
+MCP Manifest
+```
+
+文档：
+
+自动生成。
+
+禁止：
+
+手工维护。
+
+---
+
+# 十八、API Observability
+
+统一支持：
+
+```
+TraceID
+
+Metrics
+
+Logging
+
+Audit
+
+Latency
+
+Success Rate
+
+Error Rate
+```
+
+进入：
+
+统一 Monitoring。
+
+---
+
+# 十九、API Security
+
+统一安全：
+
+包括：
+
+- HTTPS
+- TLS
+- JWT
+- Signature
+- Rate Limit
+- Permission
+- Data Encryption
+
+所有开放接口：
+
+必须签名。
+
+---
+
+# 二十、API Idempotency
+
+重要接口：
+
+支持：
+
+```
+Idempotency-Key
+```
+
+例如：
+
+支付。
+
+会员升级。
+
+库存调整。
+
+避免重复执行。
+
+---
+
+# 二十一、API Event
+
+API：
+
+成功执行。
+
+可以发布：
+
+```
+Business Event
+```
+
+例如：
+
+```
+POST /customers
+
+↓
+
+CustomerRegistered
+```
+
+API：
+
+不负责：
+
+业务协作。
+
+Event：
+
+负责：
+
+后续扩展。
+
+---
+
+# 二十二、API Governance
+
+统一治理：
+
+包括：
+
+- Registry
+- Owner
+- SLA
+- Version
+- Permission
+- Audit
+- Lifecycle
+
+所有 API：
+
+进入：
+
+API Registry。
+
+---
+
+# 二十三、API Lifecycle
+
+生命周期：
+
+```text
+Design
+
+↓
+
+Review
+
+↓
+
+Develop
+
+↓
+
+Test
+
+↓
+
+Publish
+
+↓
+
+Deprecated
+
+↓
+
+Archived
+```
+
+统一管理。
+
+---
+
+# 二十四、AI Native API
+
+AI 调用 API：
+
+必须：
+
+```
+Capability
+
+↓
+
+Permission
+
+↓
+
+Policy
+
+↓
+
+API
+
+↓
+
+Audit
+```
+
+AI：
+
+禁止：
+
+绕过 API。
+
+直接访问数据库。
+
+---
+
+# 二十五、MCP Compatible API
+
+所有 Business Capability：
+
+必须支持：
+
+MCP Discovery。
+
+统一描述：
+
+```
+Capability
+
+↓
+
+Input Schema
+
+↓
+
+Output Schema
+
+↓
+
+Permission
+
+↓
+
+Examples
+```
+
+支持：
+
+Agent 自动发现。
+
+---
+
+# 二十六、Future Evolution
+
+未来 API：
+
+演进：
+
+```text
+REST API
+
+↓
+
+OpenAPI
+
+↓
+
+Graph API
+
+↓
+
+MCP API
+
+↓
+
+Agent Capability API
+
+↓
+
+Autonomous Business API
+```
+
+形成：
+
+企业能力网络。
+
+---
+
+# 二十七、本章总结
+
+API Specification 是 JBOS Engineering Foundation 的统一接口规范。
+
+它定义了 API 的设计原则、契约模型、资源命名、安全认证、权限控制、版本管理、生命周期以及 AI 与 MCP 的兼容机制。
+
+通过本规范，JBOS 将建立：
+
+- One API Registry（统一 API 注册中心）
+- One Contract Model（统一契约模型）
+- One Security Standard（统一安全标准）
+- One Capability Gateway（统一能力网关）
+- One AI Callable API（统一 AI 可调用接口）
+
+未来，所有业务能力都将通过标准化 API 对外开放，并成为 AI Agent、第三方系统、移动端以及生态伙伴访问 JBOS 的统一入口。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS API Specification |

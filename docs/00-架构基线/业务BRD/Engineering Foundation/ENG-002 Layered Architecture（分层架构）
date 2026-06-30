@@ -1,0 +1,925 @@
+# ENG-002 Layered Architecture（分层架构）
+
+---
+
+**文档编号**：ENG-002
+
+**文档名称**：Layered Architecture
+
+**中文名称**：分层架构规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一分层架构（Layered Architecture）。
+
+所有微服务、领域模块、AI Agent、Workflow、API、后台管理系统以及移动端应用均应遵循本规范。
+
+本规范旨在建立：
+
+- 清晰的职责边界（Clear Responsibility）
+- 高内聚、低耦合（High Cohesion, Low Coupling）
+- 面向领域（Domain-Oriented）
+- 面向能力（Capability-Oriented）
+- AI Native（AI 原生）
+- 可治理（Governable）
+- 可扩展（Extensible）
+
+统一研发架构。
+
+---
+
+# 二、设计目标（Architecture Goals）
+
+JBOS 分层架构需要满足以下目标：
+
+- 保证业务逻辑独立于技术框架
+- 保证领域模型长期稳定
+- 保证基础设施可替换
+- 保证接口统一
+- 保证 AI 能够统一接入
+- 保证事件驱动天然支持
+- 保证未来支持微服务拆分
+
+---
+
+# 三、Architecture Overview（总体架构）
+
+JBOS 采用六层企业架构。
+
+```text
+Presentation Layer
+        │
+Application Layer
+        │
+Domain Layer
+        │
+Governance Layer
+        │
+AI Native Layer
+        │
+Infrastructure Layer
+```
+
+说明：
+
+Presentation
+
+负责交互。
+
+Application
+
+负责业务流程。
+
+Domain
+
+负责业务规则。
+
+Governance
+
+负责企业治理。
+
+AI Native
+
+负责智能能力。
+
+Infrastructure
+
+负责技术实现。
+
+---
+
+# 四、Layer Dependency（层级依赖）
+
+依赖关系如下：
+
+```text
+Presentation
+      │
+      ▼
+Application
+      │
+      ▼
+Domain
+      │
+      ▼
+Governance
+      │
+      ▼
+Infrastructure
+```
+
+AI Native Layer：
+
+横向贯穿：
+
+```text
+Presentation
+
+Application
+
+Domain
+
+Governance
+```
+
+AI 不属于任何业务层。
+
+---
+
+# 五、Presentation Layer（表现层）
+
+职责：
+
+负责所有用户交互。
+
+包括：
+
+- Web Admin
+- Mobile App
+- Mini Program
+- POS
+- Dashboard
+- BI Portal
+- Open API
+- MCP Endpoint
+
+禁止：
+
+编写业务规则。
+
+禁止：
+
+访问 Repository。
+
+---
+
+## Presentation 包结构
+
+```text
+presentation
+
+├── controller
+├── dto
+├── request
+├── response
+├── validator
+├── mapper
+└── exception
+```
+
+---
+
+## Presentation 负责
+
+例如：
+
+```
+HTTP Request
+
+↓
+
+DTO
+
+↓
+
+Validation
+
+↓
+
+Application Service
+```
+
+不允许：
+
+业务计算。
+
+---
+
+# 六、Application Layer（应用层）
+
+Application Layer：
+
+负责：
+
+业务流程编排。
+
+不负责：
+
+业务规则。
+
+例如：
+
+Customer 注册：
+
+```
+Register Customer
+
+↓
+
+Validate
+
+↓
+
+Create Customer
+
+↓
+
+Publish Event
+
+↓
+
+Return Result
+```
+
+真正业务规则：
+
+位于 Domain。
+
+---
+
+## Application 包结构
+
+```text
+application
+
+├── service
+├── command
+├── query
+├── dto
+├── assembler
+├── handler
+└── facade
+```
+
+---
+
+## Application Service
+
+特点：
+
+负责：
+
+Use Case。
+
+例如：
+
+```text
+RegisterCustomerService
+
+CreateOrderService
+
+UpgradeMembershipService
+
+TransferCustomerService
+```
+
+每个 Service：
+
+对应：
+
+一个 Business Capability。
+
+---
+
+# 七、Domain Layer（领域层）
+
+Domain Layer：
+
+整个系统核心。
+
+包括：
+
+```text
+Aggregate
+
+Entity
+
+Value Object
+
+Domain Service
+
+Repository Interface
+
+Factory
+
+Specification
+
+Policy
+
+Domain Event
+```
+
+这里：
+
+禁止：
+
+依赖：
+
+数据库。
+
+缓存。
+
+MQ。
+
+Redis。
+
+HTTP。
+
+SDK。
+
+Domain 必须保持纯净。
+
+---
+
+## Domain 包结构
+
+```text
+domain
+
+├── aggregate
+├── entity
+├── valueobject
+├── service
+├── repository
+├── factory
+├── policy
+├── event
+├── specification
+└── exception
+```
+
+---
+
+## Domain Service
+
+例如：
+
+```
+CustomerGrowthService
+
+CustomerValueService
+
+InventoryAllocationService
+```
+
+Domain Service：
+
+封装：
+
+业务规则。
+
+---
+
+# 八、Governance Layer（治理层）
+
+Governance：
+
+不是基础设施。
+
+而是：
+
+企业治理。
+
+包括：
+
+```text
+Policy
+
+Rule
+
+Permission
+
+Ownership
+
+Audit
+
+Version
+
+State Machine
+
+Lifecycle
+```
+
+Governance：
+
+可被：
+
+所有 Domain。
+
+统一引用。
+
+---
+
+## Governance 包结构
+
+```text
+governance
+
+├── policy
+├── rule
+├── permission
+├── ownership
+├── audit
+├── lifecycle
+├── statemachine
+├── version
+└── governance-service
+```
+
+---
+
+# 九、AI Native Layer（AI 原生层）
+
+AI 不属于 Domain。
+
+也不属于 Infrastructure。
+
+JBOS 单独建立：
+
+AI Native Layer。
+
+包括：
+
+```text
+AI Agent
+
+Prompt
+
+Knowledge
+
+Memory
+
+Tool
+
+Planner
+
+Reasoner
+
+Evaluator
+
+Business Brain
+```
+
+AI Layer：
+
+通过：
+
+Application Service。
+
+调用业务能力。
+
+禁止：
+
+直接访问数据库。
+
+---
+
+## AI 包结构
+
+```text
+ai
+
+├── agent
+├── prompt
+├── knowledge
+├── memory
+├── planner
+├── tool
+├── runtime
+├── evaluation
+└── brain
+```
+
+---
+
+# 十、Infrastructure Layer（基础设施层）
+
+负责：
+
+所有技术实现。
+
+例如：
+
+```text
+Database
+
+Redis
+
+Kafka
+
+RabbitMQ
+
+ElasticSearch
+
+OSS
+
+SMTP
+
+Payment
+
+SMS
+
+LLM
+
+Vector DB
+```
+
+所有：
+
+第三方依赖。
+
+放这里。
+
+---
+
+## Infrastructure 包结构
+
+```text
+infrastructure
+
+├── persistence
+├── mq
+├── cache
+├── storage
+├── search
+├── gateway
+├── client
+├── config
+└── repository
+```
+
+---
+
+# 十一、Dependency Rule（依赖规则）
+
+统一依赖方向：
+
+```text
+Presentation
+
+↓
+
+Application
+
+↓
+
+Domain
+
+↓
+
+Interface
+
+↓
+
+Infrastructure
+```
+
+Governance：
+
+被：
+
+Domain
+
+Application
+
+共同引用。
+
+Infrastructure：
+
+实现：
+
+Repository。
+
+例如：
+
+```
+CustomerRepository
+
+↓
+
+JpaCustomerRepository
+```
+
+---
+
+# 十二、Repository Pattern
+
+Repository：
+
+定义：
+
+位于：
+
+Domain。
+
+例如：
+
+```java
+interface CustomerRepository
+```
+
+实现：
+
+位于：
+
+Infrastructure。
+
+例如：
+
+```java
+CustomerRepositoryImpl
+```
+
+Domain：
+
+不知道：
+
+数据库。
+
+---
+
+# 十三、Domain Event Flow
+
+统一事件流：
+
+```text
+Domain
+
+↓
+
+Raise Event
+
+↓
+
+Application
+
+↓
+
+Event Bus
+
+↓
+
+Subscriber
+
+↓
+
+Audit
+```
+
+事件：
+
+统一发布。
+
+---
+
+# 十四、Command & Query Separation
+
+Application：
+
+推荐采用：
+
+CQRS。
+
+例如：
+
+```text
+Command
+
+Create Customer
+
+Update Customer
+
+Delete Customer
+```
+
+```text
+Query
+
+Customer Detail
+
+Customer List
+
+Customer Analysis
+```
+
+读写：
+
+独立。
+
+---
+
+# 十五、Transaction Boundary
+
+事务：
+
+只能存在：
+
+Application。
+
+例如：
+
+```
+Application Service
+
+@Transactional
+```
+
+Domain：
+
+禁止：
+
+事务。
+
+Infrastructure：
+
+禁止：
+
+事务逻辑。
+
+---
+
+# 十六、Exception Handling
+
+统一异常：
+
+```text
+Presentation
+
+↓
+
+ApplicationException
+
+↓
+
+DomainException
+
+↓
+
+InfrastructureException
+```
+
+禁止：
+
+RuntimeException
+
+到处抛。
+
+---
+
+# 十七、Module Organization
+
+每个 Domain：
+
+独立组织。
+
+例如：
+
+```text
+customer
+
+application
+
+domain
+
+infrastructure
+
+presentation
+```
+
+而不是：
+
+```text
+controller
+
+service
+
+mapper
+
+dao
+```
+
+这种按技术分层的目录。
+
+采用：
+
+按业务域组织。
+
+---
+
+# 十八、Layer Governance
+
+每层：
+
+必须：
+
+明确职责。
+
+禁止：
+
+跨层访问。
+
+例如：
+
+Presentation：
+
+禁止：
+
+调用 Repository。
+
+Infrastructure：
+
+禁止：
+
+调用 Controller。
+
+Domain：
+
+禁止：
+
+调用 Redis。
+
+---
+
+# 十九、Architecture Evolution
+
+未来：
+
+Layer：
+
+继续扩展：
+
+```text
+Presentation
+
+↓
+
+Application
+
+↓
+
+Domain
+
+↓
+
+Governance
+
+↓
+
+AI Runtime
+
+↓
+
+Integration
+
+↓
+
+Infrastructure
+```
+
+支持：
+
+Business Brain。
+
+Digital Twin。
+
+Multi-Agent。
+
+---
+
+# 二十、本章总结
+
+Layered Architecture 是 JBOS 工程体系最重要的基础规范之一。
+
+它通过六层架构统一了企业经营系统的职责划分，将业务逻辑、治理能力、AI 能力与技术实现完全解耦，实现了真正意义上的 Business Driven Architecture。
+
+通过本规范，JBOS 将形成：
+
+- One Layer Standard（统一分层标准）
+- One Dependency Rule（统一依赖规则）
+- One Business Architecture（统一业务架构）
+- One Engineering Architecture（统一工程架构）
+- One AI Native Architecture（统一 AI 原生架构）
+
+未来所有微服务、API、Workflow、事件总线、AI Agent、Business Brain 均应建立在本分层架构之上，确保整个 Jewelry Business Operating System 具备长期演进能力、团队协作能力以及企业级可维护性。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Layered Architecture 工程规范 |

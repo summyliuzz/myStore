@@ -1,0 +1,768 @@
+# ENG-003 Microservice Architecture（微服务架构）
+
+---
+
+**文档编号**：ENG-003
+
+**文档名称**：Microservice Architecture
+
+**中文名称**：微服务架构规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一微服务架构规范（Microservice Architecture）。
+
+本规范用于指导：
+
+- 微服务拆分
+- 服务治理
+- 服务通信
+- 服务部署
+- 服务生命周期
+- 服务演进
+- AI Service 集成
+- 多租户架构
+
+所有后端服务必须遵循本规范。
+
+---
+
+# 二、设计目标（Architecture Goals）
+
+JBOS 微服务架构应满足以下目标：
+
+- 面向业务领域（Business Driven）
+- 面向能力（Capability Driven）
+- 独立部署（Independent Deployment）
+- 独立扩展（Independent Scaling）
+- 数据自治（Data Ownership）
+- 服务自治（Service Autonomy）
+- AI Native
+- Cloud Native
+- Event Driven
+
+---
+
+# 三、Architecture Overview（总体架构）
+
+JBOS 采用 Domain + Capability 双维度微服务架构。
+
+```text
+Business Domain
+        │
+Business Capability
+        │
+Microservice
+        │
+Application Service
+        │
+Domain Model
+        │
+Infrastructure
+```
+
+每一个微服务必须拥有：
+
+- 独立业务能力
+- 独立数据
+- 独立生命周期
+- 独立部署能力
+
+---
+
+# 四、Microservice Principles（微服务原则）
+
+所有服务必须遵循：
+
+## Principle-001
+
+One Service One Domain
+
+一个微服务负责一个业务领域。
+
+例如：
+
+```text
+Customer Service
+
+Membership Service
+
+Order Service
+
+Inventory Service
+```
+
+禁止：
+
+Customer + Inventory 混合。
+
+---
+
+## Principle-002
+
+Capability First
+
+服务围绕业务能力建立。
+
+不是围绕数据库建立。
+
+例如：
+
+```
+Customer Growth
+
+↓
+
+Customer Growth Service
+```
+
+而不是：
+
+```
+customer_growth_table
+```
+
+---
+
+## Principle-003
+
+Service Autonomy
+
+每个服务：
+
+独立：
+
+开发。
+
+测试。
+
+部署。
+
+扩容。
+
+升级。
+
+---
+
+## Principle-004
+
+Database Per Service
+
+每个服务：
+
+拥有自己的数据库。
+
+禁止：
+
+数据库共享。
+
+---
+
+## Principle-005
+
+Contract First
+
+所有接口：
+
+先定义：
+
+Contract。
+
+再开发。
+
+API 是契约。
+
+不是实现。
+
+---
+
+# 五、Bounded Context（限界上下文）
+
+JBOS 基于 DDD 建立限界上下文。
+
+核心上下文建议如下：
+
+```text
+Customer Context
+
+Membership Context
+
+Sales Context
+
+Marketing Context
+
+Inventory Context
+
+Product Context
+
+Organization Context
+
+Store Context
+
+Finance Context
+
+Workflow Context
+
+AI Context
+```
+
+每个 Context：
+
+对应一个或多个微服务。
+
+---
+
+# 六、Service Classification（服务分类）
+
+JBOS 服务统一划分为：
+
+```text
+Core Domain Service
+
+Supporting Domain Service
+
+Generic Service
+
+Infrastructure Service
+
+AI Service
+
+Integration Service
+```
+
+职责清晰。
+
+避免混合。
+
+---
+
+# 七、Core Business Services（核心业务服务）
+
+建议初始服务如下：
+
+```text
+Customer Service
+
+Membership Service
+
+Sales Service
+
+Order Service
+
+Inventory Service
+
+Product Service
+
+Campaign Service
+
+Organization Service
+
+Store Service
+
+Employee Service
+```
+
+这些构成 JBOS Core。
+
+---
+
+# 八、Supporting Services（支撑服务）
+
+包括：
+
+```text
+Notification Service
+
+Search Service
+
+File Service
+
+Report Service
+
+Workflow Service
+
+Audit Service
+
+Permission Service
+
+Policy Service
+```
+
+为核心业务提供支撑。
+
+---
+
+# 九、AI Native Services
+
+AI 独立成为服务。
+
+包括：
+
+```text
+Agent Service
+
+Knowledge Service
+
+Prompt Service
+
+Memory Service
+
+Embedding Service
+
+Evaluation Service
+
+Business Brain Service
+```
+
+所有 AI 能力统一管理。
+
+---
+
+# 十、Integration Services
+
+负责外部集成。
+
+例如：
+
+```text
+ERP Connector
+
+CRM Connector
+
+POS Connector
+
+WeChat Connector
+
+Payment Connector
+
+SMS Connector
+
+Email Connector
+
+IoT Connector
+```
+
+禁止：
+
+业务服务直接集成第三方。
+
+---
+
+# 十一、Service Communication（服务通信）
+
+统一通信方式：
+
+同步：
+
+```text
+REST API
+
+gRPC
+```
+
+异步：
+
+```text
+Business Event
+
+Kafka
+
+RabbitMQ
+```
+
+禁止：
+
+数据库调用。
+
+---
+
+# 十二、Service Contract（服务契约）
+
+每个服务必须公开：
+
+```text
+API Contract
+
+Event Contract
+
+Data Contract
+
+Error Contract
+
+Permission Contract
+```
+
+所有 Contract：
+
+统一版本管理。
+
+---
+
+# 十三、API Gateway
+
+所有外部请求：
+
+统一进入：
+
+```text
+API Gateway
+```
+
+Gateway：
+
+负责：
+
+- Authentication
+- Authorization
+- Rate Limit
+- Logging
+- Routing
+- Version
+
+业务服务：
+
+无需重复实现。
+
+---
+
+# 十四、Service Registry
+
+统一服务注册。
+
+包括：
+
+```text
+Service Name
+
+Version
+
+Owner
+
+Health Status
+
+Capability
+
+Endpoint
+```
+
+支持：
+
+自动发现。
+
+---
+
+# 十五、Database Ownership
+
+数据库：
+
+属于服务。
+
+例如：
+
+```text
+Customer DB
+
+↓
+
+Customer Service
+```
+
+其他服务：
+
+禁止：
+
+直接访问。
+
+只能：
+
+API。
+
+Event。
+
+---
+
+# 十六、Distributed Transaction
+
+JBOS 默认：
+
+最终一致性。
+
+采用：
+
+```text
+Saga Pattern
+
+Outbox Pattern
+
+Event Choreography
+```
+
+禁止：
+
+跨服务数据库事务。
+
+---
+
+# 十七、Anti-Corruption Layer（ACL）
+
+跨领域访问必须通过 ACL。
+
+例如：
+
+```text
+Marketing
+
+↓
+
+ACL
+
+↓
+
+Customer
+```
+
+ACL 负责：
+
+- 模型转换
+- 数据适配
+- 协议转换
+- 兼容旧系统
+
+避免领域模型污染。
+
+---
+
+# 十八、Service Observability
+
+所有服务必须支持：
+
+```text
+Health Check
+
+Metrics
+
+Logging
+
+Tracing
+
+Audit
+
+Business Metrics
+```
+
+统一纳入可观测体系。
+
+---
+
+# 十九、Service Security
+
+统一安全要求：
+
+- OAuth2 / OIDC
+- JWT
+- mTLS（内部通信）
+- API Signature（开放接口）
+- Permission Validation
+- Data Encryption
+- Audit Logging
+
+所有服务默认零信任。
+
+---
+
+# 二十、Deployment Architecture
+
+所有服务支持：
+
+```text
+Docker
+
+↓
+
+Kubernetes
+
+↓
+
+Service Mesh
+
+↓
+
+Auto Scaling
+
+↓
+
+Rolling Update
+```
+
+实现云原生部署。
+
+---
+
+# 二十一、Service Lifecycle
+
+统一生命周期：
+
+```text
+Design
+
+↓
+
+Development
+
+↓
+
+Testing
+
+↓
+
+Deployment
+
+↓
+
+Operation
+
+↓
+
+Monitoring
+
+↓
+
+Optimization
+
+↓
+
+Retirement
+```
+
+每个服务：
+
+独立演进。
+
+---
+
+# 二十二、Service Governance
+
+所有服务必须统一管理：
+
+- Service Catalog
+- Version
+- SLA
+- API
+- Event
+- Owner
+- Dependency
+- Runtime Status
+
+形成统一 Service Registry。
+
+---
+
+# 二十三、Multi-Tenant Architecture
+
+JBOS 原生支持多租户。
+
+租户隔离包括：
+
+```text
+Tenant
+
+↓
+
+Organization
+
+↓
+
+Store
+
+↓
+
+Business Data
+```
+
+支持：
+
+- SaaS
+- 集团
+- 连锁品牌
+- 加盟模式
+
+统一架构。
+
+---
+
+# 二十四、Future Evolution
+
+JBOS 微服务未来演进：
+
+```text
+Monolith
+
+↓
+
+Modular Monolith
+
+↓
+
+Microservice
+
+↓
+
+Event Driven
+
+↓
+
+AI Native Service
+
+↓
+
+Multi-Agent Service
+
+↓
+
+Autonomous Business Platform
+```
+
+最终形成：
+
+智能企业运行平台。
+
+---
+
+# 二十五、本章总结
+
+Microservice Architecture 是 JBOS Engineering Foundation 的核心组成部分。
+
+本规范定义了 JBOS 的微服务拆分原则、限界上下文、服务分类、服务契约、通信机制、数据自治、服务治理及云原生部署模式。
+
+通过本规范，JBOS 将建立：
+
+- One Service One Domain（一个服务一个业务领域）
+- One Service One Database（一个服务一个数据库）
+- One Capability One Contract（一个能力一个契约）
+- One Registry（统一服务注册中心）
+- One Event Bus（统一事件总线）
+- One Governance Framework（统一服务治理体系）
+
+未来，JBOS 将进一步向 AI Native Service、Multi-Agent Collaboration、Business Brain Platform 演进，实现企业经营系统从微服务架构向智能自治架构的持续升级。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS 微服务架构规范 |

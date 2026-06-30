@@ -1,0 +1,1038 @@
+# ENG-008 AI Agent Specification（AI Agent 规范）
+
+---
+
+**文档编号**：ENG-008
+
+**文档名称**：AI Agent Specification
+
+**中文名称**：AI Agent 规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Business Runtime Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一 AI Agent Specification。
+
+AI Agent 是 JBOS Business Runtime 的核心运行单元。
+
+在 JBOS 中，AI 不属于某一个模块，而是一种能够自主理解业务、调用能力、执行流程、遵循治理规则并持续学习的 Business Runtime。
+
+本规范定义：
+
+- AI Agent Canonical Model
+- Agent Runtime
+- Agent Lifecycle
+- Agent Capability
+- Agent Governance
+- Agent Memory
+- Agent Planning
+- Agent Tool Calling
+- Multi-Agent Collaboration
+- Human + AI Collaboration
+- Agent Security
+
+本规范适用于：
+
+- Customer Agent
+- Sales Agent
+- Marketing Agent
+- Inventory Agent
+- Operation Agent
+- BI Agent
+- Business Brain
+
+---
+
+# 二、Architecture Position
+
+JBOS Runtime：
+
+```text
+Business Capability
+
+↓
+
+Application Service
+
+↓
+
+Business Runtime
+
+├── API Runtime
+├── Event Runtime
+├── Workflow Runtime
+├── Agent Runtime
+├── Knowledge Runtime
+└── MCP Runtime
+```
+
+Agent Runtime：
+
+成为整个 Runtime 的智能执行中心。
+
+---
+
+# 三、AI Agent Definition
+
+JBOS 定义：
+
+> AI Agent 是能够自主理解业务目标、制定执行计划、调用 Business Capability、遵循 Governance Framework 并持续学习优化的智能业务执行体。
+
+Agent：
+
+不是 ChatBot。
+
+也不是 Prompt。
+
+而是：
+
+Business Worker。
+
+---
+
+# 四、Design Principles
+
+所有 Agent 必须遵循：
+
+## Principle-001
+
+Business Native
+
+Agent：
+
+围绕 Business Capability 工作。
+
+不是围绕 LLM。
+
+---
+
+## Principle-002
+
+Capability Driven
+
+Agent：
+
+只能调用：
+
+Business Capability。
+
+禁止：
+
+直接 SQL。
+
+---
+
+## Principle-003
+
+Governance First
+
+Agent：
+
+必须经过：
+
+Permission
+
+Policy
+
+Rule
+
+Audit
+
+Version
+
+统一治理。
+
+---
+
+## Principle-004
+
+Tool Based
+
+Agent：
+
+通过 Tool：
+
+调用业务。
+
+而不是：
+
+直接执行代码。
+
+---
+
+## Principle-005
+
+Explainable
+
+所有 Agent：
+
+必须能够解释：
+
+为什么。
+
+如何。
+
+依据什么。
+
+做出决策。
+
+---
+
+## Principle-006
+
+Human Controllable
+
+AI：
+
+始终支持：
+
+Human Override。
+
+---
+
+# 五、AI Agent Canonical Model
+
+统一对象：
+
+```text
+BusinessAgent
+
+├── AgentID
+├── AgentCode
+├── AgentName
+├── AgentType
+├── BusinessDomain
+├── BusinessCapability
+├── Role
+├── Goal
+├── Instruction
+├── ToolSet
+├── KnowledgeSet
+├── Memory
+├── Permission
+├── Policy
+├── Workflow
+├── Owner
+├── Version
+├── Status
+└── Metadata
+```
+
+所有 Agent：
+
+统一注册。
+
+---
+
+# 六、Agent Classification
+
+统一分类：
+
+```text
+Task Agent
+
+Assistant Agent
+
+Analysis Agent
+
+Decision Agent
+
+Workflow Agent
+
+Supervisor Agent
+
+Planner Agent
+
+Coordinator Agent
+
+Learning Agent
+```
+
+不同 Agent：
+
+承担不同职责。
+
+---
+
+# 七、Business Agent
+
+JBOS 推荐业务 Agent：
+
+```text
+Customer Agent
+
+Membership Agent
+
+Marketing Agent
+
+Sales Agent
+
+Inventory Agent
+
+Store Agent
+
+CRM Agent
+
+Operation Agent
+
+Finance Agent
+
+Business Brain Agent
+```
+
+一个 Agent：
+
+负责一类经营能力。
+
+---
+
+# 八、Agent Runtime
+
+统一运行时：
+
+```text
+Goal
+
+↓
+
+Planner
+
+↓
+
+Reasoning
+
+↓
+
+Tool Selection
+
+↓
+
+Workflow
+
+↓
+
+Execution
+
+↓
+
+Evaluation
+
+↓
+
+Memory Update
+```
+
+形成：
+
+完整闭环。
+
+---
+
+# 九、Goal Driven Execution
+
+Agent：
+
+接受：
+
+Goal。
+
+例如：
+
+```text
+提升会员复购率
+
+提升门店成交率
+
+降低库存积压
+
+提升客户活跃度
+```
+
+不是：
+
+执行单一命令。
+
+---
+
+# 十、Planning
+
+Agent：
+
+必须支持：
+
+```text
+Task Planning
+
+Workflow Planning
+
+Capability Planning
+
+Resource Planning
+```
+
+支持：
+
+多步推理。
+
+---
+
+# 十一、Reasoning
+
+支持：
+
+```text
+Rule Based
+
+Knowledge Based
+
+LLM Based
+
+Hybrid Reasoning
+```
+
+AI：
+
+必须引用：
+
+Business Knowledge。
+
+---
+
+# 十二、Tool Calling
+
+Agent：
+
+统一调用：
+
+```text
+Business Capability
+
+↓
+
+API
+
+↓
+
+Workflow
+
+↓
+
+Event
+```
+
+禁止：
+
+直接：
+
+数据库。
+
+Redis。
+
+MQ。
+
+---
+
+# 十三、Knowledge
+
+Agent：
+
+引用：
+
+```text
+Knowledge Base
+
+Business Rule
+
+Policy
+
+SOP
+
+Product Knowledge
+
+Customer Knowledge
+```
+
+Knowledge：
+
+统一管理。
+
+---
+
+# 十四、Memory
+
+统一 Memory：
+
+```text
+Session Memory
+
+Working Memory
+
+Long-term Memory
+
+Business Memory
+```
+
+Memory：
+
+支持：
+
+持续学习。
+
+---
+
+# 十五、Agent Permission
+
+统一权限：
+
+```text
+Read Customer
+
+Update Customer
+
+Create Campaign
+
+Approve Workflow
+
+Execute AI
+```
+
+Agent：
+
+不能绕过 Permission。
+
+---
+
+# 十六、Agent Policy
+
+统一策略：
+
+```text
+Risk Policy
+
+Discount Policy
+
+Privacy Policy
+
+Approval Policy
+
+AI Policy
+```
+
+统一：
+
+Governance。
+
+---
+
+# 十七、Agent Workflow
+
+Agent：
+
+能够：
+
+```text
+Start Workflow
+
+Participate Workflow
+
+Complete Workflow
+
+Trigger Workflow
+```
+
+成为：
+
+Workflow Participant。
+
+---
+
+# 十八、Multi-Agent Collaboration
+
+统一模型：
+
+```text
+Supervisor Agent
+
+↓
+
+Planner Agent
+
+↓
+
+Sales Agent
+
+Inventory Agent
+
+Marketing Agent
+
+↓
+
+Business Result
+```
+
+Agent：
+
+协同完成任务。
+
+---
+
+# 十九、Human + AI Collaboration
+
+统一模式：
+
+```text
+Human
+
+↓
+
+AI Recommendation
+
+↓
+
+Human Approval
+
+↓
+
+Execution
+
+↓
+
+Feedback
+
+↓
+
+Learning
+```
+
+AI：
+
+辅助。
+
+Human：
+
+最终负责。
+
+---
+
+# 二十、Agent Lifecycle
+
+生命周期：
+
+```text
+Design
+
+↓
+
+Train
+
+↓
+
+Evaluate
+
+↓
+
+Publish
+
+↓
+
+Running
+
+↓
+
+Monitoring
+
+↓
+
+Optimize
+
+↓
+
+Retire
+```
+
+统一治理。
+
+---
+
+# 二十一、Agent Registry
+
+统一注册：
+
+```text
+Agent Registry
+
+├── Agent
+├── Version
+├── Capability
+├── Tool
+├── Prompt
+├── Knowledge
+├── Owner
+├── Permission
+├── SLA
+```
+
+统一管理。
+
+---
+
+# 二十二、Agent Observability
+
+统一监控：
+
+包括：
+
+```text
+Execution Time
+
+Success Rate
+
+Failure Rate
+
+Hallucination
+
+Tool Usage
+
+Cost
+
+Latency
+
+Accuracy
+```
+
+统一：
+
+Observability。
+
+---
+
+# 二十三、Agent Audit
+
+所有 Agent：
+
+统一记录：
+
+```text
+Prompt
+
+Knowledge
+
+Reasoning
+
+Tool
+
+Decision
+
+Result
+
+Feedback
+```
+
+支持：
+
+Explainability。
+
+---
+
+# 二十四、Agent Security
+
+统一安全：
+
+包括：
+
+- Identity
+- Authentication
+- Authorization
+- Prompt Security
+- Tool Security
+- Data Isolation
+- Audit
+
+禁止：
+
+越权。
+
+---
+
+# 二十五、Agent Version
+
+统一版本：
+
+```text
+Agent v1
+
+↓
+
+Agent v2
+
+↓
+
+Agent v3
+```
+
+Prompt。
+
+Knowledge。
+
+Tool。
+
+独立版本。
+
+---
+
+# 二十六、Business Brain
+
+Business Brain：
+
+由多个 Agent：
+
+组成：
+
+```text
+CEO Agent
+
+↓
+
+Operation Agent
+
+↓
+
+Marketing Agent
+
+↓
+
+CRM Agent
+
+↓
+
+Inventory Agent
+
+↓
+
+Finance Agent
+```
+
+形成：
+
+企业经营智能。
+
+---
+
+# 二十七、AI Governance
+
+统一治理：
+
+包括：
+
+- Registry
+- Version
+- Audit
+- Policy
+- Permission
+- Risk
+- Cost
+- SLA
+
+统一：
+
+AI Governance。
+
+---
+
+# 二十八、Agent Runtime Framework
+
+统一 Runtime：
+
+```text
+Goal
+
+↓
+
+Planner
+
+↓
+
+Reasoner
+
+↓
+
+Knowledge
+
+↓
+
+Tool
+
+↓
+
+Workflow
+
+↓
+
+Event
+
+↓
+
+Business Capability
+
+↓
+
+Evaluation
+
+↓
+
+Memory
+```
+
+形成：
+
+AI Runtime。
+
+---
+
+# 二十九、Future Evolution
+
+未来 Agent：
+
+演进：
+
+```text
+Task Agent
+
+↓
+
+Business Agent
+
+↓
+
+Multi-Agent
+
+↓
+
+Business Brain
+
+↓
+
+Autonomous Enterprise
+```
+
+最终形成：
+
+企业自治系统。
+
+---
+
+# 三十、本章总结
+
+AI Agent Specification 是 JBOS Business Runtime 的智能执行规范。
+
+本规范建立了：
+
+- One Agent Canonical Model（统一 Agent 模型）
+- One Agent Runtime（统一 Agent 运行时）
+- One Agent Registry（统一 Agent 注册中心）
+- One Agent Governance（统一 Agent 治理体系）
+- One Human + AI Collaboration（统一人机协同模型）
+- One Business Brain Architecture（统一企业智能架构）
+
+在 JBOS 中，AI Agent 不再是聊天机器人，而是企业经营能力的数字员工（Digital Business Worker）。
+
+每一个 Agent 都拥有明确的业务职责、权限、知识、工具、工作流及治理规则，并能够与其他 Agent 协同工作，共同构建 AI Native Business Operating System。
+
+---
+
+# 附录 A：JBOS 推荐 Agent 体系
+
+```text
+Business Brain
+│
+├── CEO Agent
+├── COO Agent
+├── CRM Agent
+├── Customer Growth Agent
+├── Membership Agent
+├── Sales Agent
+├── Marketing Agent
+├── Inventory Agent
+├── Procurement Agent
+├── Store Operation Agent
+├── Finance Agent
+├── BI Agent
+└── Knowledge Agent
+```
+
+---
+
+# 附录 B：Agent 调用链
+
+```text
+Business Goal
+        │
+        ▼
+Agent Runtime
+        │
+        ▼
+Planner
+        │
+        ▼
+Knowledge Retrieval
+        │
+        ▼
+Tool Calling
+        │
+        ▼
+Business Capability
+        │
+        ▼
+Workflow
+        │
+        ▼
+Business Event
+        │
+        ▼
+Memory Update
+```
+
+---
+
+# 附录 C：Agent 与 JBOS 架构关系
+
+```text
+Presentation Layer
+        │
+Application Layer
+        │
+Business Runtime
+├─────────────┐
+│ API Runtime │
+│ Event       │
+│ Workflow    │
+│ Agent       │
+│ Knowledge   │
+│ MCP         │
+└─────────────┘
+        │
+Governance Framework
+        │
+Infrastructure
+```
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS AI Agent Specification |

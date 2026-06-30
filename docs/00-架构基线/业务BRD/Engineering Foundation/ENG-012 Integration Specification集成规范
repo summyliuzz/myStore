@@ -1,0 +1,967 @@
+# ENG-012 Integration Specification（集成规范）
+
+---
+
+**文档编号**：ENG-012
+
+**文档名称**：Integration Specification
+
+**中文名称**：系统集成规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Enterprise Integration Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本规范定义 JBOS（Jewelry Business Operating System）的统一企业集成架构（Enterprise Integration Architecture）。
+
+JBOS 不仅是一个业务系统，更是企业数字生态（Enterprise Digital Ecosystem）的核心平台。
+
+Integration 的目标不是连接系统，而是连接企业能力（Business Capability）。
+
+本规范统一定义：
+
+- Enterprise Integration Architecture
+- Canonical Integration Model
+- Integration Runtime
+- API Integration
+- Event Integration
+- Workflow Integration
+- MCP Integration
+- AI Integration
+- Partner Integration
+- Data Integration
+- Integration Governance
+
+---
+
+# 二、Architecture Position
+
+```text
+External Ecosystem
+        │
+Partner Platform
+        │
+Integration Runtime
+        │
+Business Runtime
+        │
+Business Capability
+        │
+Domain Model
+```
+
+Integration Runtime：
+
+连接：
+
+企业内外所有能力。
+
+---
+
+# 三、Architecture Goals
+
+建立：
+
+- One Enterprise Gateway
+- One Integration Runtime
+- One Canonical Contract
+- One Enterprise Event Bus
+- One Enterprise Capability Fabric
+- One Enterprise Connector Platform
+
+形成：
+
+Enterprise Integration Platform（EIP）。
+
+---
+
+# 四、Design Principles
+
+所有集成必须遵循：
+
+## Principle-001
+
+Business Capability First
+
+集成对象：
+
+不是数据库。
+
+不是微服务。
+
+而是：
+
+Business Capability。
+
+---
+
+## Principle-002
+
+Loose Coupling
+
+所有系统：
+
+通过：
+
+API
+
+Event
+
+Workflow
+
+MCP
+
+进行协作。
+
+禁止：
+
+数据库直连。
+
+---
+
+## Principle-003
+
+Contract First
+
+所有接口：
+
+必须：
+
+Schema。
+
+Version。
+
+Documentation。
+
+Example。
+
+---
+
+## Principle-004
+
+Integration by Runtime
+
+所有调用：
+
+统一进入：
+
+Integration Runtime。
+
+禁止：
+
+点对点集成。
+
+---
+
+## Principle-005
+
+Governance Built-in
+
+所有集成：
+
+统一：
+
+Permission。
+
+Audit。
+
+Policy。
+
+Version。
+
+Monitoring。
+
+---
+
+# 五、Integration Canonical Model
+
+统一对象：
+
+```text
+Integration
+
+├── IntegrationID
+├── IntegrationCode
+├── IntegrationName
+├── IntegrationType
+├── Partner
+├── Capability
+├── Contract
+├── Protocol
+├── Authentication
+├── Permission
+├── Policy
+├── Version
+├── Status
+└── Metadata
+```
+
+统一治理。
+
+---
+
+# 六、Integration Classification
+
+统一分类：
+
+```text
+API Integration
+
+Event Integration
+
+Workflow Integration
+
+MCP Integration
+
+Data Integration
+
+Partner Integration
+
+Payment Integration
+
+Identity Integration
+
+AI Integration
+
+IoT Integration
+```
+
+统一：
+
+Integration Registry。
+
+---
+
+# 七、Integration Runtime
+
+统一运行时：
+
+```text
+Request
+
+↓
+
+Gateway
+
+↓
+
+Authentication
+
+↓
+
+Policy
+
+↓
+
+Routing
+
+↓
+
+Transformation
+
+↓
+
+Capability
+
+↓
+
+Response
+```
+
+所有集成：
+
+统一执行。
+
+---
+
+# 八、API Integration
+
+统一：
+
+REST。
+
+GraphQL（按需）。
+
+gRPC（内部）。
+
+所有 API：
+
+遵循：
+
+ENG-004 API Specification。
+
+---
+
+# 九、Event Integration
+
+所有跨系统：
+
+异步通信：
+
+统一：
+
+Business Event。
+
+遵循：
+
+ENG-005 Event Specification。
+
+禁止：
+
+轮询同步。
+
+---
+
+# 十、Workflow Integration
+
+跨系统业务：
+
+统一：
+
+Workflow。
+
+例如：
+
+```text
+ERP
+
+↓
+
+Order Workflow
+
+↓
+
+CRM
+
+↓
+
+Inventory
+
+↓
+
+Finance
+```
+
+形成：
+
+跨系统业务流程。
+
+---
+
+# 十一、MCP Integration
+
+AI：
+
+统一：
+
+通过 MCP：
+
+发现：
+
+Business Capability。
+
+调用：
+
+Business Capability。
+
+遵循：
+
+ENG-009 MCP Specification。
+
+---
+
+# 十二、Partner Integration
+
+支持：
+
+```text
+Supplier
+
+Dealer
+
+Marketplace
+
+Payment
+
+Logistics
+
+Marketing Platform
+
+Government Platform
+```
+
+统一：
+
+Partner Registry。
+
+---
+
+# 十三、Identity Integration
+
+统一：
+
+身份互通：
+
+支持：
+
+```text
+OIDC
+
+OAuth2
+
+SAML
+
+LDAP（可选）
+```
+
+统一：
+
+SSO。
+
+---
+
+# 十四、Payment Integration
+
+统一：
+
+支付能力。
+
+例如：
+
+```text
+Stripe
+
+支付宝
+
+微信支付
+
+银联
+
+PayNow
+
+银行网关
+```
+
+通过：
+
+Payment Capability。
+
+统一封装。
+
+---
+
+# 十五、Notification Integration
+
+统一通知：
+
+支持：
+
+```text
+SMS
+
+Email
+
+WhatsApp
+
+微信
+
+Telegram
+
+Push
+
+Webhook
+```
+
+统一：
+
+Notification Capability。
+
+---
+
+# 十六、Data Integration
+
+统一：
+
+数据同步：
+
+包括：
+
+```text
+CDC
+
+ETL
+
+Streaming
+
+Batch
+
+Snapshot
+```
+
+统一：
+
+Data Pipeline。
+
+---
+
+# 十七、Protocol Support
+
+统一协议：
+
+```text
+HTTP
+
+HTTPS
+
+gRPC
+
+Kafka
+
+AMQP
+
+MQTT
+
+WebSocket
+
+SFTP（按需）
+```
+
+统一：
+
+Protocol Adapter。
+
+---
+
+# 十八、Canonical Contract
+
+所有集成：
+
+统一：
+
+```text
+Request Schema
+
+Response Schema
+
+Error Schema
+
+Version
+
+Permission
+
+Metadata
+```
+
+形成：
+
+Canonical Contract。
+
+---
+
+# 十九、Transformation Engine
+
+统一：
+
+数据转换：
+
+```text
+Canonical
+
+↓
+
+Partner Model
+```
+
+避免：
+
+业务层转换。
+
+---
+
+# 二十、Integration Registry
+
+统一注册：
+
+```text
+API
+
+Event
+
+Workflow
+
+Partner
+
+Connector
+
+Contract
+
+Version
+```
+
+形成：
+
+Enterprise Integration Catalog。
+
+---
+
+# 二十一、Connector Framework
+
+统一 Connector：
+
+例如：
+
+```text
+SAP
+
+Oracle
+
+Kingdee
+
+用友
+
+Salesforce
+
+Shopify
+
+Amazon
+
+TikTok Shop
+
+Shopee
+
+Lazada
+```
+
+Connector：
+
+标准化。
+
+插件化。
+
+---
+
+# 二十二、Integration Security
+
+所有集成：
+
+统一：
+
+```text
+Authentication
+
+Authorization
+
+Encryption
+
+Signature
+
+Audit
+
+Rate Limit
+```
+
+遵循：
+
+ENG-011 Security Specification。
+
+---
+
+# 二十三、Integration Monitoring
+
+统一监控：
+
+```text
+Availability
+
+Latency
+
+Failure
+
+Retry
+
+Throughput
+
+Partner SLA
+```
+
+进入：
+
+ENG-010 Observability。
+
+---
+
+# 二十四、Integration Governance
+
+统一治理：
+
+包括：
+
+- Registry
+- Version
+- Owner
+- Contract
+- Policy
+- Audit
+- SLA
+- Lifecycle
+
+统一管理。
+
+---
+
+# 二十五、Integration Lifecycle
+
+生命周期：
+
+```text
+Design
+
+↓
+
+Review
+
+↓
+
+Develop
+
+↓
+
+Test
+
+↓
+
+Publish
+
+↓
+
+Operate
+
+↓
+
+Monitor
+
+↓
+
+Retire
+```
+
+统一：
+
+版本管理。
+
+---
+
+# 二十六、AI Integration
+
+AI：
+
+能够：
+
+统一接入：
+
+```text
+OpenAI
+
+Azure OpenAI
+
+Anthropic
+
+Google Gemini
+
+DeepSeek
+
+Qwen
+
+企业私有模型
+```
+
+通过：
+
+AI Provider Adapter。
+
+屏蔽：
+
+模型差异。
+
+---
+
+# 二十七、Enterprise Integration Fabric
+
+JBOS：
+
+建立：
+
+Enterprise Integration Fabric。
+
+```text
+Business Capability
+
+↓
+
+Integration Runtime
+
+↓
+
+Partner
+
+↓
+
+Enterprise
+
+↓
+
+AI
+
+↓
+
+External Ecosystem
+```
+
+形成：
+
+企业能力网络。
+
+---
+
+# 二十八、Future Evolution
+
+未来：
+
+Integration：
+
+演进：
+
+```text
+API
+
+↓
+
+Event
+
+↓
+
+Capability
+
+↓
+
+MCP
+
+↓
+
+Capability Mesh
+
+↓
+
+Enterprise Digital Ecosystem
+```
+
+实现：
+
+Capability as a Service（CaaS）。
+
+---
+
+# 二十九、本章总结
+
+Integration Specification 是 JBOS Enterprise Integration Architecture 的统一规范。
+
+本规范建立：
+
+- One Integration Runtime（统一集成运行时）
+- One Canonical Contract（统一集成契约）
+- One Integration Registry（统一集成注册中心）
+- One Connector Framework（统一连接器框架）
+- One Enterprise Gateway（统一企业网关）
+- One Enterprise Integration Fabric（统一企业集成网络）
+
+JBOS 将 Integration 从"系统接口"升级为"企业能力互联"，实现 API、Event、Workflow、MCP、AI 与合作伙伴之间的统一协同，为企业构建开放、可扩展、AI Native 的数字生态平台。
+
+---
+
+# 附录 A：JBOS Enterprise Integration Architecture
+
+```text
+External Platform
+│
+├── ERP
+├── CRM
+├── Payment
+├── Logistics
+├── Marketplace
+├── AI Provider
+└── Government
+        │
+Enterprise Gateway
+        │
+Integration Runtime
+├───────────────┐
+│ API           │
+│ Event         │
+│ Workflow      │
+│ MCP           │
+│ Connector     │
+│ Transformation│
+└───────────────┘
+        │
+Business Runtime
+        │
+Business Capability
+```
+
+---
+
+# 附录 B：标准 Connector 分类
+
+| Connector Type | Examples |
+|----------------|----------|
+| ERP | SAP、Oracle ERP、金蝶、用友 |
+| CRM | Salesforce、HubSpot |
+| E-Commerce | Shopify、Shopee、Lazada、TikTok Shop |
+| Payment | Stripe、支付宝、微信支付、PayNow |
+| Logistics | DHL、FedEx、顺丰 |
+| Identity | Microsoft Entra ID、Okta、Keycloak |
+| AI | OpenAI、Anthropic、Gemini、DeepSeek |
+
+---
+
+# 附录 C：Integration Reference Architecture
+
+```text
+Partner Request
+        │
+Gateway
+        │
+Authentication
+        │
+Policy Engine
+        │
+Transformation Engine
+        │
+Business Capability
+        │
+Workflow
+        │
+Event
+        │
+Response
+```
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Integration Specification |

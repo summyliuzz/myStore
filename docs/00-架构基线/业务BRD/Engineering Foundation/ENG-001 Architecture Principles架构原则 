@@ -1,0 +1,630 @@
+# ENG-001 Architecture Principles（架构原则）
+
+---
+
+**文档编号**：ENG-001
+
+**文档名称**：Architecture Principles
+
+**中文名称**：架构原则规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的 Architecture Principles（架构原则）。
+
+Architecture Principles 是整个 JBOS 的最高工程规范，指导所有产品设计、系统开发、架构演进、技术选型以及 AI 能力建设。
+
+本规范适用于：
+
+- Business Domain
+- Application Service
+- Microservice
+- API
+- Event
+- Database
+- Workflow
+- AI Agent
+- MCP Server
+- Frontend
+- Mobile
+- BI
+- Integration
+
+所有系统均应遵循本规范。
+
+---
+
+# 二、Architecture Vision（架构愿景）
+
+JBOS 的目标不是开发一个 SaaS 系统，而是构建一个面向珠宝行业的 **AI Native Business Operating System**。
+
+它需要具备以下特征：
+
+- Business Native（业务原生）
+- AI Native（AI 原生）
+- Cloud Native（云原生）
+- Event Driven（事件驱动）
+- Capability Driven（能力驱动）
+- Data Driven（数据驱动）
+- Knowledge Driven（知识驱动）
+- Extensible（可扩展）
+- Governable（可治理）
+- Evolvable（可演进）
+
+---
+
+# 三、Architecture Objectives（架构目标）
+
+JBOS 架构需要实现以下目标：
+
+## Business Agility（业务敏捷）
+
+业务能力能够快速组合与扩展。
+
+---
+
+## Engineering Efficiency（研发效率）
+
+降低模块耦合，提高研发协作效率。
+
+---
+
+## Enterprise Governance（企业治理）
+
+保证所有业务能力具备统一治理能力。
+
+---
+
+## AI Enablement（AI 赋能）
+
+所有业务能力均可被 AI 调用、分析和协同。
+
+---
+
+## Sustainable Evolution（持续演进）
+
+支持多年持续迭代，不因技术升级推翻业务架构。
+
+---
+
+# 四、Core Architecture Principles（核心原则）
+
+JBOS 定义十二项核心架构原则。
+
+---
+
+## Principle-001 Business First
+
+所有技术设计必须服务于业务。
+
+技术架构不能主导业务架构。
+
+业务模型永远优先于数据库模型。
+
+---
+
+## Principle-002 Domain Driven
+
+采用 Domain Driven Design（DDD）。
+
+系统按业务领域划分，而不是按技术模块划分。
+
+例如：
+
+```text
+Customer Domain
+Membership Domain
+Sales Domain
+Marketing Domain
+Inventory Domain
+Organization Domain
+Finance Domain
+```
+
+避免：
+
+```text
+User Module
+Common Module
+Util Module
+```
+
+---
+
+## Principle-003 Capability Driven
+
+系统围绕 Business Capability 建设。
+
+能力是最小业务单元。
+
+例如：
+
+```text
+Customer Growth
+
+Customer Value
+
+Inventory Allocation
+
+Marketing Automation
+
+Store Operation
+```
+
+能力可独立演进。
+
+---
+
+## Principle-004 AI Native
+
+AI 不是外挂。
+
+AI 是系统基础能力。
+
+所有能力默认支持：
+
+- AI 调用
+- AI 分析
+- AI 推荐
+- AI 自动化
+
+---
+
+## Principle-005 Event Driven
+
+系统通过 Business Event 解耦。
+
+例如：
+
+```text
+CustomerRegistered
+
+↓
+
+MembershipActivated
+
+↓
+
+GrowthScoreCalculated
+
+↓
+
+MarketingTriggered
+```
+
+业务事件是跨服务协作基础。
+
+---
+
+## Principle-006 Loose Coupling
+
+模块之间低耦合。
+
+通过：
+
+- Event
+- API
+- Contract
+
+进行协作。
+
+禁止：
+
+直接访问其他服务数据库。
+
+---
+
+## Principle-007 High Cohesion
+
+同一业务能力必须聚合。
+
+例如：
+
+Customer Domain：
+
+负责：
+
+- Customer
+- Profile
+- Identity
+- Relationship
+
+禁止拆散。
+
+---
+
+## Principle-008 Cloud Native
+
+所有服务支持：
+
+- Container
+- Kubernetes
+- Auto Scaling
+- Stateless
+- Service Discovery
+
+默认云原生部署。
+
+---
+
+## Principle-009 Security by Design
+
+安全不是附加功能。
+
+而是设计原则。
+
+包括：
+
+- Identity
+- Permission
+- Encryption
+- Audit
+- Data Isolation
+
+贯穿整个系统。
+
+---
+
+## Principle-010 Governance by Default
+
+所有对象默认纳入治理。
+
+包括：
+
+- Ownership
+- Permission
+- Policy
+- Rule
+- Audit
+- Version
+
+统一治理。
+
+---
+
+## Principle-011 Open Integration
+
+所有能力支持开放集成。
+
+统一：
+
+- API
+- Event
+- Webhook
+- MCP
+- SDK
+
+避免封闭系统。
+
+---
+
+## Principle-012 Evolutionary Architecture
+
+架构支持持续演进。
+
+避免一次性设计。
+
+所有模块均支持：
+
+- Replace
+- Upgrade
+- Extension
+
+而不影响整体系统。
+
+---
+
+# 五、Architecture Layers（架构分层）
+
+JBOS 采用统一分层架构：
+
+```text
+Presentation Layer
+        │
+Application Layer
+        │
+Domain Layer
+        │
+Governance Layer
+        │
+Infrastructure Layer
+```
+
+其中：
+
+- Presentation：用户交互
+- Application：业务编排
+- Domain：业务模型
+- Governance：策略、规则、权限、审计
+- Infrastructure：数据库、中间件、消息等
+
+---
+
+# 六、Architecture Style（架构风格）
+
+JBOS 综合采用以下架构风格：
+
+| Style | Purpose |
+|--------|---------|
+| Layered Architecture | 系统分层 |
+| Domain Driven Design | 领域建模 |
+| Hexagonal Architecture | 隔离业务与技术 |
+| Event Driven Architecture | 异步协作 |
+| Microservice Architecture | 服务拆分 |
+| CQRS（按需使用） | 读写分离 |
+| AI Native Architecture | AI 能力统一接入 |
+
+根据业务复杂度灵活组合。
+
+---
+
+# 七、Business Capability Architecture
+
+所有业务通过 Capability 暴露。
+
+统一模型：
+
+```text
+Business Domain
+
+↓
+
+Business Capability
+
+↓
+
+Application Service
+
+↓
+
+Domain Service
+```
+
+Capability 是系统对外提供能力的唯一入口。
+
+---
+
+# 八、Engineering Boundaries
+
+各层职责必须清晰：
+
+| Layer | Responsibility |
+|--------|----------------|
+| Presentation | 页面与交互 |
+| Application | 流程编排 |
+| Domain | 业务规则 |
+| Governance | 治理控制 |
+| Infrastructure | 技术实现 |
+
+禁止跨层调用。
+
+---
+
+# 九、Data Principles
+
+数据设计遵循：
+
+- Single Source of Truth
+- Canonical Model
+- Event Consistency
+- Data Ownership
+- Data Traceability
+
+每个业务对象只有一个权威来源。
+
+---
+
+# 十、Service Communication Principles
+
+服务之间统一采用：
+
+同步：
+
+- REST API
+- gRPC（内部高性能调用）
+
+异步：
+
+- Business Event
+- Message Queue
+
+禁止数据库共享。
+
+---
+
+# 十一、AI Architecture Principles
+
+AI 必须遵循：
+
+- AI 不直接访问数据库
+- AI 必须通过 Business Capability
+- AI 必须遵循 Permission
+- AI 必须遵循 Policy
+- AI 必须记录 Audit
+- AI 必须支持 Explainability
+
+AI 与业务治理保持一致。
+
+---
+
+# 十二、Scalability Principles
+
+系统必须支持：
+
+- Horizontal Scaling
+- Service Isolation
+- Read/Write Separation
+- Distributed Cache
+- Distributed Event Bus
+
+支持集团级部署。
+
+---
+
+# 十三、Observability Principles
+
+所有组件必须支持：
+
+- Logging
+- Metrics
+- Tracing
+- Health Check
+- Audit Trail
+
+实现可观测运行。
+
+---
+
+# 十四、Reliability Principles
+
+系统必须具备：
+
+- Retry
+- Idempotency
+- Timeout
+- Circuit Breaker
+- Fallback
+
+确保关键业务稳定运行。
+
+---
+
+# 十五、Configuration Principles
+
+所有配置统一管理：
+
+包括：
+
+- Business Policy
+- Business Rule
+- Feature Flag
+- AI Prompt
+- Workflow
+- Environment
+
+避免硬编码。
+
+---
+
+# 十六、Extensibility Principles
+
+所有模块必须支持：
+
+- Plugin
+- Extension Point
+- Adapter
+- Custom Policy
+- Custom Rule
+
+满足不同品牌、加盟商和企业需求。
+
+---
+
+# 十七、Architecture Governance
+
+架构治理包括：
+
+- Architecture Review
+- Design Review
+- API Review
+- Domain Review
+- Security Review
+- AI Review
+
+重大架构变更必须经过治理流程。
+
+---
+
+# 十八、Architecture Decision Record（ADR）
+
+所有关键架构决策必须记录 ADR。
+
+统一内容包括：
+
+- Decision ID
+- Background
+- Decision
+- Alternatives
+- Consequences
+- Review Date
+
+保证架构演进可追溯。
+
+---
+
+# 十九、Architecture Evolution
+
+JBOS 架构演进路线：
+
+```text
+Monolithic
+
+↓
+
+Modular Monolith
+
+↓
+
+Microservice
+
+↓
+
+Event Driven
+
+↓
+
+AI Native
+
+↓
+
+Business Brain
+
+↓
+
+Autonomous Business Operating System
+```
+
+保持持续演进能力。
+
+---
+
+# 二十、本章总结
+
+Architecture Principles 是 JBOS Engineering Foundation 的根基，也是所有研发工作的最高指导原则。
+
+本规范确立了：
+
+- Business First
+- Domain Driven
+- Capability Driven
+- AI Native
+- Event Driven
+- Cloud Native
+- Governance by Default
+- Evolutionary Architecture
+
+八大核心设计思想，并统一定义了架构分层、服务通信、数据治理、安全、可观测性、扩展性以及架构治理机制。
+
+未来所有工程规范，包括 API、事件、数据库、微服务、AI Agent、MCP、前端架构等，均应遵循本文件所定义的原则，确保整个 JBOS 在业务、工程与 AI 三个层面保持一致性、可治理性与可持续演进能力。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS 架构原则规范 |

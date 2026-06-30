@@ -1,0 +1,1004 @@
+# ENG-007 Workflow Specification（工作流规范）
+
+---
+
+**文档编号**：ENG-007
+
+**文档名称**：Workflow Specification
+
+**中文名称**：工作流规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一 Workflow Specification（工作流规范）。
+
+Workflow 是 JBOS Business Runtime 的核心组成部分。
+
+Workflow 不仅用于审批，更用于驱动企业经营能力的自动执行、事件编排、AI 协同、跨系统协作以及业务生命周期管理。
+
+本规范统一定义：
+
+- Workflow Canonical Model
+- Workflow Runtime
+- Workflow Engine
+- Workflow State
+- Workflow Event
+- Workflow Governance
+- Workflow Version
+- AI Workflow
+- Human Workflow
+- Business Process Orchestration
+
+所有企业流程均应遵循本规范。
+
+---
+
+# 二、Workflow Architecture Position
+
+JBOS Runtime Architecture：
+
+```text
+Business Capability
+
+        │
+
+Application Service
+
+        │
+
+Business Runtime
+
+ ├──────── API Runtime
+ ├──────── Event Runtime
+ ├──────── Workflow Runtime
+ └──────── AI Runtime
+
+        │
+
+Infrastructure
+```
+
+Workflow 是 Business Runtime 的流程执行中心。
+
+---
+
+# 三、Workflow Definition
+
+JBOS 定义：
+
+> Workflow 是企业业务能力按照业务规则、事件、策略、AI 决策及人工审批进行协调执行的运行机制。
+
+Workflow 不等于审批。
+
+Workflow 是：
+
+Business Orchestration。
+
+---
+
+# 四、Workflow Design Principles
+
+所有 Workflow 必须遵循：
+
+## Principle-001
+
+Business First
+
+流程来自业务。
+
+不是来自系统页面。
+
+---
+
+## Principle-002
+
+Capability Driven
+
+Workflow 编排的是：
+
+Business Capability。
+
+而不是数据库。
+
+---
+
+## Principle-003
+
+Event Driven
+
+Workflow：
+
+由 Event 驱动。
+
+也发布 Event。
+
+---
+
+## Principle-004
+
+State Machine Driven
+
+Workflow：
+
+必须拥有状态机。
+
+禁止：
+
+状态混乱。
+
+---
+
+## Principle-005
+
+Version Controlled
+
+所有 Workflow：
+
+必须支持：
+
+Version。
+
+---
+
+## Principle-006
+
+AI Native
+
+Workflow：
+
+默认支持：
+
+AI。
+
+Human。
+
+Automation。
+
+共同参与。
+
+---
+
+# 五、Workflow Canonical Model
+
+统一对象：
+
+```text
+Workflow
+
+├── WorkflowID
+├── WorkflowCode
+├── WorkflowName
+├── WorkflowType
+├── BusinessCapability
+├── Trigger
+├── Version
+├── StateMachine
+├── Policy
+├── Rule
+├── Permission
+├── Owner
+├── SLA
+├── Status
+├── Metadata
+```
+
+统一治理。
+
+---
+
+# 六、Workflow Classification
+
+统一分类：
+
+```text
+Business Workflow
+
+Approval Workflow
+
+Automation Workflow
+
+AI Workflow
+
+Integration Workflow
+
+Notification Workflow
+
+Data Workflow
+
+Scheduled Workflow
+```
+
+统一 Runtime。
+
+---
+
+# 七、Workflow Runtime
+
+统一运行时：
+
+```text
+Trigger
+
+↓
+
+Workflow Engine
+
+↓
+
+State Machine
+
+↓
+
+Business Rule
+
+↓
+
+Capability
+
+↓
+
+Event
+
+↓
+
+Next State
+```
+
+所有 Workflow：
+
+运行一致。
+
+---
+
+# 八、Workflow Trigger
+
+统一触发方式：
+
+```text
+API Trigger
+
+Business Event
+
+Cron
+
+Timer
+
+Human Action
+
+AI Decision
+
+Webhook
+
+MCP Request
+```
+
+支持：
+
+组合触发。
+
+---
+
+# 九、Workflow Node
+
+统一节点：
+
+```text
+Start
+
+↓
+
+Task
+
+↓
+
+Decision
+
+↓
+
+Approval
+
+↓
+
+AI Decision
+
+↓
+
+Parallel
+
+↓
+
+Sub Workflow
+
+↓
+
+Event
+
+↓
+
+End
+```
+
+所有节点：
+
+统一定义。
+
+---
+
+# 十、Workflow State Machine
+
+所有 Workflow：
+
+必须拥有状态。
+
+例如：
+
+```text
+Draft
+
+↓
+
+Pending
+
+↓
+
+Running
+
+↓
+
+Waiting
+
+↓
+
+Approved
+
+↓
+
+Rejected
+
+↓
+
+Completed
+
+↓
+
+Cancelled
+```
+
+统一生命周期。
+
+---
+
+# 十一、Workflow Task
+
+统一 Task：
+
+```text
+Human Task
+
+System Task
+
+AI Task
+
+Integration Task
+
+Business Task
+```
+
+Task：
+
+独立运行。
+
+---
+
+# 十二、Human Workflow
+
+人工节点：
+
+支持：
+
+```text
+Assign
+
+Approve
+
+Reject
+
+Transfer
+
+Delegate
+
+Escalate
+```
+
+支持：
+
+组织架构。
+
+权限。
+
+角色。
+
+---
+
+# 十三、AI Workflow
+
+AI 节点：
+
+包括：
+
+```text
+Reason
+
+Plan
+
+Analyze
+
+Recommend
+
+Generate
+
+Evaluate
+
+Approve（按策略允许）
+```
+
+AI：
+
+不是外挂。
+
+而是 Workflow Participant。
+
+---
+
+# 十四、Automation Workflow
+
+自动节点：
+
+例如：
+
+```text
+Inventory Allocation
+
+Membership Upgrade
+
+Birthday Coupon
+
+Customer Tagging
+
+Risk Detection
+```
+
+无需人工参与。
+
+---
+
+# 十五、Workflow Event
+
+Workflow：
+
+统一发布：
+
+```text
+WorkflowStarted
+
+TaskAssigned
+
+TaskCompleted
+
+WorkflowApproved
+
+WorkflowRejected
+
+WorkflowCompleted
+
+WorkflowCancelled
+```
+
+Event：
+
+进入：
+
+Event Bus。
+
+---
+
+# 十六、Workflow Policy
+
+Workflow：
+
+执行：
+
+Business Policy。
+
+例如：
+
+```text
+Approval Policy
+
+Discount Policy
+
+Risk Policy
+
+Permission Policy
+```
+
+Policy：
+
+可动态修改。
+
+无需改代码。
+
+---
+
+# 十七、Workflow Rule
+
+Workflow：
+
+执行：
+
+Business Rule。
+
+例如：
+
+```text
+IF VIP
+
+↓
+
+Skip Approval
+```
+
+Rule：
+
+由 Rule Engine：
+
+统一执行。
+
+---
+
+# 十八、Workflow Permission
+
+统一权限：
+
+包括：
+
+```text
+Start Workflow
+
+Approve Workflow
+
+Cancel Workflow
+
+Reassign Workflow
+
+View Workflow
+
+Manage Workflow
+```
+
+统一：
+
+Business Permission。
+
+---
+
+# 十九、Workflow Version
+
+统一版本：
+
+```text
+Workflow v1
+
+↓
+
+Workflow v2
+
+↓
+
+Workflow v3
+```
+
+运行中的流程：
+
+继续使用：
+
+旧版本。
+
+新实例：
+
+采用：
+
+最新版本。
+
+---
+
+# 二十、Workflow SLA
+
+统一支持：
+
+```text
+Expected Duration
+
+Timeout
+
+Escalation
+
+Reminder
+
+Auto Close
+```
+
+用于：
+
+流程治理。
+
+---
+
+# 二十一、Workflow Audit
+
+所有 Workflow：
+
+统一审计。
+
+包括：
+
+```text
+Who
+
+When
+
+Action
+
+Before
+
+After
+
+Reason
+
+Policy
+
+AI Decision
+```
+
+进入：
+
+Audit Framework。
+
+---
+
+# 二十二、Workflow Registry
+
+统一注册：
+
+```text
+Workflow Registry
+
+├── Name
+├── Version
+├── Owner
+├── Capability
+├── Event
+├── SLA
+├── Permission
+├── Status
+```
+
+形成：
+
+Workflow Catalog。
+
+---
+
+# 二十三、Workflow Engine
+
+JBOS Workflow Engine：
+
+负责：
+
+```text
+Execute
+
+Pause
+
+Resume
+
+Rollback
+
+Retry
+
+Terminate
+
+Replay
+```
+
+统一 Runtime。
+
+推荐兼容：
+
+- Camunda 8
+- Flowable
+- Temporal
+- Zeebe
+
+通过适配层屏蔽底层差异。
+
+---
+
+# 二十四、Workflow Persistence
+
+统一数据：
+
+```text
+Workflow Definition
+
+Workflow Instance
+
+Workflow Task
+
+Workflow Variable
+
+Workflow History
+
+Workflow Event
+```
+
+全部版本化。
+
+---
+
+# 二十五、Workflow Monitoring
+
+统一监控：
+
+包括：
+
+```text
+Running
+
+Failed
+
+Timeout
+
+Retry
+
+Completed
+
+Throughput
+
+Success Rate
+```
+
+进入：
+
+Observability。
+
+---
+
+# 二十六、Workflow Integration
+
+Workflow：
+
+统一调用：
+
+```text
+Business Capability
+
+↓
+
+API
+
+↓
+
+Event
+
+↓
+
+AI Agent
+
+↓
+
+External System
+```
+
+Workflow：
+
+不直接：
+
+SQL。
+
+---
+
+# 二十七、Workflow + AI Collaboration
+
+AI：
+
+参与：
+
+Workflow。
+
+例如：
+
+```text
+Customer Complaint
+
+↓
+
+AI Classification
+
+↓
+
+Risk Score
+
+↓
+
+Human Review
+
+↓
+
+AI Recommendation
+
+↓
+
+Approval
+
+↓
+
+Customer Notification
+```
+
+形成：
+
+Human + AI。
+
+协同流程。
+
+---
+
+# 二十八、Workflow Governance
+
+统一治理：
+
+包括：
+
+- Workflow Registry
+- Version
+- Audit
+- Permission
+- SLA
+- Owner
+- Policy
+- Rule
+- State Machine
+
+统一管理。
+
+---
+
+# 二十九、Future Evolution
+
+Workflow：
+
+未来演进：
+
+```text
+Business Workflow
+
+↓
+
+AI Workflow
+
+↓
+
+Multi-Agent Workflow
+
+↓
+
+Autonomous Workflow
+
+↓
+
+Business Brain Runtime
+```
+
+形成：
+
+智能经营运行平台。
+
+---
+
+# 三十、本章总结
+
+Workflow Specification 是 JBOS Business Runtime 的流程执行标准，也是连接 Business Capability、API、Event、AI Agent 与 Governance Framework 的核心规范。
+
+本规范统一建立了：
+
+- One Workflow Canonical Model（统一工作流模型）
+- One Workflow Runtime（统一流程运行时）
+- One Workflow Engine（统一流程引擎）
+- One Workflow Registry（统一流程注册中心）
+- One Workflow Governance（统一流程治理体系）
+- One Human + AI Collaboration Model（统一人机协同模型）
+
+Workflow 在 JBOS 中不再只是审批工具，而是企业经营能力的执行引擎（Business Execution Engine）。
+
+未来所有营销活动、客户经营、会员运营、库存调拨、组织审批、AI 决策以及 Business Brain 的自动经营，都将在统一 Workflow Runtime 中运行，实现真正意义上的 AI Native Business Operating System。
+
+---
+
+# 附录 A：JBOS Workflow 分层模型
+
+```text
+Business Layer
+│
+├── Customer Growth Workflow
+├── Membership Workflow
+├── Sales Workflow
+├── Inventory Workflow
+├── Marketing Workflow
+└── Organization Workflow
+
+Application Layer
+│
+├── Workflow Service
+├── Task Service
+├── State Machine
+└── Policy Engine
+
+Runtime Layer
+│
+├── Workflow Engine
+├── Event Bus
+├── Scheduler
+├── AI Runtime
+└── Timer
+
+Infrastructure Layer
+│
+├── Workflow Database
+├── Redis
+├── MQ
+├── Object Storage
+└── Monitoring
+```
+
+---
+
+# 附录 B：标准 Workflow 生命周期
+
+```text
+Design
+    │
+Review
+    │
+Published
+    │
+Running
+    │
+Paused
+    │
+Completed
+    │
+Archived
+```
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Workflow Specification |

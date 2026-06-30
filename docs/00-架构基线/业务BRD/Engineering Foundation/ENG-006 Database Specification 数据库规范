@@ -1,0 +1,827 @@
+# ENG-006 Database Specification（数据库规范）
+
+---
+
+**文档编号**：ENG-006
+
+**文档名称**：Database Specification
+
+**中文名称**：数据库规范
+
+**所属体系**：JBOS Engineering Foundation
+
+**所属领域**：Engineering Architecture
+
+**版本**：v1.0.0 Draft
+
+**状态**：Architecture Baseline
+
+**作者**：JBOS Architecture Team
+
+**创建日期**：2026-06-29
+
+---
+
+# 一、文档目的（Purpose）
+
+本文件定义 JBOS（Jewelry Business Operating System）的统一数据库架构规范（Database Specification）。
+
+Database 是 Business Domain 的持久化实现，而不是业务模型本身。
+
+本规范统一定义：
+
+- Business Data Canonical Model
+- Data Ownership
+- Aggregate Persistence
+- Multi-Tenant Model
+- Data Versioning
+- Audit Model
+- Read / Write Model
+- Event Store
+- Data Lifecycle
+- Database Governance
+
+所有业务数据必须遵循本规范。
+
+---
+
+# 二、Architecture Goals（架构目标）
+
+数据库架构应满足：
+
+- Business First
+- Domain Driven
+- Aggregate Driven
+- Data Ownership
+- Event Driven
+- AI Ready
+- Multi-Tenant Native
+- High Availability
+- High Scalability
+- Traceability
+
+数据库服务于业务，而不是业务围绕数据库设计。
+
+---
+
+# 三、Core Design Principles（核心设计原则）
+
+所有数据库设计必须遵循以下原则。
+
+## Principle-001
+
+Business Model First
+
+数据库来自 Domain Model。
+
+禁止：
+
+数据库反向决定业务模型。
+
+---
+
+## Principle-002
+
+Database Per Service
+
+每个微服务拥有自己的数据库。
+
+例如：
+
+```text
+Customer DB
+
+Membership DB
+
+Order DB
+
+Inventory DB
+```
+
+禁止：
+
+跨服务共享数据库。
+
+---
+
+## Principle-003
+
+Aggregate Persistence
+
+Aggregate Root：
+
+作为唯一持久化入口。
+
+禁止：
+
+直接修改 Aggregate 内部 Entity。
+
+---
+
+## Principle-004
+
+Single Source of Truth
+
+每个业务对象：
+
+只能存在一个权威数据源。
+
+例如：
+
+Customer：
+
+只能由 Customer Service 维护。
+
+---
+
+## Principle-005
+
+Data Evolvable
+
+所有数据模型：
+
+支持：
+
+- Version
+- Migration
+- Compatibility
+
+持续演进。
+
+---
+
+# 四、Business Data Canonical Model
+
+JBOS 建立统一数据对象。
+
+```text
+Business Data
+
+├── Aggregate
+├── Entity
+├── Value Object
+├── Read Model
+├── Write Model
+├── Event
+├── Audit
+├── Version
+├── Metadata
+└── Extension
+```
+
+所有数据模型统一管理。
+
+---
+
+# 五、Database Architecture
+
+统一架构：
+
+```text
+Application Layer
+
+↓
+
+Repository
+
+↓
+
+Aggregate
+
+↓
+
+Persistence Adapter
+
+↓
+
+Database
+```
+
+Repository：
+
+是唯一数据库入口。
+
+禁止：
+
+Application：
+
+直接访问 SQL。
+
+---
+
+# 六、Canonical Table Model
+
+所有业务表遵循统一结构。
+
+```text
+Business Table
+
+├── Business Fields
+├── Tenant Fields
+├── Audit Fields
+├── Version Fields
+├── Extension Fields
+```
+
+保持统一。
+
+---
+
+# 七、Canonical Base Columns
+
+所有业务表默认包含：
+
+| Column | Description |
+|----------|-------------|
+| id | 全局唯一ID（Snowflake/UUID） |
+| tenant_id | 租户ID |
+| organization_id | 企业ID |
+| store_id | 门店ID |
+| created_at | 创建时间 |
+| created_by | 创建人 |
+| updated_at | 更新时间 |
+| updated_by | 更新人 |
+| version | 乐观锁版本 |
+| deleted | 逻辑删除 |
+| status | 业务状态 |
+
+所有业务表统一继承。
+
+---
+
+# 八、Aggregate Persistence Model
+
+Repository：
+
+保存 Aggregate。
+
+例如：
+
+```text
+Customer Aggregate
+
+↓
+
+Customer Table
+
+Customer Profile Table
+
+Customer Tag Table
+
+Customer Address Table
+```
+
+Repository：
+
+统一保存。
+
+---
+
+# 九、Entity Persistence
+
+Entity：
+
+不能：
+
+独立 Repository。
+
+必须：
+
+属于 Aggregate。
+
+例如：
+
+```text
+Customer
+
+└── Address
+
+└── Tag
+
+└── Preference
+```
+
+Address：
+
+不能：
+
+直接 CRUD。
+
+---
+
+# 十、Value Object Persistence
+
+Value Object：
+
+推荐：
+
+JSON。
+
+例如：
+
+```json
+Address
+
+Money
+
+Coordinate
+
+BusinessHours
+```
+
+支持：
+
+数据库 JSON 类型。
+
+避免：
+
+大量小表。
+
+---
+
+# 十一、CQRS Data Model
+
+统一：
+
+Write Model：
+
+```text
+Aggregate
+```
+
+Read Model：
+
+```text
+Customer Summary
+
+Customer Insight
+
+Dashboard View
+
+Sales Statistics
+```
+
+读写：
+
+独立优化。
+
+---
+
+# 十二、Read Model
+
+Read Model：
+
+特点：
+
+- Denormalized
+- Query Optimized
+- Event Driven Update
+
+支持：
+
+Dashboard。
+
+BI。
+
+AI。
+
+---
+
+# 十三、Event Store
+
+所有 Business Event：
+
+统一进入：
+
+```text
+event_store
+```
+
+字段：
+
+```text
+event_id
+
+aggregate_id
+
+event_name
+
+payload
+
+version
+
+timestamp
+```
+
+支持：
+
+Replay。
+
+---
+
+# 十四、Audit Model
+
+统一：
+
+```text
+audit_log
+```
+
+包括：
+
+- Before
+- After
+- Operator
+- Policy
+- Rule
+- AI
+- Trace
+
+与 DOMAIN-017 保持一致。
+
+---
+
+# 十五、Version Model
+
+统一：
+
+```text
+version_history
+```
+
+记录：
+
+所有业务对象：
+
+历史版本。
+
+支持：
+
+Rollback。
+
+Diff。
+
+---
+
+# 十六、Multi-Tenant Model
+
+统一：
+
+```text
+Tenant
+
+↓
+
+Organization
+
+↓
+
+Store
+
+↓
+
+Business Data
+```
+
+所有业务表：
+
+必须：
+
+tenant_id。
+
+禁止：
+
+混租户数据。
+
+---
+
+# 十七、Soft Delete
+
+统一采用：
+
+逻辑删除。
+
+字段：
+
+```text
+deleted
+
+deleted_at
+
+deleted_by
+```
+
+禁止：
+
+业务数据：
+
+物理删除。
+
+---
+
+# 十八、Temporal Data
+
+支持：
+
+时间维度。
+
+例如：
+
+```text
+Effective Date
+
+Expired Date
+
+Business Date
+```
+
+支持：
+
+历史查询。
+
+---
+
+# 十九、Index Specification
+
+统一索引规范：
+
+必须：
+
+- 主键索引
+- Tenant Index
+- Business Unique Index
+- Query Index
+- Foreign Key（逻辑引用）
+
+原则：
+
+避免：
+
+超过 5 个联合索引。
+
+避免：
+
+全表扫描。
+
+---
+
+# 二十、Naming Convention
+
+统一命名：
+
+表：
+
+```text
+customer
+
+customer_profile
+
+membership
+
+sales_order
+```
+
+字段：
+
+```text
+snake_case
+```
+
+禁止：
+
+CamelCase。
+
+缩写。
+
+---
+
+# 二十一、Data Security
+
+所有敏感数据：
+
+支持：
+
+- Encryption At Rest
+- Encryption In Transit
+- Data Masking
+- Tokenization（按需）
+- Permission Control
+
+例如：
+
+手机号。
+
+身份证。
+
+银行卡。
+
+---
+
+# 二十二、Data Partition
+
+支持：
+
+大数据分区。
+
+例如：
+
+```text
+Tenant
+
+Business Date
+
+Year
+
+Month
+```
+
+支持：
+
+Archive。
+
+冷热分离。
+
+---
+
+# 二十三、Database Migration
+
+统一采用：
+
+Migration Tool。
+
+例如：
+
+```text
+Flyway
+
+Liquibase
+```
+
+禁止：
+
+人工修改生产数据库。
+
+所有变更：
+
+版本化。
+
+可回滚。
+
+---
+
+# 二十四、Database Governance
+
+所有数据库统一治理。
+
+包括：
+
+- Schema Registry
+- Data Dictionary
+- Version
+- Owner
+- Audit
+- Lineage
+- Retention Policy
+
+统一管理。
+
+---
+
+# 二十五、AI Native Data Layer
+
+AI：
+
+禁止：
+
+直接访问数据库。
+
+统一流程：
+
+```text
+AI Agent
+
+↓
+
+Capability API
+
+↓
+
+Application
+
+↓
+
+Repository
+
+↓
+
+Database
+```
+
+数据库：
+
+永远不直接暴露给 AI。
+
+---
+
+# 二十六、Future Evolution
+
+数据库未来演进：
+
+```text
+Relational Database
+
+↓
+
+Event Store
+
+↓
+
+Knowledge Graph
+
+↓
+
+Vector Database
+
+↓
+
+Business Memory
+
+↓
+
+Enterprise Knowledge Fabric
+```
+
+形成：
+
+AI Native 数据底座。
+
+---
+
+# 二十七、本章总结
+
+Database Specification 是 JBOS Engineering Foundation 的数据架构基线。
+
+本规范统一定义了：
+
+- One Business Data Canonical Model（统一业务数据模型）
+- One Aggregate Persistence Model（统一聚合持久化模型）
+- One Database Per Service（统一数据自治原则）
+- One Event Store（统一事件存储）
+- One Audit Model（统一审计模型）
+- One Multi-Tenant Model（统一多租户模型）
+- One Data Governance Framework（统一数据治理体系）
+
+数据库不再只是存储层，而是 Business Domain、Governance Framework、Event Driven Architecture、AI Native Architecture 的共同基础设施。
+
+未来，JBOS 将逐步构建面向 Business Brain 的企业知识底座，实现业务数据、事件数据、知识数据与 AI 推理数据的统一治理。
+
+---
+
+# 附录 A：JBOS 推荐数据库技术栈
+
+| 场景 | 推荐技术 |
+|-------|----------|
+| OLTP | PostgreSQL（首选） / MySQL |
+| Cache | Redis |
+| Search | Elasticsearch / OpenSearch |
+| Event Store | PostgreSQL / Kafka Log |
+| Object Storage | MinIO / S3 |
+| Time Series | TimescaleDB（可选） |
+| Vector Database | pgvector（首选）/ Milvus（大规模） |
+| Graph Database | Neo4j（按需） |
+
+---
+
+# 附录 B：标准业务表模板
+
+```text
+customer
+├── id
+├── tenant_id
+├── organization_id
+├── store_id
+├── customer_no
+├── customer_name
+├── mobile
+├── gender
+├── birthday
+├── status
+├── version
+├── created_at
+├── created_by
+├── updated_at
+├── updated_by
+├── deleted
+├── deleted_at
+├── deleted_by
+```
+
+所有业务表均应基于 Canonical Base Columns 扩展。
+
+---
+
+## Revision History
+
+| Version | Date | Author | Description |
+|----------|------|--------|-------------|
+| v1.0.0 Draft | 2026-06-29 | JBOS Architecture Team | 初始版本，建立 JBOS Database Specification 规范 |
