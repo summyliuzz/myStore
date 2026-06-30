@@ -1,0 +1,817 @@
+# ENG-013 Engineering Development Standards（工程开发规范）
+
+---
+
+Document ID：ENG-013
+
+Version：1.0
+
+Status：Architecture Baseline
+
+Layer：Engineering Foundation
+
+Category：Engineering Governance
+
+---
+
+# 1. Purpose
+
+本规范定义 JBOS 的统一工程开发体系（Engineering Development Standards）。
+
+Engineering Standards 不只是 Coding Standard。
+
+它覆盖：
+
+整个 Software Development Lifecycle（SDLC）。
+
+包括：
+
+Architecture
+
+Domain
+
+Development
+
+Testing
+
+CI/CD
+
+Deployment
+
+Release
+
+Documentation
+
+AI Development
+
+Governance
+
+确保：
+
+One Engineering Language。
+
+One Development Process。
+
+One Delivery Standard。
+
+One Quality Standard。
+
+---
+
+# 2. Engineering Architecture
+
+整个研发体系：
+
+```text
+Business Requirement
+
+↓
+
+Business Domain
+
+↓
+
+Architecture
+
+↓
+
+Engineering Standards
+
+↓
+
+Implementation
+
+↓
+
+Testing
+
+↓
+
+CI/CD
+
+↓
+
+Deployment
+
+↓
+
+Operation
+
+↓
+
+Observability
+
+↓
+
+Evolution
+```
+
+---
+
+# 3. Engineering Principles
+
+所有开发遵循：
+
+Business First
+
+Architecture First
+
+DDD First
+
+Event First
+
+Workflow First
+
+AI First
+
+MCP Native
+
+Cloud Native
+
+Open Standards
+
+Automation First
+
+---
+
+# 4. Engineering Layers
+
+统一：
+
+```text
+Requirement
+
+↓
+
+Architecture
+
+↓
+
+Domain
+
+↓
+
+Application
+
+↓
+
+Infrastructure
+
+↓
+
+Runtime
+
+↓
+
+Operation
+```
+
+每一层：
+
+必须：
+
+独立。
+
+低耦合。
+
+---
+
+# 5. Repository Standards
+
+统一：
+
+Mono Repository。
+
+```text
+jbos-platform
+
+apps/
+
+domains/
+
+services/
+
+runtime/
+
+sdk/
+
+shared/
+
+docs/
+
+deployment/
+
+scripts/
+
+infrastructure/
+```
+
+---
+
+# 6. Branch Strategy
+
+统一：
+
+```text
+main
+
+develop
+
+release/*
+
+feature/*
+
+hotfix/*
+```
+
+禁止：
+
+直接：
+
+Push Main。
+
+---
+
+# 7. Coding Standards
+
+统一：
+
+Clean Code。
+
+SOLID。
+
+DDD。
+
+CQRS。
+
+Event Driven。
+
+Composition。
+
+禁止：
+
+God Class。
+
+Magic Number。
+
+Hard Coding。
+
+Long Method。
+
+Deep Nesting。
+
+---
+
+# 8. DDD Standards
+
+统一：
+
+```text
+Aggregate
+
+Entity
+
+Value Object
+
+Repository
+
+Domain Service
+
+Policy
+
+Rule
+
+Specification
+
+Factory
+
+Event
+```
+
+与 DOMAIN 系列：
+
+一致。
+
+---
+
+# 9. API Development Standards
+
+统一：
+
+REST。
+
+OpenAPI。
+
+Idempotent。
+
+Version。
+
+Error。
+
+Rate Limit。
+
+遵循：
+
+ENG-004。
+
+---
+
+# 10. Event Development Standards
+
+统一：
+
+Immutable。
+
+Past Tense。
+
+Replayable。
+
+Version。
+
+Schema Registry。
+
+遵循：
+
+ENG-005。
+
+---
+
+# 11. Workflow Standards
+
+统一：
+
+Workflow。
+
+禁止：
+
+硬编码业务流程。
+
+所有业务：
+
+可编排。
+
+遵循：
+
+ENG-007。
+
+---
+
+# 12. AI Agent Standards
+
+Agent：
+
+统一：
+
+Goal。
+
+Capability。
+
+Knowledge。
+
+Tool。
+
+Workflow。
+
+Memory。
+
+Permission。
+
+Policy。
+
+Explainability。
+
+遵循：
+
+ENG-008。
+
+---
+
+# 13. MCP Tool Standards
+
+所有 Tool：
+
+统一：
+
+Capability。
+
+Schema。
+
+Permission。
+
+Version。
+
+Metadata。
+
+遵循：
+
+ENG-009。
+
+---
+
+# 14. Database Standards
+
+统一：
+
+Aggregate Persistence。
+
+Repository。
+
+Soft Delete。
+
+Version。
+
+Audit。
+
+Tenant。
+
+遵循：
+
+ENG-006。
+
+---
+
+# 15. Security Standards
+
+统一：
+
+Zero Trust。
+
+Least Privilege。
+
+Encryption。
+
+Permission。
+
+Audit。
+
+遵循：
+
+ENG-011。
+
+---
+
+# 16. Observability Standards
+
+统一：
+
+Metrics。
+
+Trace。
+
+Log。
+
+Dashboard。
+
+Business KPI。
+
+AI Metrics。
+
+遵循：
+
+ENG-010。
+
+---
+
+# 17. Integration Standards
+
+统一：
+
+API。
+
+Workflow。
+
+Event。
+
+MCP。
+
+Partner。
+
+Connector。
+
+遵循：
+
+ENG-012。
+
+---
+
+# 18. Testing Standards
+
+统一：
+
+Unit Test
+
+Integration Test
+
+Domain Test
+
+Workflow Test
+
+API Test
+
+Performance Test
+
+Security Test
+
+AI Evaluation
+
+MCP Test
+
+Contract Test
+
+E2E Test
+
+---
+
+# 19. Documentation Standards
+
+所有模块：
+
+必须：
+
+拥有：
+
+Architecture。
+
+Domain。
+
+API。
+
+Workflow。
+
+README。
+
+Change Log。
+
+ADR。
+
+禁止：
+
+无文档开发。
+
+---
+
+# 20. Git Commit Standards
+
+统一：
+
+Conventional Commits。
+
+例如：
+
+```text
+feat(customer):
+
+fix(member):
+
+refactor(workflow):
+
+test(agent):
+
+docs(api):
+
+perf(inventory):
+```
+
+---
+
+# 21. CI/CD Standards
+
+统一：
+
+```text
+Build
+
+↓
+
+Lint
+
+↓
+
+Unit Test
+
+↓
+
+Integration Test
+
+↓
+
+Security Scan
+
+↓
+
+AI Test
+
+↓
+
+Package
+
+↓
+
+Deploy
+
+↓
+
+Smoke Test
+```
+
+全部：
+
+自动化。
+
+---
+
+# 22. Code Review Standards
+
+Review：
+
+必须检查：
+
+Architecture
+
+DDD
+
+Business Rule
+
+Security
+
+Performance
+
+Test
+
+Documentation
+
+AI Safety
+
+MCP Compatibility
+
+---
+
+# 23. Release Standards
+
+统一：
+
+Semantic Version。
+
+Blue Green。
+
+Canary。
+
+Rollback。
+
+Database Migration。
+
+Feature Flag。
+
+---
+
+# 24. Engineering Governance
+
+统一治理：
+
+Architecture Review
+
+Code Review
+
+Security Review
+
+Performance Review
+
+AI Review
+
+Release Review
+
+ADR
+
+RFC
+
+统一审批。
+
+---
+
+# 25. Engineering KPI
+
+研发指标：
+
+包括：
+
+Lead Time
+
+Deployment Frequency
+
+MTTR
+
+Defect Density
+
+Test Coverage
+
+Code Quality
+
+Technical Debt
+
+AI Quality Score
+
+Delivery Predictability
+
+---
+
+# 26. AI Assisted Development
+
+支持：
+
+AI Coding。
+
+AI Review。
+
+AI Documentation。
+
+AI Testing。
+
+AI Refactoring。
+
+AI Architecture Review。
+
+统一：
+
+Human Approval。
+
+---
+
+# 27. Future Evolution
+
+Engineering：
+
+未来：
+
+```text
+Coding
+
+↓
+
+Engineering
+
+↓
+
+Automation
+
+↓
+
+AI Pair Programming
+
+↓
+
+AI Engineering Team
+
+↓
+
+Autonomous Software Factory
+```
+
+---
+
+# 28. Summary
+
+Engineering Development Standards 是 JBOS 全部研发活动的统一工程规范。
+
+本规范建立：
+
+One Engineering Language
+
+One Development Lifecycle
+
+One Architecture Standard
+
+One Quality Standard
+
+One Delivery Standard
+
+One Governance Framework
+
+它连接：
+
+PD
+
+↓
+
+BRD
+
+↓
+
+Domain
+
+↓
+
+Architecture
+
+↓
+
+Engineering
+
+↓
+
+Runtime
+
+↓
+
+Operation
+
+成为整个 JBOS Engineering Foundation 的最终落地标准。
